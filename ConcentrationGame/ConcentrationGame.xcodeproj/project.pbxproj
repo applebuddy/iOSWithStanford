@@ -74,6 +74,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		07209AA4230D3FEE00444D23 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				07B1C48C2306E9B400BF4B16 /* AppDelegate.swift */,
+				07B1C4952306E9B600BF4B16 /* LaunchScreen.storyboard */,
+				07B1C4902306E9B400BF4B16 /* Main.storyboard */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		07B1C4802306E9B400BF4B16 = {
 			isa = PBXGroup;
 			children = (
@@ -97,11 +107,9 @@
 		07B1C48B2306E9B400BF4B16 /* ConcentrationGame */ = {
 			isa = PBXGroup;
 			children = (
-				07B1C48C2306E9B400BF4B16 /* AppDelegate.swift */,
 				07B1C48E2306E9B400BF4B16 /* ViewController.swift */,
-				07B1C4902306E9B400BF4B16 /* Main.storyboard */,
+				07209AA4230D3FEE00444D23 /* Supporting Files */,
 				07B1C4932306E9B600BF4B16 /* Assets.xcassets */,
-				07B1C4952306E9B600BF4B16 /* LaunchScreen.storyboard */,
 				07B1C4982306E9B600BF4B16 /* Info.plist */,
 			);
 			path = ConcentrationGame;
