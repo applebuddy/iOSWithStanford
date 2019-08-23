@@ -6,6 +6,7 @@
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
 //
 
+/// Lecture 1)
 /// * 개발자 문서 내 자주사용하는 클래스의 OverView는 전부 읽어보도록 하자.
 // 프로젝트를 만들때 필요한 것 : 프로젝트명, 팀명, 기관명, 기관식별자
 // 네비게이터 : 좌측 창 영역은 네비게이터라고 한다. 검색/디버깅/파일목록 등을 볼 수 있다. (CMD+0)
@@ -14,6 +15,24 @@
 // Simulator : 실 기기로 무/유선 디버깅이 되지만 시뮬레이터를 통한 디버깅도 지원하고 있다.
 
 // * 인터페이스빌더 내 확대/축소 : Alt+Scroll, 핀치동작으로 가능하다.
+
+/// Lecture 2)
+// ## MVC 패턴 : Medel + View + Controller
+// ###Controller :
+// -모델과 원하는대로 얘기 하며 사용자에게 보여져야 할 데이터를 받는다.(특히 공개적인 데이터와는 무제한적으로 대화가능)
+// - Outlet을 통해 view와 소통한다.
+// ###View : 스토리보드... UILabel, UIImageView, UIView... and so on...
+// - 모델과 절대 소통 불가능
+// - 뷰는 컨트롤러와 블라인드상태로 소통해야한다. 뷰는 컨트롤러가 집중력게임 컨트롤러인이 어떤 컨트롤러인지 알지 못한다. 소통 시 컨트롤러에서 뷰에 대한 정의를 구조적으로 지정하고 교류할 수 있다.(타겟메서드, 델리게이트, 데이터소스 프로토콜 등...)
+// ex) 컨트롤러에 타겟 메서드를 지정 후 뷰가 동작 시 메서드가 동작하는 방식으로 소통 가능
+// ex) 스크롤뷰 등의 did, will, should Delegate 메서드 등을 컨트롤러에서 등록하여 사용할 수 있다.
+// ex) 테이블 뷰 등의 스트롤 시 셀 갯수 등을 UITableViewDataSource Protocol로 지정하고 상황에 따라 필요한 만큼의 데이터만 모델에 요청하여 유저에게 보여줄 수 있다.
+// ###Medel
+// - View와 절대 소통 불가능
+// - Contorller에 사용자에게 보여져야 할 데이터를 제공한다.
+// - Controller와 직접적으로는 소통하지 못한다.
+// - Notification, KVO(Key Value Observing) 방식으로 컨트롤러와 소통할 수 있다. -> 라이도방송국으로 생각하면 이해하기 좋다.
+
 import UIKit
 
 class ViewController: UIViewController {
