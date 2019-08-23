@@ -13,10 +13,10 @@
 // 유틸리티창 : 우측 창 영역 (OPT+CMD+0)
 // 콘솔 : 디버깅 출력 등에 사용하는 하단창 (CMD+SHIFT+Y)
 // Simulator : 실 기기로 무/유선 디버깅이 되지만 시뮬레이터를 통한 디버깅도 지원하고 있다.
-
+//
 // * 인터페이스빌더 내 확대/축소 : Alt+Scroll, 핀치동작으로 가능하다.
 // * 메서드의 인자이름 지정 방법 : withEmoji emoji 처럼 외/내부 인자이름을 설명할 수 있다. 물론 외/내부 인자이름 동일하게 emogi 하나만 지정할 수도 있다.
-
+//
 /// Lecture 2)
 // ## MVC 패턴 : Medel + View + Controller
 // ###Controller :
@@ -32,18 +32,18 @@
 // - View와 절대 소통 불가능
 // - Contorller에 사용자에게 보여져야 할 데이터를 제공한다.
 // - Controller와 직접적으로는 소통하지 못한다.
-// - Notification, KVO(Key Value Observing) 방식으로 컨트롤러와 소통할 수 있다. -> 라이도방송국으로 생각하면 이해하기 좋다.
-
+// - Notification, KVO(Key Value Observing) 방식으로 컨트롤러와 소통할 수 있다. -> 라디오방송국으로 생각하면 이해하기 좋다.
+//
 // * API란? : Application Programming Interface(인스턴스 리스트)의 약자
-
+//
 // ## 클래스가 아닌 struct를 사용하는 이유?? : 사실 스위프트의 클래스와 구조체는 대부분이 유사하다. 하지만 두가지 큰 차이가 있다.
 // 구조체는 값타입이다. vs 클래스는 참조타입니다.
 // 구조체는 상속성을 가지고 있지않다. vs 클래스는 상속성을 가지고 있다.
 // 구조체는 모든 멤버변수를 초기화할 수 있는 공짜 이니셜라이저가 존재한다. vs 클래스는 이러한 공짜 이니셜라이저가 존재하지 않는다.
-
+//
 // * lazy : lazy를 사용하면 실제 사용하기 전까진 초기화 하지 않는다.누군가 game을 사용하려 할때 비로소 초기화 된다.
 // lazy를 사용하면 프로퍼티 옵저버(Property Obserber, 프로퍼티 감시자)로서의 역할은 불가능하다.
-
+//
 // * 배열.indices : 계수가능 범위를 배열로 리턴해준다.
 // indices 사용 예 : for index in emojiCardButtons.indices {}
 
