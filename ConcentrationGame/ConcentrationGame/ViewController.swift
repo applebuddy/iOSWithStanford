@@ -53,6 +53,8 @@
 // - 저장프로퍼티와 달리 쓰기, 읽기 시 마다 set, get 블럭 내용을 신행된다.
 // - get과 달리 set은 필수 구현요소가 아니다.
 //    - -> 읽기/쓰기(get/set) or 읽기(get) 상태로 구현 가능
+//    - get 만 사용한다면 get 명시 없이 return ~~~~ 로 구현할 수도 있다.
+// - 상황에 따라 계산되는 속성으로 코드는 훨씬 간결해지고, 직관적이게 된다. 일어난 상황에따라 반응하기 때문이다.
 // - 특정 행위를 할때마다 변경 혹은 읽기가 필요한 경우 유용할 수 있다.
 // - **저장프로퍼티, 계산프로퍼티의 특성을 살릴 만한 상황을 잘 판단하여 사용하는 것이 좋다.**
 //    - ex) indexOfOneAndOnlyFaceUpCard: Int? -> 카드를 뒤집을때 카드의 상태에 따라 다른 처리가 필요한 변수
@@ -82,29 +84,34 @@ import UIKit
 
 class ViewController: UIViewController {
     @IBOutlet var flipCountLabel: UILabel!
-    
+
     // Outlet Collection Property
     @IBOutlet var emojiCardButtons: [UIButton]!
-    
-    lazy var game: Concentration = Concentration(numberOfPairsOfCards: (emojiCardButtons.count + 1) / 2)
-    
+
+    lazy var game: Concentration = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
+
+    var numberOfPairsOfCards: Int {
+        // get만 있으므로 아래와 같이 return ~~ 방식으로 만 표현할 수 있다.
+        return (emojiCardButtons.count + 1) / 2
+    }
+
     var flipCount: Int = 0 {
         // didSet은 값이 설정되기 직후에 실행되며, 설정되기 전 값인 oldValue에 접근할 수 있다.
         didSet {
             flipCountLabel.text = "Flips: \(flipCount)"
         }
-        
-        /// willSet은 값이 설정되기 직전에 실행되며, 새로 설정 된 newValue에 접근할 수 있다.
-        willSet {
-            flipCountLabel.text = "Flips: \(flipCount)"
-        }
+
+//        /// willSet은 값이 설정되기 직전에 실행되며, 새로 설정 된 newValue에 접근할 수 있다.
+//        willSet {
+//            flipCountLabel.text = "Flips: \(flipCount)"
+//        }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-    
+
     /// * @IBAction은 Xcode에서 추가한 지시문이다. 인터페이스빌더 내 UI객체와 연결이 되어 동작한다.
     @IBAction func emojCardPressed(_ sender: UIButton) {
         flipCount += 1 // 넘긴 횟수를 1 증가 시킨다.
@@ -116,7 +123,7 @@ class ViewController: UIViewController {
             print("chosen card was not in emojuCardButtons")
         }
     }
-    
+
     func updateViewFromModel() {
         for index in emojiCardButtons.indices {
             let button = emojiCardButtons[index]
@@ -131,7 +138,7 @@ class ViewController: UIViewController {
             }
         }
     }
-    
+
     var emojiChoices = ["👻", "🎃", "😱", "🥵", "🥶", "😭", "💀", "👽"]
     var emoji = [Int: String]()
     func emoji(for card: Card) -> String {
@@ -144,7 +151,7 @@ class ViewController: UIViewController {
             // 한번 사용한 이모티콘은 emojiChoices 배열에서 삭제한다.
             emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
         }
-        
+
         return emoji[card.identifier] ?? "?"
     }
 }
