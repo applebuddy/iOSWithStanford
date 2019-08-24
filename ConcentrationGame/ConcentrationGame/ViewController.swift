@@ -6,47 +6,78 @@
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
 //
 
-/// Lecture 1)
-/// * 개발자 문서 내 자주사용하는 클래스의 OverView는 전부 읽어보도록 하자.
-// 프로젝트를 만들때 필요한 것 : 프로젝트명, 팀명, 기관명, 기관식별자
-// 네비게이터 : 좌측 창 영역은 네비게이터라고 한다. 검색/디버깅/파일목록 등을 볼 수 있다. (CMD+0)
-// 유틸리티창 : 우측 창 영역 (OPT+CMD+0)
-// 콘솔 : 디버깅 출력 등에 사용하는 하단창 (CMD+SHIFT+Y)
-// Simulator : 실 기기로 무/유선 디버깅이 되지만 시뮬레이터를 통한 디버깅도 지원하고 있다.
 //
-// * 인터페이스빌더 내 확대/축소 : Alt+Scroll, 핀치동작으로 가능하다.
-// * 메서드의 인자이름 지정 방법 : withEmoji emoji 처럼 외/내부 인자이름을 설명할 수 있다. 물론 외/내부 인자이름 동일하게 emogi 하나만 지정할 수도 있다.
-//
-/// Lecture 2)
-// ## MVC 패턴 : Medel + View + Controller
-// ###Controller :
-// -모델과 원하는대로 얘기 하며 사용자에게 보여져야 할 데이터를 받는다.(특히 공개적인 데이터와는 무제한적으로 대화가능)
-// - Outlet을 통해 view와 소통한다.
-// ###View : 스토리보드... UILabel, UIImageView, UIView... and so on...
-// - 모델과 절대 소통 불가능
-// - 뷰는 컨트롤러와 블라인드상태로 소통해야한다. 뷰는 컨트롤러가 집중력게임 컨트롤러인이 어떤 컨트롤러인지 알지 못한다. 소통 시 컨트롤러에서 뷰에 대한 정의를 구조적으로 지정하고 교류할 수 있다.(타겟메서드, 델리게이트, 데이터소스 프로토콜 등...)
-// ex) 컨트롤러에 타겟 메서드를 지정 후 뷰가 동작 시 메서드가 동작하는 방식으로 소통 가능
-// ex) 스크롤뷰 등의 did, will, should Delegate 메서드 등을 컨트롤러에서 등록하여 사용할 수 있다.
-// ex) 테이블 뷰 등의 스트롤 시 셀 갯수 등을 UITableViewDataSource Protocol로 지정하고 상황에 따라 필요한 만큼의 데이터만 모델에 요청하여 유저에게 보여줄 수 있다.
-// ###Medel
-// - View와 절대 소통 불가능
-// - Contorller에 사용자에게 보여져야 할 데이터를 제공한다.
-// - Controller와 직접적으로는 소통하지 못한다.
-// - Notification, KVO(Key Value Observing) 방식으로 컨트롤러와 소통할 수 있다. -> 라디오방송국으로 생각하면 이해하기 좋다.
-//
-// * API란? : Application Programming Interface(인스턴스 리스트)의 약자
-//
-// ## 클래스가 아닌 struct를 사용하는 이유?? : 사실 스위프트의 클래스와 구조체는 대부분이 유사하다. 하지만 두가지 큰 차이가 있다.
-// 구조체는 값타입이다. vs 클래스는 참조타입니다.
-// 구조체는 상속성을 가지고 있지않다. vs 클래스는 상속성을 가지고 있다.
-// 구조체는 모든 멤버변수를 초기화할 수 있는 공짜 이니셜라이저가 존재한다. vs 클래스는 이러한 공짜 이니셜라이저가 존재하지 않는다.
-//
-// * lazy : lazy를 사용하면 실제 사용하기 전까진 초기화 하지 않는다.누군가 game을 사용하려 할때 비로소 초기화 된다.
-// lazy를 사용하면 프로퍼티 옵저버(Property Obserber, 프로퍼티 감시자)로서의 역할은 불가능하다.
-//
-// * 배열.indices : 계수가능 범위를 배열로 리턴해준다.
-// indices 사용 예 : for index in emojiCardButtons.indices {}
+/// Lecture 3)
+// 지금까지 만든 집중력게임, 세로모드에선 문제 없어보이지만.. 가로모드가 된다면?? -> 어설픈 레이아웃 상태...
+// ✭이런 문제 해결을 위해서 오토레이아웃이 필요하다.
 
+// ### **앞서 강의에서 배운 내용 간략정리**
+// - 타겟/액션, IBOutlet, IBOutletCollection
+// - 메서드와 프로퍼티 사용
+// - 프로퍼티옵저버(didSet, willSet)
+// - 배열 Array<Element>
+// - 딕셔너리 Dictionary<Key, Value> -> 해쉬타입
+// - for in 반복문 : 시퀀스(sequence) 성질이 있는 요소 순회탐색에 사용 가능
+// - 문자열, 배열, 딕셔너리, Set 등
+// - MVC(Model-View-Controller) 패턴
+// - 값타입 Struct, 참조타입 class
+// - 초기화함수, initializers
+// - 실제 실행 시 초기화 되는 lazy 프로퍼티(프로퍼티옵저버 역할 불가능)
+// - 타입변환 (ex) UInt32(Int) )
+// - nil이 될 수도 있는 옵셔널, 옵셔널바인딩방법 "if let"
+
+// ### Stride(from:,through:,by:)
+// - Float 등의 부동소수점을 반복문으로 돌릴 수 없을까?
+// - Swift에서는 stride 전역함수를 이용하여 구현할 수 있다.
+// - 부동소수점 이외에 문자열의 인수 등도 셀 수 있다.
+// - for (i = 0.5; i<=15.25; i+=0.3) 과 같은 동작의 stride 사용 예
+// for i in stride(from: 0.5, through: 15.25, by: 0.3) {
+//
+// }
+// ### Tuple
+// - 튜플은 무엇일까? 메소드나 변수가 없는 소형 구조체, 값만 들어가 있는 다른 언어의 구조체와 유사하다.
+// - 가볍기때문에 한줄만으로 표현할 수 있다.
+// - 여러 요소의 이름을 유연하게 설정할 수 있다.
+// - 함수 내에서 하나 이상의 값을 리턴할때 유용하다.
+//    - ex) (weight: Double, height: Double)로 신장+체중 리턴
+// - Tuple 사용 예)
+// let tuple: (String, Int, Double) = ("Hello", 5, 9.84) // tuple의 타입이 Tuple이 된다.
+// - Tuple 사용 예 2)
+// let tuple2: (w: String, i: Int, v: Double) = ("Hello", 5, 9.85)
+// print(tuple2.w) // prints "Hello"
+// print(tuple2.i) // prints 5
+// print(tuple2.v) // prints 9.85
+
+// ### 계산프로퍼티 (Computed Properties)
+// - 쓰기, 읽기 시 기 지정한 get, set 대로 계산되는 프로퍼티
+// - 저장프로퍼티와 달리 쓰기, 읽기 시 마다 set, get 블럭 내용을 신행된다.
+// - get과 달리 set은 필수 구현요소가 아니다.
+//    - -> 읽기/쓰기(get/set) or 읽기(get) 상태로 구현 가능
+// - 특정 행위를 할때마다 변경 혹은 읽기가 필요한 경우 유용할 수 있다.
+// - **저장프로퍼티, 계산프로퍼티의 특성을 살릴 만한 상황을 잘 판단하여 사용하는 것이 좋다.**
+//    - ex) indexOfOneAndOnlyFaceUpCard: Int? -> 카드를 뒤집을때 카드의 상태에 따라 다른 처리가 필요한 변수
+// - 계산프로퍼티 사용 예)
+// var foo: Double {
+//    get {
+//        // return the calculated value of foo
+//        return 계산된 foo의 값
+//    }
+//
+//    set(newValue) {
+//        // do comething based on the fact that foo has changed to newValue
+//        // 새로운 값으로 변경이 됄 때 해당 블럭이 실행 된다.
+//    }
+// }
+
+// ### UIStackView
+// - 다양한 UI객체를 묶어 관리할 수 있다.
+// - 여러개의 UI를 선택 -> 인터페이스 빌더 하단 embed in View 로 스택뷰 처리가능
+// - 스택뷰 프로퍼티
+// - distribution : 스택뷰 내 서브뷰의 배치 설정
+// - alignment : 스택뷰 정렬 기준 설정
+
+// ### 3강 용어정리
+// * Safe Area : 안전영역 즉, 스크린 주변의 다른 UI와 겹치지 않고 배치할 수 있는 영역
 import UIKit
 
 class ViewController: UIViewController {
