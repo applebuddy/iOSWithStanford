@@ -82,29 +82,29 @@ import UIKit
 
 class ViewController: UIViewController {
     @IBOutlet var flipCountLabel: UILabel!
-
+    
     // Outlet Collection Property
     @IBOutlet var emojiCardButtons: [UIButton]!
-
+    
     lazy var game: Concentration = Concentration(numberOfPairsOfCards: (emojiCardButtons.count + 1) / 2)
-
+    
     var flipCount: Int = 0 {
         // didSet은 값이 설정되기 직후에 실행되며, 설정되기 전 값인 oldValue에 접근할 수 있다.
         didSet {
             flipCountLabel.text = "Flips: \(flipCount)"
         }
-
+        
         /// willSet은 값이 설정되기 직전에 실행되며, 새로 설정 된 newValue에 접근할 수 있다.
         willSet {
             flipCountLabel.text = "Flips: \(flipCount)"
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
+    
     /// * @IBAction은 Xcode에서 추가한 지시문이다. 인터페이스빌더 내 UI객체와 연결이 되어 동작한다.
     @IBAction func emojCardPressed(_ sender: UIButton) {
         flipCount += 1 // 넘긴 횟수를 1 증가 시킨다.
@@ -116,7 +116,7 @@ class ViewController: UIViewController {
             print("chosen card was not in emojuCardButtons")
         }
     }
-
+    
     func updateViewFromModel() {
         for index in emojiCardButtons.indices {
             let button = emojiCardButtons[index]
@@ -131,7 +131,7 @@ class ViewController: UIViewController {
             }
         }
     }
-
+    
     var emojiChoices = ["👻", "🎃", "😱", "🥵", "🥶", "😭", "💀", "👽"]
     var emoji = [Int: String]()
     func emoji(for card: Card) -> String {
@@ -144,7 +144,7 @@ class ViewController: UIViewController {
             // 한번 사용한 이모티콘은 emojiChoices 배열에서 삭제한다.
             emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
         }
-
+        
         return emoji[card.identifier] ?? "?"
     }
 }
