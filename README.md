@@ -52,8 +52,10 @@ iOS Study with Stanford
  * API란? : Application Programming Interface(인스턴스 리스트)의 약자
  * lazy : lazy를 사용하면 실제 사용하기 전까진 초기화 하지 않는다.누군가 game을 사용하려 할때 비로소 초기화 된다.
  lazy를 사용하면 프로퍼티 옵저버(Property Obserber, 프로퍼티 감시자)로서의 역할은 불가능하다.
- * 배열.indices : 계수가능 범위를 배열로 리턴해준다.
+ * 배열.indices() : 계수가능 범위를 배열로 리턴해준다.
    - indices 사용 예 : for index in emojiCardButtons.indices {}
+ * 배열.shuffle() : 컬렉션 요소를 랜덤하게 섞어준다.
+   - shuffle 사용 예 : emojiCardButtons.shuffle()
 
 ### ➣  2강 구현 결과
 <div>
