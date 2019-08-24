@@ -93,6 +93,109 @@
 // - extension은 저장공간이 있는 변수는 아니다.
 // - extension은 쉽게 남용 될 수 있다. 확장 사용 시 불필요한 기능인지 고려할 필요가 있다.
 
+//// ## 열거형 Enum
+//
+// - 타입의 일종, 타입 종류로는 enum, struct, class 가 있다.
+// - struct, class와 비슷하다.
+// - 메서드, 변수를 가질 수 있지만 저장공간을 가지지는 않는다.
+// - enum의 저장공간은 연동자료들 각각에 대해서만 존재한다. 그러므로 enum의 값들은 계산된 변수만을 가질 수 있다.
+//    -enum의 연동자료 이외에 대한 저장공간은 존재하지 않는다.
+// - 구조체(struct)와 동일한 값 타입이다.
+// - swift enum은 다른 언어의 열거형과 흡사하다. 하지만...
+// - **다른 언어에 비해 swift의 enum은 매우 강력하다.**
+//    - enum 각각의 케이스들이 연동된 데이터 혹은 값을 가질 수 있기 때문이다.
+// - * 타입 추론이 가능하지만 좌측 혹은 우측 어느 한곳에는 해당 타입을 명시해주어야 추론이 가능하다.
+// - swift enum의 사용 예시)
+// enum FastFoodMenuItem {
+//    case hamburger(numberOfPatties,: Int)
+//    case fries(size: FryOrderSize)
+//    case drink(String, ounces: Int)
+//    case cookie
+// }
+// - enum 값을 셋팅 한데 관련 데이터를 반드시 제공해야 한다.
+// let menuItem: FastFoodMenuItem = FastFoodMenuItem.hamburger(patties: 2)
+// var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
+// - enum은 등호대신 switch 문을 통해 비교한다.
+// - enum switch 문 내 case문에서 ".값" 만 명시해도 값 추론이 가능하다.
+// - case 내 두줄 이상의 코드도 실행 가능하다.
+// ### break
+// - switch 문 내에서 특정 분기 시 아무것도 실행하고 싶지 않다면, break문을 사용하면 된다.menuItem
+// var menuItem = FastFoodMenuItem.hamburger(patties: 2)
+//    switch menuItem {
+//        case .hamburger: break // 아무것도 실행 하기 싫으면 이렇게 break문 사용하면 된다.
+//        case .fires: print("fries")
+//        case .drink: print("drinK")
+//        case .cookie: print("cookie")
+//    }
+// ### default:
+// - 만약 특정 케이스 이외의 케이스를 한번에 묶어 구분하려면 default:를 사용할 수 있다.
+
+// ### case let
+// - 만약 case 내 정보에 따른 연동자료를 얻고 싶다면 case문 내에 let을 활용할 수 있다.
+// - let 변수 이름은 enum 요소와 무관하게 지정해도 무방하다.
+// - case let 사용 예시)
+//// drink에 대한 특정 값 부여에 따른 연동자료를 얻을 수 있다.
+// var menuItem = FastFoodMenuItem.drink("Coke", ounces: 32)
+// switch menuItem {
+// case . hamburger(let pattyCount): print("a burger with \(pattyCount) patties!")
+// case .fries(let size): print("a \(size) order of fries!")
+// case .drink(let brand, let ounces): print("a \(ounces)oz \(brand)")
+// case .cookie: print("a cookie!")
+// }
+
+////### switch self
+////- enum 내에 switch self 를 구성하여 case에 따른 연동자료를 반환시길 수 있다.
+////- enum 내부적으로 self를 변경 시킬 수도 있다.
+////    * 단, 값타입인 enum 타입 내에서는 mutating 속성이 부여되어 있어야 내부 쓰기가 가능
+////- switch self 사용 예시)
+// enum FastFoodMenuItem {
+//    ...
+//    // switch self 사용예시 1)
+//    func isIncludedInSpecialOrder(number: Int) -> Bool {
+//        switch self {
+//        case . hamburger(let pattyCount): return pattyCount == number
+//        case .fries, .cookie: return true // 음료수와 쿠키를 항상 스페셜 주문(true)이다.
+//        case .drink(_, let ounces): return ounces == 16 // & 16oz...
+//            // * ',' 반점을 사용해 몇 개의 케이스 경우를 묶어줄 수 있다.
+//        }
+//    }
+//
+//    // switch self 사용예시 2)
+//    mutating func switchToBeingACookie() {
+//        // enum 객체의 self를 변경할 수 있다.
+//        self = .cookie
+//    }
+// }
+
+//// ## 옵셔널
+////- Optional "옵셔널도 enum이다."
+////- nil일 수도 있음을 의미. The Enumeration
+////- 다음주에 볼 주제, 옵셔널.
+////- 옵셔널의 정의 형태) enum +  배열과 같은 제네릭 형태로 되어있다.
+// enum Optional<T> {
+//    case none // 설정되어있지 않은 상태
+//    case some(<T>) // 그 이외 데이터타입 'T'와 관련된 상태
+// }
+////- 구조가 매우 단순해 보이지만, Optional은 다른 타입들은 가지고 있지 않은 많은 특별한 구문(syntax)들을 갖고 있다.
+////- 만약 값이 없는 옵셔널을 강제바인딩 '!' 처리 한다면???)
+// let hello: String?
+// print(hello!)
+// switch hello {
+// case .none: // 예외 발생(강제 바인딩을 했으나 값이 없으므로 오류발생), 안전한 바인딩 시 해당 상황 시 옵셔널 바인딩의 else 부분이 실행 되고 Crash를 면할 수 있다.
+// case .some: // 만약 강제 바인딩 시 값이 존재했다면 오류없이 해당 데이터(연동자료)를 출력 했을 것이다.
+// }
+//
+// ### 옵셔널 체이닝
+// - 옵셔널 체이닝은 수차례의 옵셔널 검사를 하며 값을 접근하는 방법이다.
+// - 옵셔널 체이닝 사용 예시)
+//
+////전부 이상없이 접근이 되었다면 z를 리턴한다.
+//// 만약 x, foo(), bar를 접근하며 어느 하나라도 값이 nil(case .none)이라면 해당 옵셔널 체이닝을 빠져나가 nil을 리턴한다.
+// let opt = x?.foo()?.bar?.z
+
+// ## Swift 앱개발에 사용되는 자료구조
+// ## Class, Struct, Enum, Protocol
+
 // ### 3강 용어정리
 // * Safe Area : 안전영역 즉, 스크린 주변의 다른 UI와 겹치지 않고 배치할 수 있는 영역
 // * Assertion : 어떤 것이 참임을 단언하는 함수
