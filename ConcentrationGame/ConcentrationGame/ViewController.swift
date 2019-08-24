@@ -11,6 +11,13 @@
 // 지금까지 만든 집중력게임, 세로모드에선 문제 없어보이지만.. 가로모드가 된다면?? -> 어설픈 레이아웃 상태...
 // ✭이런 문제 해결을 위해서 오토레이아웃이 필요하다.
 
+// ### UIStackView
+// - 다양한 UI객체를 묶어 관리할 수 있다.
+// - 여러개의 UI를 선택 -> 인터페이스 빌더 하단 embed in View 로 스택뷰 처리가능
+// - 스택뷰 프로퍼티
+// - distribution : 스택뷰 내 서브뷰의 배치 설정
+// - alignment : 스택뷰 정렬 기준 설정
+
 // ### **앞서 강의에서 배운 내용 간략정리**
 // - 타겟/액션, IBOutlet, IBOutletCollection
 // - 메서드와 프로퍼티 사용
@@ -71,31 +78,46 @@
 //    }
 // }
 
-// ### UIStackView
-// - 다양한 UI객체를 묶어 관리할 수 있다.
-// - 여러개의 UI를 선택 -> 인터페이스 빌더 하단 embed in View 로 스택뷰 처리가능
-// - 스택뷰 프로퍼티
-// - distribution : 스택뷰 내 서브뷰의 배치 설정
-// - alignment : 스택뷰 정렬 기준 설정
+// ## **접근제어 Access Control**
+// - 외부로부터 코드 내부를 접근하는 기준을 지정할 수 있다.
+// ### open : 해당 프레임워크 이외의 모듈에서 불러올 뿐만 아니라 할당, 서브클래싱, 오버라이딩 까지 전부 가능하다. 즉 완전개방 상태이다.
+// ### public : 해당 프레임워크 이외의 모듈에서도 사용자가 불러와 사용이 가능하다.
+// ### Internal : default 접근제어, Internal일 경우, 모듈 내에 서는 지정한 객체나 코드이던 해당 메서드, 프로퍼티에 접근이 가능하다.
+// ### Private : 다른 객체로부터 불러올 수 없다. 해당 지정된 블록 내에서만 접근 가능, 접근 비공개상태
+// ### Private(set) : 다른 객체로부터 불려질 수 있다. 읽기 접근은 되지만 할당은 불가능 하다. 지정 된 내부에서만 할당 가능.
+// ### pileprivate : 파일 이내에서는 지정 된 메서드, 프로퍼티에 대해서 접근 및 할당 가능
+
+// ## 확장 Extension
+// - 확장은 iOS에서 매우 강력한 도구이다. 마치 조심스럽게 다루는 무기와 같다.
+// - extension 객체이름 {} 과 같은 식으로 사용할 수 있다.
+// - extension은 저장공간이 있는 변수는 아니다.
+// - extension은 쉽게 남용 될 수 있다. 확장 사용 시 불필요한 기능인지 고려할 필요가 있다.
 
 // ### 3강 용어정리
 // * Safe Area : 안전영역 즉, 스크린 주변의 다른 UI와 겹치지 않고 배치할 수 있는 영역
+// * Assertion : 어떤 것이 참임을 단언하는 함수
+// - 만약 단언한 내용이 성립하지 않으면 앱스토어 배포단계에서는 무관하나, 디버깅단계에서 프로그램 에러를 발생시킨다.
+// - API를 보호하기 좋은 수단이다.
+
 import UIKit
 
 class ViewController: UIViewController {
-    @IBOutlet var flipCountLabel: UILabel!
+    @IBOutlet private var flipCountLabel: UILabel!
 
     // Outlet Collection Property
-    @IBOutlet var emojiCardButtons: [UIButton]!
+    @IBOutlet private var emojiCardButtons: [UIButton]!
 
-    lazy var game: Concentration = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
+    // ✭ 실제 UI와 직결될 수 있는 데이터는 private 처리하는 것이 좋다.
+    private lazy var game: Concentration = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
 
+    // * 읽기만 가능한 변수이므로 internal로 두어도 무방하다.
     var numberOfPairsOfCards: Int {
         // get만 있으므로 아래와 같이 return ~~ 방식으로 만 표현할 수 있다.
         return (emojiCardButtons.count + 1) / 2
     }
 
-    var flipCount: Int = 0 {
+    // flipCount 또한 UI와 직결되므로, 읽기만 가능하도록 private(set) 설정을 할 수 있다.
+    private(set) var flipCount: Int = 0 {
         // didSet은 값이 설정되기 직후에 실행되며, 설정되기 전 값인 oldValue에 접근할 수 있다.
         didSet {
             flipCountLabel.text = "Flips: \(flipCount)"
@@ -113,7 +135,7 @@ class ViewController: UIViewController {
     }
 
     /// * @IBAction은 Xcode에서 추가한 지시문이다. 인터페이스빌더 내 UI객체와 연결이 되어 동작한다.
-    @IBAction func emojCardPressed(_ sender: UIButton) {
+    @IBAction private func emojCardPressed(_ sender: UIButton) {
         flipCount += 1 // 넘긴 횟수를 1 증가 시킨다.
         if let cardNumber = emojiCardButtons.firstIndex(of: sender) { // 선택한 카드의 인덱스를 확인
             game.chooseCard(at: cardNumber)
@@ -124,7 +146,8 @@ class ViewController: UIViewController {
         }
     }
 
-    func updateViewFromModel() {
+    // UI를 업데이트하면 UI와 직결되는 메서드이므로 역시 private 처리하는 것이 좋다.
+    private func updateViewFromModel() {
         for index in emojiCardButtons.indices {
             let button = emojiCardButtons[index]
             let card = game.cards[index]
@@ -139,19 +162,35 @@ class ViewController: UIViewController {
         }
     }
 
-    var emojiChoices = ["👻", "🎃", "😱", "🥵", "🥶", "😭", "💀", "👽"]
-    var emoji = [Int: String]()
-    func emoji(for card: Card) -> String {
+    private var emojiChoices = ["👻", "🎃", "😱", "🥵", "🥶", "😭", "💀", "👽"]
+    private var emoji = [Int: String]()
+    private func emoji(for card: Card) -> String {
         // 왜 옵셔널이 들어갈까?? -> 딕셔너리에 없는 값일 수도 있기 때문.
         // * 딕셔너리에서 무언가 찾는다면 옵셔널을 리턴한다는 것을 명심하자.
         // 이모지가 셋팅 안되있고, 선택
         if emoji[card.identifier] == nil, emojiChoices.count > 0 {
             // * arc4random_uniform은 부호없는 정수형만 취급한다. -> UInt32로 랩핑하면 사용 가능
-            let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count)))
+            // extension 으로 해당 랜덤상수 생성 메서드를 정의했기에 필요가 없어졌다. (deprecated...)
+//            let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count - 1)))
             // 한번 사용한 이모티콘은 emojiChoices 배열에서 삭제한다.
-            emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
+            emoji[card.identifier] = emojiChoices.remove(at: emojiChoices.count.arc4Random)
         }
 
         return emoji[card.identifier] ?? "?"
+    }
+}
+
+// 확장기능, extension의 사용 예
+// extension을 통해 코드를 더욱 간결하게 구현 할 수 있다.
+// extension 코드 내 여러가지 입력값에 대비한 코드처리를 했다.
+extension Int {
+    var arc4Random: Int {
+        if self > 0 {
+            return Int(arc4random_uniform(UInt32(self)))
+        } else if self < 0 {
+            return -Int(arc4random_uniform(UInt32(abs(self))))
+        } else {
+            return 0
+        }
     }
 }

@@ -13,11 +13,12 @@ struct Card {
     var isMatched = false
     var identifier: Int
 
+    // * 내부적인 처리방식의 타입프로퍼티, 타입메서드는 private 설정 해준다.
     // 타입 프로퍼티, Card 타입에 붙어있는 프로퍼티
-    static var identifierFactory = 0
+    private static var identifierFactory = 0
 
     // 정적 메서드, Card 타입에 붙어있는 메서드.
-    static func getUniqueIdentifier() -> Int {
+    private static func getUniqueIdentifier() -> Int {
         identifierFactory += 1
         return identifierFactory
     }
