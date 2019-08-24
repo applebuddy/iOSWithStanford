@@ -66,3 +66,20 @@ iOS Study with Stanford
 <br>
 
 <br>
+
+## Lecture 2)
+
+* **오토레이아웃을 적용하지 않은 집중력게임앱 가로모드 실행화면**
+<div>
+ <img width="500" src="https://user-images.githubusercontent.com/4410021/63637755-88ee1880-c6bb-11e9-90cb-7c47b704ebbf.png">
+</div>
+ -> 무언가 잘못되었다... 레이아웃 설정이 되지않아 모든 컨텐츠가 제대로 보이지 않는다. 
+
+### ➣  3강 용어 정리 
+
+
+### ➣  3강 구현 결과
+<div>
+ <img width="250" src="">
+</div>
+<br>
