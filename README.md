@@ -16,10 +16,15 @@ iOS Study with Stanford
 * 인터페이스빌더 내 확대/축소 : Alt+Scroll, 핀치동작으로 가능하다.
 * 메서드의 인자이름 지정 방법 : withEmoji emoji 처럼 외/내부 인자이름을 설명할 수 있다. 물론 외/내부 인자이름 동일하게 emogi 하나만 지정할 수도 있다.
 
-### ➣  1강 구현 결과
+### ➣  1강 구현결과
 <div>
  <img width="250" src="https://user-images.githubusercontent.com/4410021/63637175-66a4cc80-c6b4-11e9-840f-70017918c1f0.png">
 </div>
+
+<br>
+
+## 총 평
+- Xcode 기본 인터페이스, 집중력게임 기본로직 개발
 
 <br>
 <br>
@@ -50,7 +55,7 @@ iOS Study with Stanford
    - 구조체는 상속성을 가지고 있지않다. vs 클래스는 상속성을 가지고 있다.
    - 구조체는 모든 멤버변수를 초기화할 수 있는 공짜 이니셜라이저가 존재한다. vs 클래스는 이러한 공짜 이니셜라이저가 존재하지 않는다.
 
-### ➣  2강 용어 정리 
+### ➣  2강 용어정리 
  * API란? : Application Programming Interface(인스턴스 리스트)의 약자
  * lazy : lazy를 사용하면 실제 사용하기 전까진 초기화 하지 않는다.누군가 game을 사용하려 할때 비로소 초기화 된다.
  lazy를 사용하면 프로퍼티 옵저버(Property Obserber, 프로퍼티 감시자)로서의 역할은 불가능하다.
@@ -59,13 +64,18 @@ iOS Study with Stanford
  * 배열.shuffle() : 컬렉션 요소를 랜덤하게 섞어준다.
    - shuffle 사용 예 : emojiCardButtons.shuffle()
 
-### ➣  2강 구현 결과
+### ➣  2강 구현결과
 <div>
  <img width="250" src="https://user-images.githubusercontent.com/4410021/63637283-f26b2880-c6b5-11e9-9967-775e9b80fc14.png">
  <img width="250" src="https://user-images.githubusercontent.com/4410021/63637222-27c34680-c6b5-11e9-9af0-6935c3027674.png">
  <img width="250" src="https://user-images.githubusercontent.com/4410021/63637223-298d0a00-c6b5-11e9-9358-420d8d4e3675.png">
 </div>
+
 <br>
+
+## 총 평
+- MVC패턴의 개념 이해
+- 집중력게임의 MVC 적용연습
 
 <br>
 <br>
@@ -140,7 +150,8 @@ iOS Study with Stanford
 
  ### 계산프로퍼티 (Computed Properties)
  - 쓰기, 읽기 시 기 지정한 get, set 대로 계산되는 프로퍼티
- - 저장프로퍼티와 달리 쓰기, 읽기 시 마다 set, get 블럭 내용을 신행된다.
+ - 프로퍼티감지자(property Observer)와 혼용해서 사용할 수 없다.
+ - 저장프로퍼티와 달리 쓰기/읽기 시 마다 set, get 블럭 내용을 신행된다.
  - get과 달리 set은 필수 구현요소가 아니다.
     - -> 읽기/쓰기(get/set) or 읽기(get) 상태로 구현 가능
     - get 만 사용한다면 get 명시 없이 return ~~~~ 로 구현할 수도 있다.
@@ -148,7 +159,9 @@ iOS Study with Stanford
  - 특정 행위를 할때마다 변경 혹은 읽기가 필요한 경우 유용할 수 있다.
  - **저장프로퍼티, 계산프로퍼티의 특성을 살릴 만한 상황을 잘 판단하여 사용하는 것이 좋다.**
     - ex) indexOfOneAndOnlyFaceUpCard: Int? -> 카드를 뒤집을때 카드의 상태에 따라 다른 처리가 필요한 변수
- - 계산프로퍼티 사용 예)
+    
+ ~~~ swift 
+ // 계산프로퍼티 사용 예)
  var foo: Double {
     get {
         // return the calculated value of foo
@@ -160,109 +173,143 @@ iOS Study with Stanford
         // 새로운 값으로 변경이 됄 때 해당 블럭이 실행 된다.
     }
  }
+ ~~~
 
- ## **접근제어 Access Control**
+<br>
+
+## **접근제어 Access Control**
  - 외부로부터 코드 내부를 접근하는 기준을 지정할 수 있다.
- ### open : 해당 프레임워크 이외의 모듈에서 불러올 뿐만 아니라 할당, 서브클래싱, 오버라이딩 까지 전부 가능하다. 즉 완전개방 상태이다.
- ### public : 해당 프레임워크 이외의 모듈에서도 사용자가 불러와 사용이 가능하다.
- ### Internal : default 접근제어, Internal일 경우, 모듈 내에 서는 지정한 객체나 코드이던 해당 메서드, 프로퍼티에 접근이 가능하다.
- ### Private : 다른 객체로부터 불러올 수 없다. 해당 지정된 블록 내에서만 접근 가능, 접근 비공개상태
- ### Private(set) : 다른 객체로부터 불려질 수 있다. 읽기 접근은 되지만 할당은 불가능 하다. 지정 된 내부에서만 할당 가능.
- ### pileprivate : 파일 이내에서는 지정 된 메서드, 프로퍼티에 대해서 접근 및 할당 가능
+### - open : 해당 프레임워크 이외의 모듈에서 불러올 뿐만 아니라 할당, 서브클래싱, 오버라이딩 까지 전부 가능하다. 즉 완전개방 상태이다.
+### - public : 해당 프레임워크 이외의 모듈에서도 사용자가 불러와 사용이 가능하다.
+### - Internal : default 접근제어, Internal일 경우, 모듈 내에 서는 지정한 객체나 코드이던 해당 메서드, 프로퍼티에 접근이 가능하다.
+### - Private : 다른 객체로부터 불러올 수 없다. 해당 지정된 블록 내에서만 접근 가능, 접근 비공개상태
+### - Private(set) : 다른 객체로부터 불려질 수 있다. 읽기 접근은 되지만 할당은 불가능 하다. 지정 된 내부에서만 할당 가능.
+### - fileprivate : 파일 이내에서는 지정 된 메서드, 프로퍼티에 대해서 접근 및 할당 가능
 
- ## 확장 Extension
- - 확장은 iOS에서 매우 강력한 도구이다. 마치 조심스럽게 다루는 무기와 같다.
+<br>
+
+## 확장 Extension
+ - 확장은 iOS에서 매우 강력한 도구이다. 마치 "조심스럽게 다루는 무기"와 같다.
  - extension 객체이름 {} 과 같은 식으로 사용할 수 있다.
  - extension은 저장공간이 있는 변수는 아니다.
- - extension은 쉽게 남용 될 수 있다. 확장 사용 시 불필요한 기능인지 고려할 필요가 있다.
+ - extension은 간편하여 쉽게 남용 될 수 있다. 그러므로 확장 사용 시 불필요한 기능인지 고려할 필요가 있다.
 
-// ## 옵셔널
-//- Optional "옵셔널도 enum이다."
-//- nil일 수도 있음을 의미. The Enumeration
-//- 다음주에 볼 주제, 옵셔널.
-//- 옵셔널의 정의 형태) enum +  배열과 같은 제네릭 형태로 되어있다.
+<br>
+
+## 옵셔널
+- Optional "옵셔널도 enum이다."
+- nil일 수도 있음을 의미. The Enumeration
+- 다음주에 볼 주제, 옵셔널.
+- 옵셔널의 정의 형태) enum + 배열과 같은 제네릭 형태로 되어있다.
+
+~~~ swift
+// Optional의 코드 형태
  enum Optional<T> {
     case none // 설정되어있지 않은 상태
     case some(<T>) // 그 이외 데이터타입 'T'와 관련된 상태
  }
-//- 구조가 매우 단순해 보이지만, Optional은 다른 타입들은 가지고 있지 않은 많은 특별한 구문(syntax)들을 갖고 있다.
-//- 만약 값이 없는 옵셔널을 강제바인딩 '!' 처리 한다면???)
+~~~
+
+- 옵셔널의 구조가 매우 단순해 보이지만, Optional은 다른 타입들은 가지고 있지 않은 많은 특별한 구문(syntax)들을 갖고 있다.
+
+~~~ swift
+// 만약 값이 없는 옵셔널을 강제바인딩 '!' 처리 한다면???)
  let hello: String?
  print(hello!)
+~~~
+
+~~~ swift
+ // hello 상수에 대한 동작과정
  switch hello {
- case .none: // 예외 발생(강제 바인딩을 했으나 값이 없으므로 오류발생), 안전한 바인딩 시 해당 상황 시 옵셔널 바인딩의 else 부분이 실행 되고 Crash를 면할 수 있다.
- case .some: // 만약 강제 바인딩 시 값이 존재했다면 오류없이 해당 데이터(연동자료)를 출력 했을 것이다.
+    case .none: // 예외 발생(강제 바인딩을 했으나 값이 없으므로 오류발생), 안전한 바인딩 시 해당 상황 시 옵셔널 바인딩의 else 부분이 실행 되고 Crash를 면할 수 있다.
+    case .some: // 만약 강제 바인딩 시 값이 존재했다면 오류없이 해당 데이터(연동자료)를 출력 했을 것이다.
  }
+ ~~~
 
- ### 옵셔널 체이닝
+### ➣  옵셔널 체이닝
  - 옵셔널 체이닝은 수차례의 옵셔널 검사를 하며 값을 접근하는 방법이다.
- - 옵셔널 체이닝 사용 예시)
 
-//전부 이상없이 접근이 되었다면 z를 리턴한다.
+~~~ swift
+// 옵셔널 체이닝 사용 예시)
+// 전부 이상없이 접근이 되었다면 z를 리턴한다.
 // 만약 x, foo(), bar를 접근하며 어느 하나라도 값이 nil(case .none)이라면 해당 옵셔널 체이닝을 빠져나가 nil을 리턴한다.
  let opt = x?.foo()?.bar?.z
+~~~
 
- ## ARC (Automatic Reference Counting)
+<br> 
+
+## ARC (Automatic Reference Counting)
  - iOS의 자동 참조할당 해제 방식
  - ARC가 0 이되면 Heap에서 빼내서 할당을 해제한다.
- - strong, weak 등의 참조 옵션이 존재한다.
+ - strong, weak, unowned 등의 참조 옵션이 존재한다.
 
-    ### Strong
-    - 참조카운팅의 기본 설정값.
-    - strong으로 설정하고 있는 한 해당 객체는 힙 내에 계속 사용된다.
+### ➣  Strong
+- 참조카운팅의 기본 설정값.
+- strong으로 설정하고 있는 한 해당 객체는 힙 내에 계속 유지된다.
 
- ### weak
- - 힙 내의 어떤것을 가리키고 있지만, 흥미가 있어야만 사용되는 것
- - weak은 옵셔널 포인터로 참조타입을 가리킨다.
- - 아울렛, 델리게이트 등에 사용될 수 있다. 그 외에에는 사용을 안하는 편이다.
+### ➣  weak
+- weak은 옵셔널 포인터로 참조타입을 가리킨다.
+- 힙 내의 어떤것을 가리키고 있지만, 흥미가 있어야만 사용되는 것
+- 아울렛, 델리게이트 등에 사용될 수 있다. 그 외에에는 사용을 안하는 편이다.
 
- ### unowned
- - "만약 내가 문제가 있으면 오류를 발생시켜라."
-    - 반드시 nil이 아니라고 판단될때 사용해야 문제가 없다.
- - 참조순환(메모리 사이클)을 방지하기 위해 사용한다.
-    - 클로저를 사용하면 캡쳐링 등의 참조순환 문제가 발생할 수 있는데 이를 방지하기 위해 사용하곤 한다.
- - 매우 위험한 참조카운팅 방식
- - 매우 드물게 사용한다.
+### ➣  unowned
+- "만약 내가 문제가 있으면 오류를 발생시켜라."
+   - 반드시 nil이 아니라고 판단될때 사용해야 문제가 없다.
+- 참조순환(메모리 사이클)을 방지하기 위해 사용한다.
+   - 클로저를 사용하면 캡쳐링 등의 참조순환 문제가 발생할 수 있는데 이를 방지하기 위해 사용하곤 한다.
+- 매우 위험한 참조카운팅 방식
+- 매우 드물게 사용한다.
 
- ## Swift 앱개발에 사용되는 자료구조
- ## Class, Struct, Enum, Protocol
+<br>
 
- ### 클래스 Class
- - 클래스는 참조타입, 상속을 지원한다.
- - 참조타입으로서 힙(Heap)영역에 존재하게 된다.
- - 클래스 등의 참조계산 방식은 ARC(Automatic Refernce Counting)로 동작한다.
+## Swift 앱개발에 사용되는 자료구조
+## Class, Struct, Enum, Protocol
 
- ### 구조체 Struct
- - 구조체는 값타입, 상속을 지원하지 않는다.
- - 배열, 딕셔너리, 문자열, 문자, 정수형 ,Double, UInt32 등...#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+## 클래스 Class
+- 클래스는 참조타입, 상속을 지원한다.
+- 참조타입으로서 힙(Heap)영역에 존재하게 된다.
+- 클래스 등의 참조계산 방식은 앞서 언급한 ARC(Automatic Refernce Counting)로 동작한다.
 
-// ## 열거형 Enum
+## 구조체 Struct
+- 구조체는 값타입, 상속을 지원하지 않는다.
+- 구조체 종류
+  - 배열, 딕셔너리, 문자열, 문자, 정수형 ,Double, UInt32 등... 많다.
 
- - 타입의 일종, 타입 종류로는 enum, struct, class 가 있다.
- - struct, class와 비슷하다.
- - 메서드, 변수를 가질 수 있지만 저장공간을 가지지는 않는다.
- - enum의 저장공간은 연동자료들 각각에 대해서만 존재한다. 그러므로 enum의 값들은 계산된 변수만을 가질 수 있다.
-    -enum의 연동자료 이외에 대한 저장공간은 존재하지 않는다.
- - 구조체(struct)와 동일한 값 타입이다.
- - swift enum은 다른 언어의 열거형과 흡사하다. 하지만...
- - **다른 언어에 비해 swift의 enum은 매우 강력하다.**
-    - enum 각각의 케이스들이 연동된 데이터 혹은 값을 가질 수 있기 때문이다.
- - * 타입 추론이 가능하지만 좌측 혹은 우측 어느 한곳에는 해당 타입을 명시해주어야 추론이 가능하다.
- - swift enum의 사용 예시)
- enum FastFoodMenuItem {
-    case hamburger(numberOfPatties,: Int)
-    case fries(size: FryOrderSize)
-    case drink(String, ounces: Int)
-    case cookie
- }
- - enum 값을 셋팅 한데 관련 데이터를 반드시 제공해야 한다.
- let menuItem: FastFoodMenuItem = FastFoodMenuItem.hamburger(patties: 2)
- var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
- - enum은 등호대신 switch 문을 통해 비교한다.
- - enum switch 문 내 case문에서 ".값" 만 명시해도 값 추론이 가능하다.
- - case 내 두줄 이상의 코드도 실행 가능하다.
- ### break
- - switch 문 내에서 특정 분기 시 아무것도 실행하고 싶지 않다면, break문을 사용하면 된다.menuItem
+## 열거형 Enum
+- 타입의 일종, 데이터 구조 타입인 enum, struct, class 중 하나인 열거형.
+- struct, class와 비슷하다.
+  - 그 중 구조체(struct)와 동일한 값 타입이다.
+- 메서드, 변수를 가질 수 있지만 저장공간을 가지지는 않는다.
+  - enum의 저장공간은 연동자료들 각각에 대해서만 존재한다. 그러므로 enum의 값들은 계산된 변수만을 가질 수 있다.
+    - enum의 연동자료 이외에 대한 저장공간은 존재하지 않는다.
+- swift enum은 다른 언어의 열거형과 흡사하다. 하지만...
+- **다른 언어에 비해 swift의 enum은 매우 강력하다.**
+   - enum 각각의 케이스들이 연동된 데이터 혹은 값을 가질 수 있기 때문이다.
+- * 타입 추론이 가능하지만 좌측 혹은 우측 어느 한곳에는 해당 타입을 명시해주어야 추론이 가능하다.
+
+~~~ swift
+// swift enum의 사용 예시)
+enum FastFoodMenuItem {
+   case hamburger(numberOfPatties,: Int)
+   case fries(size: FryOrderSize)
+   case drink(String, ounces: Int)
+   case cookie
+}
+~~~
+
+- enum 값을 셋팅 할때 관련 데이터를 반드시 제공해야 한다.
+~~~ swift
+let menuItem: FastFoodMenuItem = FastFoodMenuItem.hamburger(patties: 2)
+var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
+~~~
+ 
+- enum은 등호(==)대신 switch 문을 통해 비교한다.
+- enum switch 문 내 case문에서 ".값" 만 명시해도 값 추론이 가능하다.
+- case 내 두줄 이상의 코드도 실행 가능하다.
+ 
+### ➣  break
+ - switch 문 내에서 특정 분기 시 아무것도 실행하고 싶지 않다면, break문을 사용하면 된다.
+ ~~~ swift
  var menuItem = FastFoodMenuItem.hamburger(patties: 2)
     switch menuItem {
         case .hamburger: break // 아무것도 실행 하기 싫으면 이렇게 break문 사용하면 된다.
@@ -270,38 +317,46 @@ iOS Study with Stanford
         case .drink: print("drinK")
         case .cookie: print("cookie")
     }
- ### default:
- - 만약 특정 케이스 이외의 케이스를 한번에 묶어 구분하려면 default:를 사용할 수 있다.
+~~~
 
- ### case let
- - 만약 case 내 정보에 따른 연동자료를 얻고 싶다면 case문 내에 let을 활용할 수 있다.
- - let 변수 이름은 enum 요소와 무관하게 지정해도 무방하다.
- - case let 사용 예시)
+### ➣  default:
+- 만약 특정 케이스 이외의 케이스를 한번에 묶어 구분하려면 case로 default:를 사용할 수 있다.
+
+### ➣  case let
+- 만약 case 내 정보에 따른 연동자료를 얻고 싶다면 case문 내에 let을 활용할 수 있다.
+- let 변수 이름은 enum 요소와 무관하게 지정해도 무방하다.
+
+~~~ swift
+// case let 사용 예시)
 // drink에 대한 특정 값 부여에 따른 연동자료를 얻을 수 있다.
  var menuItem = FastFoodMenuItem.drink("Coke", ounces: 32)
  switch menuItem {
- case . hamburger(let pattyCount): print("a burger with \(pattyCount) patties!")
- case .fries(let size): print("a \(size) order of fries!")
- case .drink(let brand, let ounces): print("a \(ounces)oz \(brand)")
- case .cookie: print("a cookie!")
+     case . hamburger(let pattyCount): print("a burger with \(pattyCount) patties!")
+     case .fries(let size): print("a \(size) order of fries!")
+     case .drink(let brand, let ounces): print("a \(ounces)oz \(brand)")
+     case .cookie: print("a cookie!")
  }
+~~~
 
-//### switch self
-//- enum 내에 switch self 를 구성하여 case에 따른 연동자료를 반환시길 수 있다.
-//- enum 내부적으로 self를 변경 시킬 수도 있다.
-//    * 단, 값타입인 enum 타입 내에서는 mutating 속성이 부여되어 있어야 내부 쓰기가 가능
-//- switch self 사용 예시)
+### ➣  switch self 
+- enum 내에 switch self 를 구성하여 case에 따른 연동자료를 반환시길 수 있다.
+- enum 내부적으로 self를 변경 시킬 수도 있다.
+  - 단, 값타입인 enum 타입 내에서는 mutating 속성이 부여되어 있어야 내부 쓰기가 가능
+  
+~~~ swift
+// switch self 사용 예시)
  enum FastFoodMenuItem {
     ...
     // switch self 사용예시 1)
     func isIncludedInSpecialOrder(number: Int) -> Bool {
         switch self {
-        case . hamburger(let pattyCount): return pattyCount == number
-        case .fries, .cookie: return true // 음료수와 쿠키를 항상 스페셜 주문(true)이다.
-        case .drink(_, let ounces): return ounces == 16 // & 16oz...
-            // * ',' 반점을 사용해 몇 개의 케이스 경우를 묶어줄 수 있다.
+            case . hamburger(let pattyCount): return pattyCount == number
+            case .fries, .cookie: return true // 음료수와 쿠키를 항상 스페셜 주문(true)이다.
+            case .drink(_, let ounces): return ounces == 16 // & 16oz...
+                // * ',' 반점을 사용해 몇 개의 케이스 경우를 묶어줄 수 있다.
         }
     }
+ 
 
     // switch self 사용예시 2)
     mutating func switchToBeingACookie() {
@@ -309,9 +364,12 @@ iOS Study with Stanford
         self = .cookie
     }
  }
+~~~
 
-### ➣  프로토콜 Protocol
+## 프로토콜 Protocol
  - 문자열, 배열 등 많은 것들이 프로토콜을 사용하며 이들의 기초가 된다.
+
+<br>
 
 ### ➣  3강 용어정리
  * Safe Area : 안전영역 즉, 스크린 주변의 다른 UI와 겹치지 않고 배치할 수 있는 영역
@@ -319,8 +377,17 @@ iOS Study with Stanford
  - 만약 단언한 내용이 성립하지 않으면 앱스토어 배포단계에서는 무관하나, 디버깅단계에서 프로그램 에러를 발생시킨다.
  - API를 보호하기 좋은 수단이다.
 
-### ➣  3강 구현 결과
+### ➣  3강 구현결과 
+
 <div>
- <img width="250" src="">
+ <img width="400" src="https://user-images.githubusercontent.com/4410021/63647522-54329d80-c75d-11e9-93ce-7be2acb2d7a6.png">
+ <p><img width="250" src="https://user-images.githubusercontent.com/4410021/63647523-54329d80-c75d-11e9-8774-47b6ab64e86b.png">
 </div>
 <br>
+
+## 총 평
+- Swift 핵심 기초문법 훑어보기
+- 집중력게임(Concentratino Game)의 오토레이아웃 적용
+- 집중력게임 내 계산프로퍼티, extension 적용을 통한 코드 간결화
+
+
