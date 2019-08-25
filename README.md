@@ -1,7 +1,11 @@
 # iOS With Stanford
 iOS Study with Stanford
+
 <br>
-## Lecture 1) 기본 Xcode 사용법 및 개발
+<br>
+
+# Lecture 1) 
+## 기본 Xcode 사용법 및 개발
  * 개발자 문서 내 자주사용하는 클래스의 OverView는 전부 읽어보도록 하자.
  * 프로젝트를 만들때 필요한 것 : 프로젝트명, 팀명, 기관명, 기관식별자
  
@@ -29,9 +33,8 @@ iOS Study with Stanford
 <br>
 <br>
 
-## Lecture 2) MVC패턴 
-
- ## MVC 패턴 : Medel + View + Controller 의 모델-뷰-컨트롤러로 구성하는 디자인패턴 기법
+# Lecture 2) 
+## MVC패턴 : Medel + View + Controller 의 모델-뷰-컨트롤러로 구성하는 디자인패턴 기법
  
  ### ➣  Controller : UIViewController 등의 컨트롤러 요소
  - 모델과 원하는대로 얘기 하며 사용자에게 보여져야 할 데이터를 받는다.(특히 공개적인 데이터와는 무제한적으로 대화가능)
@@ -80,7 +83,8 @@ iOS Study with Stanford
 <br>
 <br>
 
-## Lecture 3) Swift 기초문법 1
+# Lecture 3) 
+## Swift 기초문법
 
 ### **앞서 강의에서 배운 내용 간략정리**
 - 타겟/액션, IBOutlet, IBOutletCollection
