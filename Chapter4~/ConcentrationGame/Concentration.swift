@@ -62,7 +62,6 @@ class Concentration {
             } else {
                 // 단 하나 뒤집어진 카드 인덱스를 indexOfOneAndOnlyFaceUpCard에 저장한다.
                 indexOfOneAndOnlyFaceUpCard = index
-
             }
         }
     }
