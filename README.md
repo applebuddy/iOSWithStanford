@@ -416,4 +416,4 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 <br>
 
 ## 총 평
-- Xcode 기본 인터페이스, 집중력게임 기본로직 개발
+-
