@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Concentration {
+struct Concentration {
     // 카드의 매칭을 위해 읽기는 필요하지만 외부의 할당권한까지 줄 필요는 없으므로 private(set) 접근제어를 설정한다.(Concentration 내부에서만 쓰기, 할당이 가능)
     private(set) var cards = [Card]()
 
@@ -42,7 +42,8 @@ class Concentration {
 
     // 기본적인 공개 API(외부 객체에서 사용하는 API) 이므로 해당 메서드는 private 처리하지 않는다.
     // 카드를 선택한다.
-    func chooseCard(at index: Int) {
+    // struct Concentration -> mutating을 통해 객체를 바꾸는 함수임을 명시하면 오류가 사라진다.
+    mutating func chooseCard(at index: Int) {
         // ✭ 공개 API 내의 보호를 위해 Assertion 단언문을 넣어 잘못된 인자값이 들어올 시 오류를 발생시킬 수 있다.
         // 사용자가 잘못 된 인자값을 넣었음을 알 수 있도록 한다.
         assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index): chosen index not in the cards")
@@ -52,7 +53,7 @@ class Concentration {
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
                 // check if cards match
                 // 만약 비교하는 두개의 카드 식별자가 일치한다면,
-                if cards[matchIndex].identifier == cards[index].identifier {
+                if cards[matchIndex] == cards[index] {
                     // 두개의 카드는 서로 매치 처리
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true

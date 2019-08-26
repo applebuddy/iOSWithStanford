@@ -395,4 +395,25 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 - 집중력게임(Concentratino Game)의 오토레이아웃 적용
 - 집중력게임 내 계산프로퍼티, extension 적용을 통한 코드 간결화
 
+<br>
+<br>
 
+# Lecture 4) 
+## 프로토콜과 클로져 Protocol, Closure
+*
+
+### ➣  Xcode Interface 요소
+- 
+
+### ➣  4강 용어정리
+* 
+
+### ➣  4강 구현결과
+<div>
+<img width="250" src="">
+</div>
+
+<br>
+
+## 총 평
+- Xcode 기본 인터페이스, 집중력게임 기본로직 개발
