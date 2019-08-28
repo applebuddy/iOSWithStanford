@@ -543,224 +543,272 @@ scrollView.delegate = self
   - **C컨트롤러는 A뷰 클래스에대해 잘 몰라도 뷰와 소통할 수 있게 되었다.**
   - **블라인드 커뮤니케이션이 가능해짐**
 
-// ### Hashable
-// - 해쉬가능하다 -> 딕셔너리의 키가 될 수 있다.
+### Hashable
+- 해쉬가능하다 -> 딕셔너리의 키가 될 수 있다.
 
-//// Hashable의 Protocol 사용 예시)
-//// Hashable 해시테이블 등에서 고유한 해시같아 보이지만 그것을 보장할 수 없다.
-//// => 이를 확실히 보장하기 위해 등호를 통해 서로 동일한지 비교가 필요하다. 그래서 Equatable프로토콜을 준수한다.
-// protocol Hashable: Equatable {
-//    // 읽기전용 해쉬벨류 변수
-//    var hashValue: Int { get }
-// }
-//
-// protocol Equatable {
-//    // lhs는 좌변, rhs는 우변을 의미한다.
-//    // Self는 현재 타입을 의미한다.
-//    // 좌변, 우변을 비교하고 그 결과를 Boolean으로 반환한다.
-//    static func == (lhs: Self, rhs: Self) -> Bool
-// }
+~~~ swift
+// Hashable의 Protocol 사용 예시)
+// Hashable 해시테이블 등에서 고유한 해시같아 보이지만 그것을 보장할 수 없다.
+// => 이를 확실히 보장하기 위해 등호를 통해 서로 동일한지 비교가 필요하다. 그래서 Equatable프로토콜을 준수한다.
+protocol Hashable: Equatable {
+   // 읽기전용 해쉬벨류 변수
+   var hashValue: Int { get }
+}
 
-// ### 딕셔너리 dictionary
-// - 키와 값(해쉬가능한 키와 값)으로 이루어진 컬렉션
-// - 키는 Hashable프로토콜을 준수해야, 값은 어떤 값이든 상관없다.
-// - 딕셔너리는 Hashable한 즉, 키가 될 수 있어야만 값과 함께 구현이 될 수 있는 컬렉션
-// - 딕셔너리의 키를 접근해 얻는 값은 옵셔널형태이다.
-//// 딕셔너리의 정의 형태 예시)
-// Dictionary<Key: Hashable, Value>
+protocol Equatable {
+   // lhs는 좌변, rhs는 우변을 의미한다.
+   // Self는 현재 타입을 의미한다.
+   // 좌변, 우변을 비교하고 그 결과를 Boolean으로 반환한다.
+   static func == (lhs: Self, rhs: Self) -> Bool
+}
+~~~
 
-<br>
+### 딕셔너리 dictionary
+- 키와 값(해쉬가능한 키와 값)으로 이루어진 컬렉션
+- 키는 Hashable프로토콜을 준수해야, 값은 어떤 값이든 상관없다.
+- 딕셔너리는 Hashable한 즉, 키가 될 수 있어야만 값과 함께 구현이 될 수 있는 컬렉션
+- 딕셔너리의 키를 접근해 얻는 값은 옵셔널형태이다.
 
-// ## 다중상속
-// - 프로토콜은 한번의 구현만으로 여러곳에서 일일히 정의할 필요없이 사용이 가능하다.
-// - 마치 상속없이도 프로토콜을 통해 다중상속처럼 보이는 효과를 얻을 수 있는 것이다.
-// - ** 그렇다면 이 프로토콜은 어디에 정의해야할까? **
-//  - => ** extension protocol, 프로토콜의 익스텐션에 넣으면 된다. **
-//  - 하지만 extension은 저장공간이 없기에 조금의 제약이 존재한다.
-
-// ### Sequence 프로토콜의 extension protocol 예시
-// - Sequence를 통해 사용가능 한 메서드
-//  - -> contains(), forEach(), joined(separator:), min(), max(), filter(), map() and so on...
-// - 실제 배열, 딕셔너리등을 사용할때 위와 같은 메서드들은 함께 자동으로 사용이 가능하다.
-// - 하지만 좀더 효율적인 방법이나 기능을 구현하기 위해서 extension을 활용할 수 있다.
-//// extension Sequence, extension protocol 사용 예시
-//
-// extension Sequence {
-//    // ✭ 하나의 메서드만 구현해도 모든 다른 구현이 공유되어 얻을 수 있다는 것이 프로토콜의 장점이다.
-//    func contains(_ element: Element) -> Bool { }
-//    // etc...
-// }
-
-// ### 다중상속 관련 프로토콜
-//    - CountableRange : 계수 가능 범위는 많은 프로토콜을 구현한다.(12 ~ 15개의 프로토콜이 존재)
-//    - Sequence : makeIterator
-//      - for in(수행하는 대상은 수열형태) 등 지원
-//    - Collection : subscripting, index(offsetBy:), index(of:), etc...
-// ex) Collection, Sequence, CountableRange...
-// - 왜 이런 프로토콜이 필요할까??
-//  - 배열(Array), 딕셔너리(Dictionary), Set, String들은 각각 하나의 Collection이다.
-//  - 이들은 또한 Sequence의 특성을 가진다.
-//  - 이들은 계수가능범위를 표현하는 indices()등의 메서드를 쓰기도 한다.
+~~~ swift
+// 딕셔너리의 정의 형태 예시)
+Dictionary<Key: Hashable, Value>
+~~~
 
 <br>
 
-// ## 함수형 프로그래밍
-// - 객체지향 프로그래밍의 진화된 형태라고도 한다.
-// - 다중상속등을 보다 쉽게 통제할 수 있다.
-// - 어떤 것이 어떤 작업을 하는지 증명할 수 있는 등 많은 장점이있다.
-// - * 스위프트는 함수형프로그래밍, 객체지향프로그매이 등을 모두 지원한다.
-// - 거의 모든 기초 프레임워크인 딕셔너리, 배열 등이 함수형 프로그래밍으로 만들어져 있다.
-// - 프로토콜을 이용한 제약이나 프로토콜의 익스텐션 등은 함수형 프로그래밍을 지원한다.
+### 프로토콜의 다중상속 효과
+- 프로토콜은 한번의 구현만으로 여러곳에서 일일히 정의할 필요없이 사용이 가능하다.
+- 마치 상속없이도 프로토콜을 통해 다중상속처럼 보이는 효과를 얻을 수 있는 것이다.
+- ** 그렇다면 이 프로토콜은 어디에 정의해야할까? **
+ - => ** extension protocol, 프로토콜의 익스텐션에 넣으면 된다. **
+ - 하지만 extension은 저장공간이 없기에 조금의 제약이 존재한다.
+
+### Sequence 프로토콜의 extension protocol 예시
+- Sequence를 통해 사용가능 한 메서드
+ - -> contains(), forEach(), joined(separator:), min(), max(), filter(), map() and so on...
+- 실제 배열, 딕셔너리등을 사용할때 위와 같은 메서드들은 함께 자동으로 사용이 가능하다.
+- 좀 더 효율적인 방법이나 기능을 구현하기 위해서 extension을 활용할 수 있다.
+
+~~~ swift
+// extension Sequence, extension protocol 사용 예시
+extension Sequence {
+   // ✭ 하나의 메서드만 구현해도 모든 다른 구현이 공유되어 얻을 수 있다는 것이 프로토콜의 장점이다.
+   func contains(_ element: Element) -> Bool { }
+   // etc...
+}
+~~~
+
+### 다중상속 관련 프로토콜
+- ex) Collection, Sequence, CountableRange...
+- CountableRange : 계수 가능 범위는 많은 프로토콜을 구현한다.(12 ~ 15개의 프로토콜이 존재)
+- Sequence : makeIterator
+  - for in(수행하는 대상은 수열형태) 등 지원
+- Collection
+  - subscripting, index(offsetBy:), index(of:), etc...
+
+- ✓ 왜 이런 프로토콜이 필요할까??
+  - 배열(Array), 딕셔너리(Dictionary), Set, String들은 각각 하나의 Collection이다.
+  - 이들은 또한 Sequence의 특성을 가진다.
+  - 이들은 계수가능범위를 표현하는 indices()등의 메서드를 쓰기도 한다.
+  - **다른 객체도 공통적인 기능을 사용해야 할때가 있다. 이럴때 프로토콜 유용함을 이용할 수 있다.**
 
 <br>
 
-// ## 문자열 String
-// - 문자열 구조체와 별개로 문자(Character) 구조체가 있다.
-// - 문자열은 유니코드로 이루어져있다. (C A F E -> 5개의 유니코드로 표현)
-// - 문자열은 구조체이자 값 타입니다.
-// - Swift에서는 문자열을 정수로 색인하지 않는다.
-// - String, Array 전부 rangeReplacableCollection 프로토콜을 준수한다.
-//
-// ### String.Index
-// - 정수 대신 다른 특수한 타입, Stirng.index를 사용하여 문자열을 색인한다.
-// - startIndex, endIndex, index(of:) 등을 통해 인덱스를 얻을 수 있다.
-// - 문자열(String)의 배열(Array)은 곧 그 문자(Character)들의 배열이다.
-// let characterArray = Array(str) // Array<Character>
-// print(characterArray[0]) // Array형으로 변환하면 String.Index 대신 정수값으로 접근이 가능해진다.
-//
-//// String.Index 사용 예시)
-// let pizzaJoint = "cafe pesto"
-// let firstCharacterIndex = pizzaJoint.startIndex // of type String.Index
-// let fourthCharacterIndex = pizzaJoint.index(firstCharacterIndex, offsetBy: 3)
-// let fourthCharater = pizzaJoint[fourthCharacterIndex] // pizzaJoint 네번째 문자열인 'e'
-//
-//// " "(공백) 이 없다면 인덱스 반환값이 nil일 수도 있으므로 if let 을 사용했다.
-// if let firstSpace = pizzaJoint.index(of: " ") {
-//    let secondWordIndex = pizzaJoint.index(firstSpace, offsetBy: 1) // 공백으로부터 1칸 뒷쪽의 문자 인덱스를 반환
-//    let secondWord = pizzaJoint[secondWordIndex..<pizzaJoint.endIndex] // "pesto"
-// }
-// - ..< 등으로 String.Index의 영역을 지정할 수 있다.
-//
-// ### Range
-// - Range는 제네릭 타입으로 꼭 Int형으로만 범위를 설정할 필요가 없다. ex) String.Index의 사용...
-//
-// ### String 제공 기능
-//
-// - **components**
-//// components 사용 예)
-// pizzaJoint.components(separatedBy: " ")[1] // pizzaJoint를 공백 단위로 쪼갠 뒤 그 중 (인덱스 1)2번째의 값을 반환한다.
-//
-// - **insert**
-//// insert 사용 예)
-// var s = pizzaJoint // String은 구조체이자 값타입이므로 값복사를 한다.
-// s.insert(contentOf: " foo", at: s.index(of: " ")!) // "cafe foo pesto" or Crashed(because of '!')
-//
-// - **replaceSubrange**
-//// replaceSubrange 사용 예시
-//// ..< 로 좌변을 구체적으로 명시 안해도 스위프트는 영리하게 startIndex로 인식하여 계산한다.
-// s.replaceSubrange(..<s.endIndex, with: "new Contents") // Change Strings with "new Contents"
-// - **remove**
-//// remove 사용 예시
-// emojiChoices.remove(at: randomStringIndex)
+## 함수형 프로그래밍 (Functional Programming)
+- **객체지향 프로그래밍의 진화된 형태라고도 한다.**
+- 다중상속 등을 보다 쉽게 통제할 수 있다.
+- 어떤 것이 어떤 작업을 하는지 증명할 수 있는 등 많은 장점이있다.
+- 거의 모든 기초 프레임워크인 딕셔너리, 배열 등이 함수형 프로그래밍으로 만들어져 있다.
+- 프로토콜을 이용한 제약이나 프로토콜의 익스텐션 등은 함수형 프로그래밍을 지원한다.
+  - 스위프트는 함수형프로그래밍, 객체지향프로그매이 등을 모두 지원한다.
 
-// ### NSAttributedString
-// - 각각의 문자가 속성을 지닌 문자열
-// - 여러문자의 범위 내에서 하나의 딕셔너리를 사용한다.
-// - 속정 문자별로 다양한 폰트나 문자 색상등을 부여하는 등 UI라벨 글자설정, UI버튼 설정 등에 활용가능
+<br>
+
+## 문자열 String
+- 문자열 구조체와 별개로 문자(Character) 구조체가 있다.
+- 문자열은 유니코드로 이루어져있다. ("CAFE" -> 5개의 유니코드로 표현)
+- 문자열은 구조체이자 값 타입니다.
+- **Swift에서는 문자열을 정수로 색인하지 않는다.**
+  - 정수형이 아닌 String.Index로 색인
+  - Array는 Array.Index가 정수형으로 정의되어 정수형으로 색인 가능
+- String, Array 전부 rangeReplacableCollection 프로토콜을 준수한다.
+
+### String.Index
+- 정수 대신 다른 특수한 타입, Stirng.index를 사용하여 문자열을 색인한다.
+- startIndex, endIndex, index(of:) 등을 통해 인덱스를 얻을 수 있다.
+- 문자열(String)의 배열(Array)은 곧 그 문자(Character)들의 배열이다.
+
+~~~ swift
+let characterArray = Array(str) // Array<Character>
+print(characterArray[0]) // Array형으로 변환하면 String.Index 대신 정수값으로 접근이 가능해진다.
+~~~
+
+~~~ swift
+// String.Index 사용 예시)
+let pizzaJoint = "cafe pesto"
+let firstCharacterIndex = pizzaJoint.startIndex // of type String.Index
+let fourthCharacterIndex = pizzaJoint.index(firstCharacterIndex, offsetBy: 3)
+let fourthCharater = pizzaJoint[fourthCharacterIndex] // pizzaJoint 네번째 문자열인 'e'
+
+// " "(공백) 이 없다면 인덱스 반환값이 nil일 수도 있으므로 if let 을 사용했다.
+if let firstSpace = pizzaJoint.index(of: " ") {
+   let secondWordIndex = pizzaJoint.index(firstSpace, offsetBy: 1) // 공백으로부터 1칸 뒷쪽의 문자 인덱스를 반환
+   let secondWord = pizzaJoint[secondWordIndex..<pizzaJoint.endIndex] // "pesto"
+}
+~~~
+- * ..< 등으로 String.Index의 영역을 지정할 수 있다.
+
+### Range
+- Range는 제네릭 타입으로 꼭 Int형으로만 범위를 설정할 필요가 없다. ex) Array.Index 외 String.Index의 사용...
+
+### String 제공 기능
+
+- **components(separatedBy:)**
+~~~ swift
+// components 사용 예)
+pizzaJoint.components(separatedBy: " ")[1] // pizzaJoint를 공백 단위로 쪼갠 뒤 그 중 (인덱스 1)2번째의 값을 반환한다.
+~~~
+
+- **insert(contentOf:,at:)**
+~~~ swift
+// insert 사용 예)
+var s = pizzaJoint // String은 구조체이자 값타입이므로 값복사를 한다.
+s.insert(contentOf: " foo", at: s.index(of: " ")!) // "cafe foo pesto" or Crashed(because of '!')
+~~~
+
+- **replaceSubrange(,with:)**
+~~~ swift
+// replaceSubrange 사용 예시
+// * ..< 로 좌변을 구체적으로 명시 안해도 스위프트는 영리하게 startIndex로 인식하여 계산한다.
+s.replaceSubrange(..<s.endIndex, with: "new Contents") // Change Strings with "new Contents"
+~~~
+
+- **remove(at:)**
+~~~ swift
+// remove 사용 예시
+emojiChoices.remove(at: randomStringIndex)
+~~~
+
+### NSAttributedString
+- 각각의 문자가 속성을 지닌 문자열
+- 여러문자의 범위 내에서 하나의 딕셔너리를 사용한다.
+- 속정 문자별로 다양한 폰트나 문자 색상등을 부여하는 등 UI라벨 글자설정, UI버튼 설정 등에 활용가능
+
+~~~ swift
 // NSAttributedString 사용 예시)
-//let attribText = NSAttributedString(string: "Flips: 0", attributes: attributes)
-//filpCountLabel.attributedText = attribText // UIButton은 attributedText라는 프로퍼티를 가지고 있습니다.
-//    - NSAttributedString의 특징
-//      - NS가 붙어있다. -> 오래된 API임을 유추할 수 있다.
-//      - class 구조이며 var를 사용하여 가변변수(variables)를 만들 수는 없다.
+let attribText = NSAttributedString(string: "Flips: 0", attributes: attributes)
+filpCountLabel.attributedText = attribText // UIButton은 attributedText라는 프로퍼티를 가지고 있습니다.
+~~~
 
-// ## Any
-// - 어떤 구조체나 클래스던 모두 들어갈 수 있음을 의미
-// - 강타입의 Swift답지 않은 표현이다.
-// - 절대 자료구조에 Any를 쓰지 말자
+- NSAttributedString의 특징
+  - NS가 붙어있다. -> 오래된 API임을 유추할 수 있다.
+  - class 구조이며 내부에 var를 사용하여 가변변수(variables)를 만들 수는 없다.
 
-// * peculiarity : 특질 이라는 뜻
+## Any
+- 어떤 구조체나 클래스던 모두 들어갈 수 있음을 의미
+- 강타입의 Swift답지 않은 표현이다.
+- 절대 자료구조에 Any를 쓰지 말자
 
-//## 함수타입 Function Types
-//- Swift의 함수는 1급객체이다.
-//- 함수는 타입이 가시는 모든 것을 가질 수 있다.
-//- 어떤 것이던 함수 타입으로 선언하고 인자값, 반환값을 지정하면 된다.
-//- ** 클로져를 활용하면 보다 가독성있고 간결한 코드를 구성할 수 있다. **
-//// 함수의 사용 예시)
-//func changeSign(operand: Double) -> Double { return -operand }
-//
-//// Double형 인자값을 받아 Double형 을 반환하는 함수 명, operation
-//var operation: (Double) -> Double
-//operation = sqrt // 동일한 형태의 함수를 대입할 수 있다.
-//
-//// 실제로 operation을 사용해도 sqrt와 같은 동작을 얻을 수 있다.
-//let result = operation(4.0)
-//
-//operation = changeSign
-//result = operation(4.0) // 결과 값 -4.0
+<br>
 
-//## 익명함수 Closure
-//- Closure는 인라인 함수이다.
-//
-//### 클로져의 사용 형태
-//// Closure 사용 에시)
-//var operation: (Double) -> Double
-//// Closure의 operation 대입
-//// * 함수를 일일히 정의해서 사용할 필용 없이 바로 대입순간 클로저형태로 정의하여 사용할 수 있다.
-//operation = { (operand: Double) -> Double in return -operand }
-//// 스위프트는 타입추론을 지원하기 때문에 리턴값을 생략해도 알아서 판단할 수 있다.
-//operation = { (operand: Double) in return -operand }
-//// operation의 리털타입 이외에도 피연산자도 알고 있다.
-//operation = { (operand) in return -operand }
-//// return 명시를 안해도 어떤 타입을 리턴할지를 알고 있으므로 return을 생략할 수도 있다.
-//operation = { (operand) in -operand }
-//// operand라는 피연산자 값을 $0로 변경할 수 있다. 그렇게 되면 in 예약어도 필요없어진다.
-//// * 여러개 인자값이 있다면 인자값 순서대로 $0, $1, $2...
-//operation = { -$0 }
-//let result = operation(4.0) // 결과 값 -4.0로 동일
+## 함수타입 Function Types
+- Swift의 함수는 1급객체이다.
+- 함수는 타입이 가지는 모든 것을 가질 수 있다.
+- 어떤 것이던 함수 타입으로 선언하고 인자값, 반환값을 지정하면 된다.
+- **클로져를 활용하면 보다 가독성있고 간결한 코드를 구성할 수 있다.**
 
-//- 만약 필요하다면 초기화를 위해 이름없는 클로저, ()를 사용할 수도 있다.
-//  - lazy 등의 지연속성 등에 사용 시 멋지게 작동할 수 있다.
-//// lazy에서의 이름없는 클로저 사용 예
-//var someProperty: type = {
-//    // someProperty에 대한 정의를 구현한다.
-//    return <정의 된 값의 반환>
-//}()
-//// 이처럼 이름없는 클로저, ()의 사용으로 lazy 프로퍼티 등에 유용하게 사용가능하다.
-//
-//- 클로저 형태의 사용 예)
-//  - map : 배열을 받아 각각의 요소에 특정 적용을 시킨 후 새로운 배열을 반환한다.
-//// map 사용예시
-//. - filter : 하나의 함수만을 받아 Bool을 리턴한다.#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-//    - 요소를 순회한다. 만약 true를 리턴하면 해당 값들만 새로운 배열에 추가하여 리턴한다.
-//    - false인 값은 넘어간다.
+~~~ swift
+// 함수의 사용 예시)
+func changeSign(operand: Double) -> Double { return -operand }
 
-//let primes = [2.0, 3.0, 5.0, 7.0, 11.0]
-//let negativePrimes = primes.map({ -$0 }) // [-2.0, -3.0, -5.0, -7.0, -11.0]
-//// * 받는 인자의 마지막일 경우, 아래와 같이 블록을 따로 빼서 구현할 수 있다. 이 형태를 후행클로져(Trailing Closure 라고 한다.)
-//let negativePrimes = primes.map() { 1.0 / $0 } // [0.5, 0.333, 0.2, ...]
-//// * 받는 인자가 단 하나라면, ()도 생략할 수 있다.
-//let primeStrings = primes.map { String($0) } // ["2.0", "3.0", "5.0", "7.0", "11.0"]
-//
-//### 클로저 사용 시 주의사항
-//- 캡쳐링 Capturing
-//  - 클로저는 클래스와 같은 참조타입이다.
-//  - 클로저는 Heap안에 들어가 있다. 가령 배열 안에 클로저가 사용 되면 배열이 클로저의 포인터를 가지고 있게 된다.
-//  - 주변코드로부터 클로저에서 변수를 받게 되면, 해당 변수들도 Heap내에 위치하게 된다.
-//// 캡쳐링 Capturing 예시)
-//var ltuae = 42
-//operation = { ltuae * $0 } // 클로저 내에서 ltuae가 캡쳐링 된다. 참조타입인 클로저 내에 ltuae를 사용해야하기 때문이다.
-//arrayOfOperations.append(operation)
-//
-//- 위와 같이 연산의 배열이 있는 클래스를 받을 때, 메모리 사이클(Memory Cycle)이 발생할 수 있다.
-//- 연산이 있는 배열의 클래스를 받게 되면 클로저가 그 클래스를 힙(Heap) 안에 넣는다.
-//- + 배열의 클래스가 또 클로저를 힙에 넣게 된다.
-//- (arrayOfOperations, operation...) 클로저는 클래스를, 클래스는 클로저를 담는 메모리 사이클이 발생하게 된다.
-### ➣  Xcode Interface 요소
-- 
+// Double형 인자값을 받아 Double형 을 반환하는 함수 명, operation
+var operation: (Double) -> Double
+operation = sqrt // 동일한 형태의 함수를 대입할 수 있다.
+
+// 실제로 operation을 사용해도 sqrt와 같은 동작을 얻을 수 있다.
+let result = operation(4.0)
+
+operation = changeSign
+result = operation(4.0) // 결과 값 -4.0
+~~~
+
+<br>
+
+## 익명함수 Closure
+- Closure는 인라인 함수이다.
+
+### 클로져의 사용 형태
+
+~~~ swift
+// Closure 사용 에시)
+var operation: (Double) -> Double
+// Closure의 operation 대입
+// * 함수를 일일히 정의해서 사용할 필용 없이 바로 대입순간 클로저형태로 정의하여 사용할 수 있다.
+operation = { (operand: Double) -> Double in return -operand }
+// 스위프트는 타입추론을 지원하기 때문에 리턴값을 생략해도 알아서 판단할 수 있다.
+operation = { (operand: Double) in return -operand }
+// operation의 리털타입 이외에도 피연산자도 알고 있다.
+operation = { (operand) in return -operand }
+// return 명시를 안해도 어떤 타입을 리턴할지를 알고 있으므로 return을 생략할 수도 있다.
+operation = { (operand) in -operand }
+// operand라는 피연산자 값을 $0로 변경할 수 있다. 그렇게 되면 in 예약어도 필요없어진다.
+// * 여러개 인자값이 있다면 인자값 순서대로 $0, $1, $2...
+operation = { -$0 }
+let result = operation(4.0) // 결과 값 -4.0로 동일
+~~~
+
+- 만약 필요하다면 초기화를 위해 이름없는 클로저, ()를 사용할 수도 있다.
+  - **lazy 등의 지연속성 등에 사용 시 멋지게 작동할 수 있다.**
+
+~~~ swift
+// lazy에서의 이름없는 클로저 사용 예
+var someProperty: type = {
+    // someProperty에 대한 정의를 구현한다.
+    return //<정의 된 값의 반환>
+}()
+~~~
+- 이처럼 이름없는 클로저, ()의 사용으로 lazy 프로퍼티 등에 유용하게 사용가능하다.
+
+
+### 클로저 형태의 사용 예)
+- filter
+  - 하나의 함수만을 받아 Bool을 리턴한다.#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+
+- map
+  - 배열을 받아 각각의 요소에 특정 적용을 시킨 후 새로운 배열을 반환한다.
+  - 요소를 순회한다. 만약 true를 리턴하면 해당 값들만 새로운 배열에 추가하여 리턴한다.
+  - false인 값은 넘어간다.
+
+~~~ swift
+//map 사용예시
+let primes = [2.0, 3.0, 5.0, 7.0, 11.0]
+let negativePrimes = primes.map({ -$0 }) // [-2.0, -3.0, -5.0, -7.0, -11.0]
+// * 받는 인자의 마지막일 경우, 아래와 같이 블록을 따로 빼서 구현할 수 있다. 이 형태를 후행클로져(Trailing Closure 라고 한다.)
+let negativePrimes = primes.map() { 1.0 / $0 } // [0.5, 0.333, 0.2, ...]
+// * 받는 인자가 단 하나라면, ()도 생략할 수 있다.
+let primeStrings = primes.map { String($0) } // ["2.0", "3.0", "5.0", "7.0", "11.0"]
+~~~
+
+### 클로저 사용 시 주의사항
+- 캡쳐링 Capturing
+  - 클로저는 클래스와 같은 참조타입으로 캡쳐링이 발생할 수 있다.
+  - 클로저는 Heap안에 들어가 있다. 가령 배열 안에 클로저가 사용 되면 배열이 클로저의 포인터를 가지고 있게 된다.
+  - 주변코드로부터 클로저에서 변수를 받게 되면, 해당 변수들도 Heap내에 위치하게 된다.
+
+~~~ swift 
+// 캡쳐링 Capturing 예시)
+var ltuae = 42
+operation = { ltuae * $0 } // 클로저 내에서 ltuae가 캡쳐링 된다. 참조타입인 클로저 내에 ltuae를 사용해야하기 때문이다.
+arrayOfOperations.append(operation)
+~~~
+
+- 위와 같이 연산의 배열이 있는 클래스를 받을 때, 메모리 사이클(Memory Cycle)이 발생할 수 있다.
+- 연산이 있는 배열의 클래스를 받게 되면 클로저가 그 클래스를 힙(Heap) 안에 넣는다.
+- + 배열의 클래스가 또 클로저를 힙에 넣게 된다.
+- (arrayOfOperations, operation...) 클로저는 클래스를, 클래스는 클로저를 담는 메모리 사이클이 발생하게 된다.
 
 ### ➣  4강 용어정리
-* 
+* peculiarity : 특질 이라는 뜻
 
 ### ➣  4강 구현결과
 - 집중력게임(Concentration Game) 내 계산프로퍼티, indexOfTheOneAndOnlyFaceUpCard의 클로저, 익스텐션 활용 예시
@@ -772,4 +820,10 @@ scrollView.delegate = self
 <br>
 
 ## 총 평
--
+- Protocol의 역할과 사용방법
+- Closure의 역할과 사용방법
+- Class vs Struct
+  - mutating 역할 및 사용 유무
+- Extension의 활용
+- String
+- MVC Delegation패턴의 작동방식, 적용 예
