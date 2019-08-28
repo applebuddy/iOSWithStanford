@@ -407,6 +407,8 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
   - 값이 계속 복사되니 비효율적이라고 생각할 수 있다.
   - 다만 스위프트는 영리해서 struct일 지라도 해당 내용이 변경되엇을 때만 값을 복제한다.
 
+<br>
+
 ## Protocol
 ### Struct, Class, Enum과 함께 스위프트의 자료구조를 형성하는 네번째 기둥
 - 별도의 구현이 없는 메서드와 변수의 리스트이자 하나의 일급타입
@@ -439,8 +441,8 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
 - 클래스나 구조체, 열거형이 프로토콜의 메서드, 변수를 구성
 - 클래스나 구조체, 열거형 등의 구조 내부에 구성
   - 클래스로 프로토콜을 구현하려 한다면 클래스의 init 에 required 예약어를 붙여주어야 만 한다.
-  - 서브클래스에서는 더이상 이 프로토콜을 구현하지 않았는데도 사람들은 프로토콜이 서브클래스에서도 가능한것으로 착각할 수 있기 때문이다.
-  - 서브클래스의 init이 형성되지 않도록 메인 클래스의 required init 지정을 해준다.
+    - 서브클래스에서는 더이상 이 프로토콜을 구현하지 않았는데도 사람들은 프로토콜이 서브클래스에서도 가능한것으로 착각할 수 있기 때문이다.
+    - 서브클래스의 init이 형성되지 않도록 메인 클래스의 required init 지정을 해준다.
 
 ### 프로토콜 채택방법
 
@@ -457,74 +459,89 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
  }
 ~~~
 
-// ### 프로토콜 옵셔널 메서드
-// - 프로토콜에서 지정한 메서드를 반드시 선언하지 않아도 되도록 설정할 수 있다.
-// - 프로토콜의 메서드를 선택적으로 사용 할 수 있다.
+### 프로토콜 옵셔널 메서드 (optional func)
+- 프로토콜 내 func 앞에 "optional"을 붙여주면 구현 가능하다.
+- 프로토콜에서 지정한 옵셔널 메서드는 반드시 선언할 필요가 없다.
+- 프로토콜의 메서드를 선택적으로 사용 할 수 있다.
 
-// ### mutating
-//// Concentratino을 struct로 변경하니 내부 오류가 발생한다. 이때 내부에서 Concentration 객체 자체를 변경시킬 것임을 mutating을 통해 명시해주어야 한다.
+### mutating
+- 내부 객체 자체를 변경시킬 수 있음을 알려주는 예약어
+- 값 타입인 Struct 등 만 구현하며, 참조타입인 class등에는 구현할 필요가 없다.
+  - ex) Concentration 객체를 class -> struct로 변경하니 내부 오류가 발생한다. 
+  - => 이때 내부에서 Concentration 객체 자체를 변경시킬 것임을 mutating을 통해 명시해주어야 한다.
 
-// ### 프로토콜 사용 예
-//// 프로토콜, Moveable
-// protocol Moveable {
-//    mutating func move(to point: CGPoint)
-// }
-//// Moveable 프로토콜을 채택한 클래스, Car
-// class Car: Moveable {
-//    // Car는 Class이자 참조타입이므로 mutating이 필요없다.
-//    func move(to point: CGPoint) {...}
-//    func changeOil()
-// }
-//
-// struct Shape: Moveable {
-//    // Shape는 Struct이다 값타입이므로 mutating을 명시해주어야 한다.
-//    mutating func move(to point: CGPoint) {...}
-//    func draw()
-// }
-//
-//// Car 인스턴스, prius
-// let prius: Car = Car()
-//// Shape 인스턴스, square
-// let square: Chape = Chape()
-//
-//// prius를 참조하는 thingToMovem
-// var thingToMove: Moveable = prius
-//thingToMove.move(to:...) // prius의 move(to:)가 실행된다.
-//thingToMove.changeOil() // Moveable타입이므로 Car의 메서드 실행불가
-//
-//// prius, square을 Moveable 타입 배열로 받을 수 있다.
-//// 둘다 Moveable 프로토콜을 준수하는 인스턴스이기 때문이다.
-// let thingsToMove: [Moveable] = [prius, square]
-//
-// func slide(slider: Moveable) {
-//    let positionToSlideTo = ...
-//        slider.move(to: positionToSlideTo)
-// }
-//
-//// prius, square 둘 다 Moveable 프로토콜을 준수하기때문에 들다 slide의 인자값으로 사용할 수 있다.
-// slide(slider: prius)
-// slide(slider: square)
+### 프로토콜 사용 예
 
-// ### MVC Delegation
-// - Protocol을 사용하면 ViewController에서 데이터 Model에 대해서 몰라도 뷰-모델 간 반응을 시킬 수 있다.
-//
-// ### MVC Delegation 사용 순서
-// - 1) 스크롤뷰, 테이블뷰와 같은 델리게이션 P프로토콜을 선언한다. ex) will, should, did...
-//// delegate 변수를 weak으로 설정
-//// -> 사용하지 않고, 힙에서 빠져나가려 한다면 nil로 설정하고 더이상 사용하지 않는다.
-//// ex) weak var delegate: UIScrollViewDelegate?
-//
-// - 2) 프로토콜 적용을 할 A뷰 내부에 D변수를 생성한다. 이 D변수는 공개변수이며 weak속성을 가진다.
-// - 3) A뷰가 will, did, should등의 이벤트를 보내고 싶을때 D변수에 전해주면 된다.
-// - 4) C컨트롤러가 P프로토콜을 채택한다. 사용을 시작한다.
-// - 5) C컨트롤러가 A뷰의 P프로토콜 변수인 B변수를 자기 자신으로 설정한다.
-//    //ex) scrollView.delegate = self
-//  - C컨트롤러는 P프로토콜의 D델리게이트를 구현하기로 선언했고, D델리게이트는 P프로토콜을 타입으로 가지고 있다.
-// - 6) C컨트롤러는 프로토콜을 준수해야한다. (프로토콜의 모든 필수 메서드를 구현해야 한다.)
-//  - 일반적으로 대부분의 델리게이트 메서드는 옵셔널이다. 그렇기에 대부분은 그냥 원하는 델리게이트 메서드만 사용할 수 있다.
-// - 7) C컨트롤러가 P프로토콜의 D델리게이트 변수를 자기자신으로 선언 + 델리게이트메서드 구현을 하여 서로 의사소통할 수 있다.
-//  - A뷰는 C컨트롤러로 원하는 will, did, should 이벤트 등을 전달 할 수 있게 되었다.
-//  - C컨트롤러는 A뷰 클래스에대해 잘 몰라도 뷰와 소통할 수 있게 되었다.
+~~~ swift
+// 프로토콜, Moveable
+protocol Moveable {
+   mutating func move(to point: CGPoint)
+}
+// Moveable 프로토콜을 채택한 클래스, Car
+class Car: Moveable {
+   // Car는 Class이자 참조타입이므로 mutating이 필요없다.
+   func move(to point: CGPoint) {...}
+   func changeOil()
+}
+
+struct Shape: Moveable {
+   // Shape는 Struct이다 값타입이므로 mutating을 명시해주어야 한다.
+   mutating func move(to point: CGPoint) {...}
+   func draw()
+}
+
+// Car 인스턴스, prius
+let prius: Car = Car()
+// Shape 인스턴스, square
+let square: Chape = Chape()
+
+// prius를 참조하는 thingToMovem
+var thingToMove: Moveable = prius
+thingToMove.move(to:...) // prius의 move(to:)가 실행된다.
+thingToMove.changeOil() // thingToMove 인스턴스는 Moveable타입이므로 Car의 메서드 실행불가
+
+// prius, square을 Moveable 타입 배열로 받을 수 있다.
+// 둘다 Moveable 프로토콜을 준수하는 인스턴스이기 때문이다.
+let thingsToMove: [Moveable] = [prius, square]
+
+ func slide(slider: Moveable) {
+    let positionToSlideTo = ...
+        slider.move(to: positionToSlideTo)
+ }
+
+// prius, square 둘 다 Moveable 프로토콜을 준수하기때문에 들다 slide의 인자값으로 사용할 수 있다.
+slide(slider: prius)
+slide(slider: square)
+~~~
+
+ ### MVC Delegation
+ - Protocol을 사용하면 ViewController에서 데이터 Model에 대해서 몰라도 뷰-모델 간 반응을 시킬 수 있다.
+
+ ### MVC Delegation 사용 순서
+- 1) 스크롤뷰, 테이블뷰와 같은 델리게이션 P프로토콜을 선언한다. ex) will, should, did...
+~~~ swift
+// delegate 변수를 weak으로 설정
+// -> 사용하지 않고, 힙에서 빠져나가려 한다면 nil로 설정하고 더이상 사용하지 않는다.
+// delegate 변수 weak 설정 예시) 
+weak var delegate: UIScrollViewDelegate?
+~~~
+
+- 2) 프로토콜 적용을 할 A뷰 내부에 델리게이트 변수, D를 생성한다. 이 D 델리게이트 변수는 공개변수이며 weak속성을 가진다.
+- 3) A뷰가 will, did, should등의 이벤트를 보내고 싶을때 D변수에 전해주면 된다.
+- 4) C컨트롤러가 P프로토콜을 채택한다. 사용을 시작한다.
+- 5) C컨트롤러가 A뷰의 P프로토콜 델리게이트 변수인 D를 자기 자신으로 설정한다.
+  - C컨트롤러는 P프로토콜의 D델리게이트를 구현하기로 선언했고, D델리게이트는 P프로토콜을 타입으로 가지고 있다.
+~~~ swift
+// in C Controller...
+scrollView.delegate = self
+~~~
+
+- 6) C컨트롤러는 프로토콜을 준수해야한다. (프로토콜의 모든 필수 메서드를 구현해야 한다. optional func는 선택적으로 사용한다.)
+  - 일반적으로 대부분의 델리게이트 메서드는 옵셔널이다. 그렇기에 대부분은 그냥 원하는 델리게이트 메서드만 사용할 수 있다.
+- 7) C컨트롤러가 P프로토콜의 D델리게이트 변수를 자기자신으로 선언 + 델리게이트메서드 구현을 하여 서로 의사소통할 수 있다.
+  - A뷰는 C컨트롤러로 원하는 will, did, should 이벤트 등을 전달 할 수 있게 되었다.
+  - **C컨트롤러는 A뷰 클래스에대해 잘 몰라도 뷰와 소통할 수 있게 되었다.**
+  - **블라인드 커뮤니케이션이 가능해짐**
 
 // ### Hashable
 // - 해쉬가능하다 -> 딕셔너리의 키가 될 수 있다.
@@ -551,6 +568,8 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
 // - 딕셔너리의 키를 접근해 얻는 값은 옵셔널형태이다.
 //// 딕셔너리의 정의 형태 예시)
 // Dictionary<Key: Hashable, Value>
+
+<br>
 
 // ## 다중상속
 // - 프로토콜은 한번의 구현만으로 여러곳에서 일일히 정의할 필요없이 사용이 가능하다.
@@ -583,6 +602,8 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
 //  - 이들은 또한 Sequence의 특성을 가진다.
 //  - 이들은 계수가능범위를 표현하는 indices()등의 메서드를 쓰기도 한다.
 
+<br>
+
 // ## 함수형 프로그래밍
 // - 객체지향 프로그래밍의 진화된 형태라고도 한다.
 // - 다중상속등을 보다 쉽게 통제할 수 있다.
@@ -590,6 +611,8 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
 // - * 스위프트는 함수형프로그래밍, 객체지향프로그매이 등을 모두 지원한다.
 // - 거의 모든 기초 프레임워크인 딕셔너리, 배열 등이 함수형 프로그래밍으로 만들어져 있다.
 // - 프로토콜을 이용한 제약이나 프로토콜의 익스텐션 등은 함수형 프로그래밍을 지원한다.
+
+<br>
 
 // ## 문자열 String
 // - 문자열 구조체와 별개로 문자(Character) 구조체가 있다.
