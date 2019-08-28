@@ -5,7 +5,7 @@ iOS Study with Stanford
 <br>
 
 # Lecture 1) 
-## 기본 Xcode 사용법 및 개발
+## ♣︎ 기본 Xcode 사용법 및 개발
  * 개발자 문서 내 자주사용하는 클래스의 OverView는 전부 읽어보도록 하자.
  * 프로젝트를 만들때 필요한 것 : 프로젝트명, 팀명, 기관명, 기관식별자
  
@@ -27,14 +27,14 @@ iOS Study with Stanford
 
 <br>
 
-## 총 평
+## ♣︎ 총 평
 - Xcode 기본 인터페이스, 집중력게임 기본로직 개발
 
 <br>
 <br>
 
 # Lecture 2) 
-## MVC패턴 : Medel + View + Controller 의 모델-뷰-컨트롤러로 구성하는 디자인패턴 기법
+## ♣︎ MVC패턴 : Medel + View + Controller 의 모델-뷰-컨트롤러로 구성하는 디자인패턴 기법
  
  ### ➣  Controller : UIViewController 등의 컨트롤러 요소
  - 모델과 원하는대로 얘기 하며 사용자에게 보여져야 할 데이터를 받는다.(특히 공개적인 데이터와는 무제한적으로 대화가능)
@@ -43,9 +43,9 @@ iOS Study with Stanford
  ### ➣  View : 스토리보드... UILabel, UIImageView, UIView... and so on...
  - 모델과 절대 소통 불가능
  - 뷰는 컨트롤러와 블라인드상태로 소통해야한다. 뷰는 컨트롤러가 집중력게임 컨트롤러인이 어떤 컨트롤러인지 알지 못한다. 소통 시 컨트롤러에서 뷰에 대한 정의를 구조적으로 지정하고 교류할 수 있다.(타겟메서드, 델리게이트, 데이터소스 프로토콜 등...)
- ex) 컨트롤러에 타겟 메서드를 지정 후 뷰가 동작 시 메서드가 동작하는 방식으로 소통 가능
- ex) 스크롤뷰 등의 did, will, should Delegate 메서드 등을 컨트롤러에서 등록하여 사용할 수 있다.
- ex) 테이블 뷰 등의 스트롤 시 셀 갯수 등을 UITableViewDataSource Protocol로 지정하고 상황에 따라 필요한 만큼의 데이터만 모델에 요청하여 유저에게 보여줄 수 있다.
+   - ex) 컨트롤러에 타겟 메서드를 지정 후 뷰가 동작 시 메서드가 동작하는 방식으로 소통 가능
+   - ex) 스크롤뷰 등의 did, will, should Delegate 메서드 등을 컨트롤러에서 등록하여 사용할 수 있다.
+   - ex) 테이블 뷰 등의 스트롤 시 셀 갯수 등을 UITableViewDataSource Protocol로 지정하고 상황에 따라 필요한 만큼의 데이터만 모델에 요청하여 유저에게 보여줄 수 있다.
  ### ➣  Model : 뷰에 표현 될 데이터모델
  - View와 절대 소통 불가능
  - Contorller에 사용자에게 보여져야 할 데이터를 제공한다.
@@ -62,7 +62,7 @@ iOS Study with Stanford
  * API란? : Application Programming Interface(인스턴스 리스트)의 약자
  * lazy : lazy를 사용하면 실제 사용하기 전까진 초기화 하지 않는다.누군가 game을 사용하려 할때 비로소 초기화 된다.
  lazy를 사용하면 프로퍼티 옵저버(Property Obserber, 프로퍼티 감시자)로서의 역할은 불가능하다.
- * 배열.indices() : 계수가능 범위를 배열로 리턴해준다.
+ * 배열.indices : 계수가능 범위를 배열로 리턴해준다.
    - indices 사용 예 : for index in emojiCardButtons.indices {}
  * 배열.shuffle() : 컬렉션 요소를 랜덤하게 섞어준다.
    - shuffle 사용 예 : emojiCardButtons.shuffle()
@@ -76,15 +76,15 @@ iOS Study with Stanford
 
 <br>
 
-## 총 평
+## ♣︎ 총 평
 - MVC패턴의 개념 이해
-- 집중력게임의 MVC 적용연습
+- 집중력게임의 MVC 디자인패턴 적용연습
 
 <br>
 <br>
 
 # Lecture 3) 
-## Swift 기초문법
+## ♣︎ Swift 기초문법
 
 ### **앞서 강의에서 배운 내용 간략정리**
 - 타겟/액션, IBOutlet, IBOutletCollection
@@ -107,20 +107,21 @@ iOS Study with Stanford
  <img width="500" src="https://user-images.githubusercontent.com/4410021/63637755-88ee1880-c6bb-11e9-90cb-7c47b704ebbf.png">
 </div>
 
-- 지금까지 만든 집중력게임, 세로모드에선 문제 없어보이지만.. 가로모드가 된다면?? 
-  - 컨텐츠가 전부 보이지 않는 어설픈 레이아웃 상태...
-  - ✭ 문제 해결을 위해서 오토레이아웃 구현이 필요하다.
+- 지금까지 만든 집중력게임, 세로모드에선 문제 없어보이지만.. 만약 가로모드(landscape 상태)가 된다면?? 
+  - -> 컨텐츠가 전부 보이지 않는 어설픈 레이아웃 상태...
+  - ✭ **문제 해결을 위해서 오토레이아웃 구현이 필요하다.**
 
  ### UIStackView
  - 다양한 UI객체를 묶어 관리할 수 있다.
  - 여러개의 UI를 선택 
    - -> 인터페이스 빌더 하단 embed in View 로 스택뷰 처리가능
  - 스택뷰 프로퍼티
- - distribution : 스택뷰 내 서브뷰의 배치 설정
+ - distribution : 스택뷰 내 서브뷰의 배치 설정 
+   - fill, fillEqually, fillProportionally... 등의 옵션이 있다.
  - alignment : 스택뷰 정렬 기준 설정
 
  ### Stride(from:,through:,by:)
- - Float 등의 부동소수점을 반복문으로 돌릴 수 없을까?
+ - *Float 등의 부동소수점을 반복문으로 돌릴 수 없을까?*
  - Swift에서는 stride 전역함수를 이용하여 구현할 수 있다.
  - 부동소수점 이외에 문자열의 인수 등도 셀 수 있다.
 
@@ -181,7 +182,7 @@ iOS Study with Stanford
 
 <br>
 
-## **접근제어 Access Control**
+## ♣︎ **접근제어 Access Control**
  - 외부로부터 코드 내부를 접근하는 기준을 지정할 수 있다.
 ### - open : 해당 프레임워크 이외의 모듈에서 불러올 뿐만 아니라 할당, 서브클래싱, 오버라이딩 까지 전부 가능하다. 즉 완전개방 상태이다.
 ### - public : 해당 프레임워크 이외의 모듈에서도 사용자가 불러와 사용이 가능하다.
@@ -192,18 +193,18 @@ iOS Study with Stanford
 
 <br>
 
-## 확장 Extension
- - 확장은 iOS에서 매우 강력한 도구이다. 마치 "조심스럽게 다루는 무기"와 같다.
- - extension 객체이름 {} 과 같은 식으로 사용할 수 있다.
+## ♣︎ 확장 Extension
+ - 확장은 iOS에서 매우 강력한 도구이다. 비유하자면, 마치 "조심스럽게 다루는 무기"와 같다.
+ - extension <객체이름> {} 과 같은 식으로 사용할 수 있다.
  - extension은 저장공간이 있는 변수는 아니다.
- - extension은 간편하여 쉽게 남용 될 수 있다. 그러므로 확장 사용 시 불필요한 기능인지 고려할 필요가 있다.
+ - extension은 간편하여 쉽게 남용 될 수 있다. 
+   - 그러므로 확장 사용 시 불필요한 기능인지 고려할 필요가 있다.
 
 <br>
 
-## 옵셔널
+## ♣︎ 옵셔널
 - Optional "옵셔널도 enum이다."
 - nil일 수도 있음을 의미. The Enumeration
-- 다음주에 볼 주제, 옵셔널.
 - 옵셔널의 정의 형태) enum + 배열과 같은 제네릭 형태로 되어있다.
 
 ~~~ swift
@@ -214,7 +215,7 @@ iOS Study with Stanford
  }
 ~~~
 
-- 옵셔널의 구조가 매우 단순해 보이지만, Optional은 다른 타입들은 가지고 있지 않은 많은 특별한 구문(syntax)들을 갖고 있다.
+- 옵셔널의 구조가 매우 단순해 보이지만, **Optional은 다른 타입들은 가지고 있지 않은 많은 특별한 구문(syntax)들을 갖고 있다.**
 
 ~~~ swift
 // 만약 값이 없는 옵셔널을 강제바인딩 '!' 처리 한다면???)
@@ -223,7 +224,7 @@ iOS Study with Stanford
 ~~~
 
 ~~~ swift
- // hello 상수에 대한 동작과정
+ // 위에서 강제바인딩(!)으로 출력실행한 hello 상수에 대한 동작과정
  switch hello {
     case .none: // 예외 발생(강제 바인딩을 했으나 값이 없으므로 오류발생), 안전한 바인딩 시 해당 상황 시 옵셔널 바인딩의 else 부분이 실행 되고 Crash를 면할 수 있다.
     case .some: // 만약 강제 바인딩 시 값이 존재했다면 오류없이 해당 데이터(연동자료)를 출력 했을 것이다.
@@ -236,13 +237,13 @@ iOS Study with Stanford
 ~~~ swift
 // 옵셔널 체이닝 사용 예시)
 // 전부 이상없이 접근이 되었다면 z를 리턴한다.
-// 만약 x, foo(), bar를 접근하며 어느 하나라도 값이 nil(case .none)이라면 해당 옵셔널 체이닝을 빠져나가 nil을 리턴한다.
+// 만약 x, foo(), bar를 접근하며 어느 하나라도 값이 nil(switch case .none)이라면 해당 옵셔널 체이닝을 빠져나가 nil을 리턴한다.
  let opt = x?.foo()?.bar?.z
 ~~~
 
 <br> 
 
-## ARC (Automatic Reference Counting)
+## ♣︎ ARC (Automatic Reference Counting)
  - iOS의 자동 참조할당 해제 방식
  - ARC가 0 이되면 Heap에서 빼내서 할당을 해제한다.
  - strong, weak, unowned 등의 참조 옵션이 존재한다.
@@ -255,9 +256,10 @@ iOS Study with Stanford
 - weak은 옵셔널 포인터로 참조타입을 가리킨다.
 - 힙 내의 어떤것을 가리키고 있지만, 흥미가 있어야만 사용되는 것
 - 아울렛, 델리게이트 등에 사용될 수 있다. 그 외에에는 사용을 안하는 편이다.
+  - **아울렛(UI요소), MVC델리게이션, 클로저 캡쳐링 등의 상황 시 참조순환을 방지 할 수 있다.**
 
 ### ➣  unowned
-- "만약 내가 문제가 있으면 오류를 발생시켜라."
+- **"만약 내가 문제가 있으면 오류를 발생시켜라."**
    - 반드시 nil이 아니라고 판단될때 사용해야 문제가 없다.
 - 참조순환(메모리 사이클)을 방지하기 위해 사용한다.
    - 클로저를 사용하면 캡쳐링 등의 참조순환 문제가 발생할 수 있는데 이를 방지하기 위해 사용하곤 한다.
@@ -266,20 +268,21 @@ iOS Study with Stanford
 
 <br>
 
-## Swift 앱개발에 사용되는 자료구조
-## Class, Struct, Enum, Protocol
+## ✯ Swift 앱개발에 사용되는 자료구조
+### => Class, Struct, Enum, Protocol
 
-## 클래스 Class
+## ♣︎ 클래스 Class
 - 클래스는 참조타입, 상속을 지원한다.
 - 참조타입으로서 힙(Heap)영역에 존재하게 된다.
 - 클래스 등의 참조계산 방식은 앞서 언급한 ARC(Automatic Refernce Counting)로 동작한다.
 
-## 구조체 Struct
+## ♣︎ 구조체 Struct
 - 구조체는 값타입, 상속을 지원하지 않는다.
 - 구조체 종류
   - 배열, 딕셔너리, 문자열, 문자, 정수형 ,Double, UInt32 등... 많다.
+- 값타입이므로 내부적으로 변경되야 하는 여지가 있을 때 mutating 예약어를 사용해야 할 수 있다. 
 
-## 열거형 Enum
+## ♣︎ 열거형 Enum
 - 타입의 일종, 데이터 구조 타입인 enum, struct, class 중 하나인 열거형.
 - struct, class와 비슷하다.
   - 그 중 구조체(struct)와 동일한 값 타입이다.
@@ -370,8 +373,10 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
  }
 ~~~
 
-## 프로토콜 Protocol
- - 문자열, 배열 등 많은 것들이 프로토콜을 사용하며 이들의 기초가 된다.
+## ♣︎ 프로토콜 Protocol
+- 문자열, 배열 등 많은 것들이 프로토콜을 사용하며 이들의 기초가 된다.
+- 다중상속과 같은 효과 / controller-view 간 델리게이션 사용 등을 통한 블라인드 소통기능 등 다양한 역할을 할 수 있다.
+- 4강에서 이어서 알아본다.
 
 <br>
 
@@ -390,16 +395,21 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 </div>
 <br>
 
-## 총 평
-- Swift 핵심 기초문법 훑어보기
+## ♣︎ 총 평
 - 집중력게임(Concentratino Game)의 오토레이아웃 적용
+- Swift 핵심 기초문법 훑어보기
+  - ARC, Optional
+  - Extension
+  - Struct, Class, Enum
 - 집중력게임 내 계산프로퍼티, extension 적용을 통한 코드 간결화
 
 <br>
 <br>
 
 # Lecture 4) 
-## Protocol, Closure, String, mutating... 
+## ✭ Protocol, Closure, String
+- 그 외 mutating 등...
+
 ### Concentration 객체를 class -> struct로 변경!
 - 이제 Concentration은 ViewController에 참조되는 포인터가 아닌 하나의 모델이 된다.
 - **왜 구조체로 교체할까??**
@@ -409,16 +419,18 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 
 <br>
 
-## Protocol
+## ♣︎ Protocol
 ### Struct, Class, Enum과 함께 스위프트의 자료구조를 형성하는 네번째 기둥
 - 별도의 구현이 없는 메서드와 변수의 리스트이자 하나의 일급타입
 - 프로토콜은 메서드에 대한 기본 구현을 제공한다.
 - ** 프로토콜은 코드가 없다. 구현방식이 아닌 순수한 선언이기 때문이다. **
 - 만약 ** 특정 프로토콜이 클래스만 받는 프로토콜 이라면, 프로토콜 뒤에 : class 를 표시 ** 해주어야 한다.
-  - : class 선언을 해두면 굳이 mutating 표시를 할 필요가 없다. class 에 mutating 을 넣을 일은 없기 때문이다.
+  - **class 선언을 해두면 굳이 mutating 표시를 할 필요가 없다. 
+    - 참조타입인 class 에 mutating 을 넣을 일은 없기 때문이다.**
   - extension에 protocol을 채택하여 사용할 수도 있다.
 - 프로토콜은 API에서 원하는 것을 불러오는 방식으로 작동한다.
-- 블라인드 커뮤니케이션을 할때 최적의 도구이다.(view - Controller)
+- 블라인드 커뮤니케이션을 할때 최적의 도구이다.
+  - ex) view - Controller Delegation Pattern
 - 특정 유사한 기능을 공유하면서도 동일한 클래스로부터 상속받을 필요가 없도록 할 수 있다. 
 - "다중상속과 같은 효과를 낼 수 있음"
 
@@ -565,7 +577,7 @@ protocol Equatable {
 
 ### 딕셔너리 dictionary
 - 키와 값(해쉬가능한 키와 값)으로 이루어진 컬렉션
-- 키는 Hashable프로토콜을 준수해야, 값은 어떤 값이든 상관없다.
+- 키는 Hashable 프로토콜을 준수해야, 값은 어떤 값이든 상관없다.
 - 딕셔너리는 Hashable한 즉, 키가 될 수 있어야만 값과 함께 구현이 될 수 있는 컬렉션
 - 딕셔너리의 키를 접근해 얻는 값은 옵셔널형태이다.
 
@@ -579,13 +591,13 @@ Dictionary<Key: Hashable, Value>
 ### 프로토콜의 다중상속 효과
 - 프로토콜은 한번의 구현만으로 여러곳에서 일일히 정의할 필요없이 사용이 가능하다.
 - 마치 상속없이도 프로토콜을 통해 다중상속처럼 보이는 효과를 얻을 수 있는 것이다.
-- ** 그렇다면 이 프로토콜은 어디에 정의해야할까? **
- - => ** extension protocol, 프로토콜의 익스텐션에 넣으면 된다. **
+- **그렇다면 이 프로토콜은 어디에 정의해야할까?**
+ - => **extension protocol, 프로토콜의 익스텐션에 넣으면 된다.**
  - 하지만 extension은 저장공간이 없기에 조금의 제약이 존재한다.
 
 ### Sequence 프로토콜의 extension protocol 예시
 - Sequence를 통해 사용가능 한 메서드
- - -> contains(), forEach(), joined(separator:), min(), max(), filter(), map() and so on...
+  - -> contains(), forEach(), joined(separator:), min(), max(), filter(), map() and so on...
 - 실제 배열, 딕셔너리등을 사용할때 위와 같은 메서드들은 함께 자동으로 사용이 가능하다.
 - 좀 더 효율적인 방법이나 기능을 구현하기 위해서 extension을 활용할 수 있다.
 
@@ -610,21 +622,21 @@ extension Sequence {
   - 배열(Array), 딕셔너리(Dictionary), Set, String들은 각각 하나의 Collection이다.
   - 이들은 또한 Sequence의 특성을 가진다.
   - 이들은 계수가능범위를 표현하는 indices()등의 메서드를 쓰기도 한다.
-  - **다른 객체도 공통적인 기능을 사용해야 할때가 있다. 이럴때 프로토콜 유용함을 이용할 수 있다.**
+  - **다른 객체 간에도 공통적인 속성, 기능을 사용해야 할때가 있다. 이럴때 프로토콜 유용함을 이용할 수 있다.**
 
 <br>
 
-## 함수형 프로그래밍 (Functional Programming)
+## ✭ 함수형 프로그래밍 (Functional Programming)
 - **객체지향 프로그래밍의 진화된 형태라고도 한다.**
 - 다중상속 등을 보다 쉽게 통제할 수 있다.
 - 어떤 것이 어떤 작업을 하는지 증명할 수 있는 등 많은 장점이있다.
-- 거의 모든 기초 프레임워크인 딕셔너리, 배열 등이 함수형 프로그래밍으로 만들어져 있다.
+- **거의 모든 기초 프레임워크인 딕셔너리, 배열 등이 함수형 프로그래밍으로 만들어져 있다.**
 - 프로토콜을 이용한 제약이나 프로토콜의 익스텐션 등은 함수형 프로그래밍을 지원한다.
-  - 스위프트는 함수형프로그래밍, 객체지향프로그매이 등을 모두 지원한다.
+  - 스위프트는 함수형프로그래밍, 객체지향프로그밍 등을 모두 지원한다.
 
 <br>
 
-## 문자열 String
+## ♣︎ 문자열 String
 - 문자열 구조체와 별개로 문자(Character) 구조체가 있다.
 - 문자열은 유니코드로 이루어져있다. ("CAFE" -> 5개의 유니코드로 표현)
 - 문자열은 구조체이자 값 타입니다.
@@ -691,8 +703,8 @@ emojiChoices.remove(at: randomStringIndex)
 
 ### NSAttributedString
 - 각각의 문자가 속성을 지닌 문자열
-- 여러문자의 범위 내에서 하나의 딕셔너리를 사용한다.
-- 속정 문자별로 다양한 폰트나 문자 색상등을 부여하는 등 UI라벨 글자설정, UI버튼 설정 등에 활용가능
+- 여러 문자의 범위 내에서 하나의 딕셔너리를 사용한다.
+- 속정 문자 별로 다양한 폰트나 문자 색상을 부여하는 등 UI라벨 글자설정, UI버튼 설정 등에 활용가능
 
 ~~~ swift
 // NSAttributedString 사용 예시)
@@ -701,18 +713,18 @@ filpCountLabel.attributedText = attribText // UIButton은 attributedText라는 �
 ~~~
 
 - NSAttributedString의 특징
-  - NS가 붙어있다. -> 오래된 API임을 유추할 수 있다.
+  - **NS가 붙어있다. -> 해당 접두어를 통해 오래된 API임을 유추할 수 있다.**
   - class 구조이며 내부에 var를 사용하여 가변변수(variables)를 만들 수는 없다.
 
-## Any
+## ♣︎ Any
 - 어떤 구조체나 클래스던 모두 들어갈 수 있음을 의미
 - 강타입의 Swift답지 않은 표현이다.
-- 절대 자료구조에 Any를 쓰지 말자
+- **절대 자료구조에 Any를 쓰지 말자**
 
 <br>
 
-## 함수타입 Function Types
-- Swift의 함수는 1급객체이다.
+## ♣︎ 함수타입 (Function Types)
+- Swift의 함수는 1급 객체이다.
 - 함수는 타입이 가지는 모든 것을 가질 수 있다.
 - 어떤 것이던 함수 타입으로 선언하고 인자값, 반환값을 지정하면 된다.
 - **클로져를 활용하면 보다 가독성있고 간결한 코드를 구성할 수 있다.**
@@ -734,7 +746,7 @@ result = operation(4.0) // 결과 값 -4.0
 
 <br>
 
-## 익명함수 Closure
+## ✭ 익명함수 Closure
 - Closure는 인라인 함수이다.
 
 ### 클로져의 사용 형태
@@ -758,7 +770,7 @@ let result = operation(4.0) // 결과 값 -4.0로 동일
 ~~~
 
 - 만약 필요하다면 초기화를 위해 이름없는 클로저, ()를 사용할 수도 있다.
-  - **lazy 등의 지연속성 등에 사용 시 멋지게 작동할 수 있다.**
+  - **lazy 등의 지연프로퍼티 등에 클로져 사용 시 멋지게 작동 수 있다.**
 
 ~~~ swift
 // lazy에서의 이름없는 클로저 사용 예
@@ -769,10 +781,13 @@ var someProperty: type = {
 ~~~
 - 이처럼 이름없는 클로저, ()의 사용으로 lazy 프로퍼티 등에 유용하게 사용가능하다.
 
-
-### 클로저 형태의 사용 예)
+### 고차함수 
+- 클로저의 일부인 고차함수
+- **다른 함수를 전달인자로 받거나 or 함수 실행을 통해 다른 함수값을 반환하는 함수**
+- **filter, map, reduce 등 많은 고차함수가 존재**
+  
 - filter
-  - 하나의 함수만을 받아 Bool을 리턴한다.#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+  - 하나의 함수만을 받아 Bool을 리턴한다. #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
 
 - map
   - 배열을 받아 각각의 요소에 특정 적용을 시킨 후 새로운 배열을 반환한다.
@@ -819,11 +834,12 @@ arrayOfOperations.append(operation)
 
 <br>
 
-## 총 평
+## ♣︎ 총 평
 - Protocol의 역할과 사용방법
-- Closure의 역할과 사용방법
+- Closure의 역할과 사용방법, 사용 시 주의사항
 - Class vs Struct
   - mutating 역할 및 사용 유무
 - Extension의 활용
 - String
+  - Array, String 인덱스의 차이점
 - MVC Delegation패턴의 작동방식, 적용 예
