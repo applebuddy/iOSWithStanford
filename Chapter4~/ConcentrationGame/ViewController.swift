@@ -9,7 +9,13 @@
 import UIKit
 
 class ViewController: UIViewController {
-    @IBOutlet private var flipCountLabel: UILabel!
+    @IBOutlet private var flipCountLabel: UILabel! {
+        didSet {
+            // 일반 변수와 달리 Outlet변수는 설정될 때 didSet을 불러온다.
+            // Outlet의 연결이 만들어질 때 didSet을 불러오는 것이다.
+            updateFlipCountLabel()
+        }
+    }
 
     // Outlet Collection Property
     @IBOutlet private var emojiCardButtons: [UIButton]!
@@ -24,10 +30,11 @@ class ViewController: UIViewController {
     }
 
     // flipCount 또한 UI와 직결되므로, 읽기만 가능하도록 private(set) 설정을 할 수 있다.
+    // flipCount의 didSet은 초기화한 당시인 0 값일때는 활성화 되지 않는다.
     private(set) var flipCount: Int = 0 {
         // didSet은 값이 설정되기 직후에 실행되며, 설정되기 전 값인 oldValue에 접근할 수 있다.
         didSet {
-            flipCountLabel.text = "Flips: \(flipCount)"
+            updateFlipCountLabel()
         }
 
 //        /// willSet은 값이 설정되기 직전에 실행되며, 새로 설정 된 newValue에 접근할 수 있다.
@@ -53,6 +60,15 @@ class ViewController: UIViewController {
         }
     }
 
+    private func updateFlipCountLabel() {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .strokeWidth: 5.0,
+            .strokeColor: UIColor.red,
+        ]
+        let attributedString = NSAttributedString(string: "Flips: \(flipCount)", attributes: attributes)
+        flipCountLabel.attributedText = attributedString
+    }
+
     // UI를 업데이트하면 UI와 직결되는 메서드이므로 역시 private 처리하는 것이 좋다.
     private func updateViewFromModel() {
         for index in emojiCardButtons.indices {
@@ -69,19 +85,25 @@ class ViewController: UIViewController {
         }
     }
 
-    private var emojiChoices = ["👻", "🎃", "😱", "🥵", "🥶", "😭", "💀", "👽"]
-    private var emoji = [Int: String]()
+    // Character Array 상태
+    // private var emojiChoices = ["👻", "🎃", "😱", "🥵", "🥶", "😭", "💀", "👽"]
+
+    // String 상태
+    private var emojiChoices = "👻🎃😱🥵🥶😭💀👽"
+    private var emoji = [Card: String]()
+
     private func emoji(for card: Card) -> String {
         // 왜 옵셔널이 들어갈까?? -> 딕셔너리에 없는 값일 수도 있기 때문.
         // * 딕셔너리에서 무언가 찾는다면 옵셔널을 리턴한다는 것을 명심하자.
-        // 이모지가 셋팅 안되있고, 선택
-        if emoji[card.identifier] == nil, emojiChoices.count > 0 {
+        // 딕셔너리의 키와 값 형태를 활용해보자.
+        if emoji[card] == nil, emojiChoices.count > 0 {
             // * arc4random_uniform은 부호없는 정수형만 취급한다. -> UInt32로 랩핑하면 사용 가능
             // 한번 사용한 이모티콘은 emojiChoices 배열에서 삭제한다.
-            emoji[card.identifier] = emojiChoices.remove(at: emojiChoices.count.arc4Random)
+            let randomStringIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: emojiChoices.count.arc4Random)
+            emoji[card] = String(emojiChoices.remove(at: randomStringIndex))
         }
 
-        return emoji[card.identifier] ?? "?"
+        return emoji[card] ?? "?"
     }
 }
 
