@@ -740,8 +740,10 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
 * 
 
 ### ➣  4강 구현결과
+- 집중력게임(Concentration Game) 내 계산프로퍼티, indexOfTheOneAndOnlyFaceUpCard의 클로저, 익스텐션 활용 예시
+- **클로져(Closure)와 익스텐션 등을 활용하여 훨씬 간결하고 직관적인 코드가 되었다.**
 <div>
-<img width="250" src="">
+<img width="500" src="https://user-images.githubusercontent.com/4410021/63854110-54d66880-c9d7-11e9-9676-d0abb9bbb372.png">
 </div>
 
 <br>
