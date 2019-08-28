@@ -191,6 +191,65 @@
 // - 거의 모든 기초 프레임워크인 딕셔너리, 배열 등이 함수형 프로그래밍으로 만들어져 있다.
 // - 프로토콜을 이용한 제약이나 프로토콜의 익스텐션 등은 함수형 프로그래밍을 지원한다.
 
+// ## 문자열 String
+// - 문자열 구조체와 별개로 문자(Character) 구조체가 있다.
+// - 문자열은 유니코드로 이루어져있다. (C A F E -> 5개의 유니코드로 표현)
+// - 문자열은 구조체이자 값 타입니다.
+// - Swift에서는 문자열을 정수로 색인하지 않는다.
+// - String, Array 전부 rangeReplacableCollection 프로토콜을 준수한다.
+//
+// ### String.Index
+// - 정수 대신 다른 특수한 타입, Stirng.index를 사용하여 문자열을 색인한다.
+// - startIndex, endIndex, index(of:) 등을 통해 인덱스를 얻을 수 있다.
+// - 문자열(String)의 배열(Array)은 곧 그 문자(Character)들의 배열이다.
+// let characterArray = Array(str) // Array<Character>
+// print(characterArray[0]) // Array형으로 변환하면 String.Index 대신 정수값으로 접근이 가능해진다.
+//
+//// String.Index 사용 예시)
+// let pizzaJoint = "cafe pesto"
+// let firstCharacterIndex = pizzaJoint.startIndex // of type String.Index
+// let fourthCharacterIndex = pizzaJoint.index(firstCharacterIndex, offsetBy: 3)
+// let fourthCharater = pizzaJoint[fourthCharacterIndex] // pizzaJoint 네번째 문자열인 'e'
+//
+//// " "(공백) 이 없다면 인덱스 반환값이 nil일 수도 있으므로 if let 을 사용했다.
+// if let firstSpace = pizzaJoint.index(of: " ") {
+//    let secondWordIndex = pizzaJoint.index(firstSpace, offsetBy: 1) // 공백으로부터 1칸 뒷쪽의 문자 인덱스를 반환
+//    let secondWord = pizzaJoint[secondWordIndex..<pizzaJoint.endIndex] // "pesto"
+// }
+// - ..< 등으로 String.Index의 영역을 지정할 수 있다.
+//
+// ### Range
+// - Range는 제네릭 타입으로 꼭 Int형으로만 범위를 설정할 필요가 없다. ex) String.Index의 사용...
+//
+// ### String 제공 기능
+//
+// - **components**
+//// components 사용 예)
+// pizzaJoint.components(separatedBy: " ")[1] // pizzaJoint를 공백 단위로 쪼갠 뒤 그 중 (인덱스 1)2번째의 값을 반환한다.
+//
+// - **insert**
+//// insert 사용 예)
+// var s = pizzaJoint // String은 구조체이자 값타입이므로 값복사를 한다.
+// s.insert(contentOf: " foo", at: s.index(of: " ")!) // "cafe foo pesto" or Crashed(because of '!')
+//
+// - **replaceSubrange**
+//// replaceSubrange 사용 예시
+//// ..< 로 좌변을 구체적으로 명시 안해도 스위프트는 영리하게 startIndex로 인식하여 계산한다.
+// s.replaceSubrange(..<s.endIndex, with: "new Contents") // Change Strings with "new Contents"
+// - **remove**
+//// remove 사용 예시
+// emojiChoices.remove(at: randomStringIndex)
+
+// ### NSAttributedString
+// - 각각의 문자가 속성을 지닌 문자열
+// - 여러문자의 범위 내에서 하나의 딕셔너리를 사용한다.
+// - 속정 문자별로 다양한 폰트나 문자 색상등을 부여하는 등 UI라벨 글자설정, UI버튼 설정 등에 활용가능
+
+// ## Any
+// - 어떤 구조체나 클래스던 모두 들어갈 수 있음을 의미
+// - 강타입의 Swift답지 않은 표현이다.
+// - 절대 자료구조에 Any를 쓰지 말자
+
 import UIKit
 
 class ViewController: UIViewController {
@@ -254,8 +313,13 @@ class ViewController: UIViewController {
         }
     }
 
-    private var emojiChoices = ["👻", "🎃", "😱", "🥵", "🥶", "😭", "💀", "👽"]
+    // Character Array 상태
+    // private var emojiChoices = ["👻", "🎃", "😱", "🥵", "🥶", "😭", "💀", "👽"]
+
+    // String 상태
+    private var emojiChoices = "👻🎃😱🥵🥶😭💀👽"
     private var emoji = [Card: String]()
+
     private func emoji(for card: Card) -> String {
         // 왜 옵셔널이 들어갈까?? -> 딕셔너리에 없는 값일 수도 있기 때문.
         // * 딕셔너리에서 무언가 찾는다면 옵셔널을 리턴한다는 것을 명심하자.
@@ -263,7 +327,8 @@ class ViewController: UIViewController {
         if emoji[card] == nil, emojiChoices.count > 0 {
             // * arc4random_uniform은 부호없는 정수형만 취급한다. -> UInt32로 랩핑하면 사용 가능
             // 한번 사용한 이모티콘은 emojiChoices 배열에서 삭제한다.
-            emoji[card] = emojiChoices.remove(at: emojiChoices.count.arc4Random)
+            let randomStringIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: emojiChoices.count.arc4Random)
+            emoji[card] = String(emojiChoices.remove(at: randomStringIndex))
         }
 
         return emoji[card] ?? "?"
