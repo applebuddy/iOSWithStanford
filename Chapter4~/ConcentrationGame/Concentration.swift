@@ -14,21 +14,27 @@ struct Concentration {
 
     // 내부적으로 이미 구현되어 있으므로, Private 처리를 해도 무방하다.
     // 계산프로퍼티로 구현되는 indexOfOneAndOnlyFaceUpCard
-    private var indexOfOneAndOnlyFaceUpCard: Int? {
+    private var indexOfTheOneAndOnlyFaceUpCard: Int? {
         get {
-            var foundIndex: Int?
-            for index in cards.indices {
-                if cards[index].isFaceUp {
-                    // 막 하나만 뒤집은 상황
-                    if foundIndex == nil {
-                        foundIndex = index
-                    } else { // 이미 하나 뒤집고 두번째 뒤집는 상황
-                        // 두개 뒤집은 뒤엔 다시 nil로 초기화 한다.
-                        return nil
-                    }
-                }
-            }
-            return foundIndex
+            // ✭ 클로져를 활용하면 보다 가독성있고 간결한 코드를 구성할 수 있다.
+            // 컬렉션에서 제공하는 filter 클로저를 적용한다.
+            // 1) cards의 계수가능 법위 정수를 순회하며 앞면인 경우만 추린다.
+            // 2) 만약 앞면인 카드가 하나뿐일 경우면 해당 인덱스를 리턴, 그 이외에는 nil을 반환한다.
+            // 각각 인덱스의 카드가 앞면이면 true, 뒷면이면 false를 리턴할 것이다.
+            return cards.indices.filter { cards[$0].isFaceUp }.oneAndOnly
+//            var foundIndex: Int?
+//            for index in cards.indices {
+//                if cards[index].isFaceUp {
+//                    // 막 하나만 뒤집은 상황
+//                    if foundIndex == nil {
+//                        foundIndex = index
+//                    } else { // 이미 하나 뒤집고 두번째 뒤집는 상황
+//                        // 두개 뒤집은 뒤엔 다시 nil로 초기화 한다.
+//                        return nil
+//                    }
+//                }
+//            }
+//            return foundIndex
         }
 
         // newValue는 set 블럭 내의 지역변수가 될 것 이다.(newValue 외 다른 변수명으로 지정할 수도 있다.)
@@ -50,7 +56,7 @@ struct Concentration {
 
         if !cards[index].isMatched {
             // 비교해야할 카드 인덱스가 존재하고, 이후 선택한 인덱스가 다른 인덱스일때, 비교를 시작한다.
-            if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
+            if let matchIndex = indexOfTheOneAndOnlyFaceUpCard, matchIndex != index {
                 // check if cards match
                 // 만약 비교하는 두개의 카드 식별자가 일치한다면,
                 if cards[matchIndex] == cards[index] {
@@ -62,7 +68,7 @@ struct Concentration {
 
             } else {
                 // 단 하나 뒤집어진 카드 인덱스를 indexOfOneAndOnlyFaceUpCard에 저장한다.
-                indexOfOneAndOnlyFaceUpCard = index
+                indexOfTheOneAndOnlyFaceUpCard = index
             }
         }
     }
@@ -77,5 +83,18 @@ struct Concentration {
         }
         // TODO: Shuffle the cards
         cards.shuffle()
+    }
+}
+
+extension Collection {
+    // 배열 내 요소가 하나일 때 단 하나 존재하는 하나의 값을 반환하는 variable
+    // ex) "hello".oneAndOnly // => nil
+    //      "h".oneAndOnly // 단 하나의 요소만 존재하므로 해당 요소를 출력 => "h"
+    // * Element : 컬렉션의 요소 별명 타입
+    var oneAndOnly: Element? {
+//         collection의 기본 프로퍼티들
+//             - count : 컬렉션의 크기를 반환
+//             - first : 컬렉션의 첫번째 요소를 반환
+        return count == 1 ? first : nil
     }
 }
