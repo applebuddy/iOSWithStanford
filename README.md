@@ -399,58 +399,63 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 <br>
 
 # Lecture 4) 
-## 프로토콜과 클로져 Protocol, Closure
-*
-// 4강)
-//  4강에서 다룰 주제 : Protocol, Closure, String, mutating...
-//  Concentration 객체를 class -> struct로 변경!
-//    - 이제 Concentration은 ViewController에 참조되는 포인터가 아닌 하나의 모델이 된다.
-//    - **왜 구조체로 교체할까??**
-//        - 구조체는 값복사 타입이다. 그러므로 Heap에 존재하지 않고 구조체를 전달 시 계속해서 그 값을 복사한다.
-//        - 값이 계속 복사되니 비효율적이라고 생각할 수 있다.
-//        - 다만 스위프트는 영리해서 struct일 지라도 해당 내용이 변경되엇을 때만 값을 복제한다.
+## Protocol, Closure, String, mutating... 
+### Concentration 객체를 class -> struct로 변경!
+- 이제 Concentration은 ViewController에 참조되는 포인터가 아닌 하나의 모델이 된다.
+- **왜 구조체로 교체할까??**
+  - 구조체는 값 복사 타입이다. 그러므로 Heap에 존재하지 않고 구조체를 전달 시 계속해서 그 값을 복사한다.
+  - 값이 계속 복사되니 비효율적이라고 생각할 수 있다.
+  - 다만 스위프트는 영리해서 struct일 지라도 해당 내용이 변경되엇을 때만 값을 복제한다.
 
-// ## Protocol
-// - Struct, Class, Enum과 함께 스위프트의 자료구조를 형성하는 네번째 기둥
-//    - 별도의 구현이 없는 메서드와 변수의 리스트이자 하나의 일급타입
-//    - 프로토콜은 메서드에 대한 기본 구현을 제공한다.
-//    - 프로토콜은 API에서 원하는 것을 불러운 방식으로 작동한다.
-//    - 블라인드 커뮤니케이션을 할때 최적의 도구이다.
-//    - 특정 유사한 기능을 공유하면서도 동일한 클래스로부터 상속받을 필요가 없도록 할 수 있다.
-//    - ** 프로토콜은 코드가 없다. 구현방식이 아닌 순수한 선언이기 때문이다. **
-//    - 만약 ** 특정 프로토콜이 클래스만 받는 프로토콜 이라면, 프로토콜 뒤에 : class 를 표시 ** 해주어야 한다.
-//      - : class 선언을 해두면 굳이 mutating 표시를 할 필요가 없다. class 에 mutating 을 넣을 일은 없기 때문이다.
-//      - extension에 protocol을 채택하여 사용할 수도 있다.
+## Protocol
+### Struct, Class, Enum과 함께 스위프트의 자료구조를 형성하는 네번째 기둥
+- 별도의 구현이 없는 메서드와 변수의 리스트이자 하나의 일급타입
+- 프로토콜은 메서드에 대한 기본 구현을 제공한다.
+- ** 프로토콜은 코드가 없다. 구현방식이 아닌 순수한 선언이기 때문이다. **
+- 만약 ** 특정 프로토콜이 클래스만 받는 프로토콜 이라면, 프로토콜 뒤에 : class 를 표시 ** 해주어야 한다.
+  - : class 선언을 해두면 굳이 mutating 표시를 할 필요가 없다. class 에 mutating 을 넣을 일은 없기 때문이다.
+  - extension에 protocol을 채택하여 사용할 수도 있다.
+- 프로토콜은 API에서 원하는 것을 불러오는 방식으로 작동한다.
+- 블라인드 커뮤니케이션을 할때 최적의 도구이다.(view - Controller)
+- 특정 유사한 기능을 공유하면서도 동일한 클래스로부터 상속받을 필요가 없도록 할 수 있다. 
+- "다중상속과 같은 효과를 낼 수 있음"
 
-// ### 프로토콜의 선언
-// - 1) 프로토콜의 선언
-//  - 클래스, 열거형, 구조체 선언과 같은 선언방식
-//  - 클래스, 구조체 등의 선언방식과 유사
-//// 프로토콜 선언 예
+### 프로토콜의 선언 방식
+- 프로토콜의 선언
+ - 클래스, 열거형, 구조체 선언과 같은 선언방식
+ - 클래스, 구조체 등의 선언방식과 유사
+ 
+~~~ swift
+// 프로토콜 선언 예
 // AProtocol을 구현하려면, IngeritedProtocolA, InheritedProtocolB 프로토콜을 충족시켜야 한다.
-// protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
-//    var someProperty: Int { get set }
-//    func aMethod(arg1: Double, anotherArgument: String) -> SomeType
-//    mutating func changeIt()
-//    init(arg: Type)
-// }
-// - 2) 클래스나 구조체, 열거형이 프로토콜의 메서드, 변수를 구성
-// - 3) 클래스나 구조체, 열거형 등의 구조 내부에 구성
-//    - 클래스로 프로토콜을 구현하려 한다면 클래스의 init 에 required 예약어를 붙여주어야 만 한다.
-//    - 서브클래스에서는 더이상 이 프로토콜을 구현하지 않았는데도 사람들은 프로토콜이 서브클래스에서도 가능한것으로 착각할 수 있기 때문이다.
-//    - 서브클래스의 init이 형성되지 않도록 메인 클래스의 required init 지정을 해준다.
+protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
+   var someProperty: Int { get set }
+   func aMethod(arg1: Double, anotherArgument: String) -> SomeType
+    mutating func changeIt()
+    init(arg: Type)
+ }
+~~~
 
-// ### 프로토콜 채택방법
-//// 프로토콜 채택방법 예시(클래스)
-// class SomeClass: SuperClassOfSomeClass, SomeProtocol, AnotherProtocol {
-//    // 클래스의 구현
-//    // 채택한 프로토콜, SomeProtocol, AnotherProtocol을 준수해야한다.
-// }
-//// 프로토콜 채택방법 예시(구조체)
-// struct SomeStruct: SomeProtocol, AnotherProtocol {
-//    // 구조체의 구현
-//    // 채택한 프로토콜, SomeProtocol, AnotherProtocol을 준수해야한다.
-// }
+- 클래스나 구조체, 열거형이 프로토콜의 메서드, 변수를 구성
+- 클래스나 구조체, 열거형 등의 구조 내부에 구성
+  - 클래스로 프로토콜을 구현하려 한다면 클래스의 init 에 required 예약어를 붙여주어야 만 한다.
+  - 서브클래스에서는 더이상 이 프로토콜을 구현하지 않았는데도 사람들은 프로토콜이 서브클래스에서도 가능한것으로 착각할 수 있기 때문이다.
+  - 서브클래스의 init이 형성되지 않도록 메인 클래스의 required init 지정을 해준다.
+
+### 프로토콜 채택방법
+
+~~~ swift
+// 프로토콜 채택방법 예시(클래스)
+ class SomeClass: SuperClassOfSomeClass, SomeProtocol, AnotherProtocol {
+    // 클래스의 구현
+    // 채택한 프로토콜, SomeProtocol, AnotherProtocol을 준수해야한다.
+ }
+// 프로토콜 채택방법 예시(구조체)
+ struct SomeStruct: SomeProtocol, AnotherProtocol {
+    // 구조체의 구현
+    // 채택한 프로토콜, SomeProtocol, AnotherProtocol을 준수해야한다.
+ }
+~~~
 
 // ### 프로토콜 옵셔널 메서드
 // - 프로토콜에서 지정한 메서드를 반드시 선언하지 않아도 되도록 설정할 수 있다.
