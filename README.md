@@ -96,7 +96,8 @@ iOS Study with Stanford
 - 메서드와 프로퍼티 사용
 - 프로퍼티옵저버(didSet, willSet)
 - 배열 Array<Element>, [Element]
-- 딕셔너리 Dictionary<Key, Value> -> 해쉬타입
+- 딕셔너리 Dictionary<Key, Value>
+  - -> 해쉬타입, 키(Hashable, Equatable)와 값(Any)으로 이루어짐
 - for in 반복문 : 시퀀스(sequence) 성질이 있는 요소 순회탐색에 사용 가능
 - 문자열, 배열, 딕셔너리, Set 등
 - MVC(Model-View-Controller) 패턴
@@ -119,16 +120,16 @@ iOS Study with Stanford
  ### UIStackView
  - 다양한 UI객체를 묶어 관리할 수 있다.
  - 여러개의 UI를 선택 
-   - -> 인터페이스 빌더 하단 embed in View 로 스택뷰 처리가능
+   - -> 인터페이스 빌더 하단 "embed in View" 로 스택뷰 처리가능
  - 스택뷰 프로퍼티
- - distribution : 스택뷰 내 서브뷰의 배치 설정 
+   - distribution : 스택뷰 내 서브뷰의 배치 설정 
    - fill, fillEqually, fillProportionally... 등의 옵션이 있다.
- - alignment : 스택뷰 정렬 기준 설정
+   - alignment : 스택뷰 정렬 기준 설정
 
  ### Stride(from:,through:,by:)
  - *Float 등의 부동소수점을 반복문으로 돌릴 수 없을까?*
- - Swift에서는 stride 전역함수를 이용하여 구현할 수 있다.
- - 부동소수점 이외에 문자열의 인수 등도 셀 수 있다.
+   - Swift에서는 stride 전역함수를 이용하여 구현할 수 있다.
+   - 부동소수점 이외에 문자열의 인수 등도 셀 수 있다.
 
  ~~~ swift
  // for (i = 0.5; i<=15.25; i+=0.3) 과 같은 동작의 stride 사용 예
@@ -143,7 +144,7 @@ iOS Study with Stanford
  - 가볍기때문에 한 줄만으로 표현할 수 있다.
  - 여러 요소의 이름을 유연하게 설정할 수 있다.
  - 함수 내에서 하나 이상의 값을 리턴할때 유용하다.
-    - ex) (weight: Double, height: Double)로 신장+체중 리턴
+    - ex) (weight: Double, height: Double)로 신장(height)+체중(weight) 값 리턴
  ~~~ swift
  // Tuple 사용 예)
  // tuple의 타입이 Tuple이 된다.
@@ -159,14 +160,14 @@ iOS Study with Stanford
  ~~~
 
  ### 계산프로퍼티 (Computed Properties)
- - 쓰기, 읽기 시 기 지정한 get, set 대로 계산되는 프로퍼티
+ - 쓰기, 읽기 시 사전 정의한 get, set 대로 계산되는 프로퍼티
  - 프로퍼티감지자(property Observer)와 혼용해서 사용할 수 없다.
- - 저장프로퍼티와 달리 쓰기/읽기 시 마다 set, get 블럭 내용을 신행된다.
- - get과 달리 set은 필수 구현요소가 아니다.
+ - 저장프로퍼티와 달리 쓰기/읽기 시 마다 set, get 블럭 내용을 실행한다.
+ - get(읽기)과 달리 set(쓰기)은 필수 구현요소가 아니다.
     - -> 읽기/쓰기(get/set) or 읽기(get) 상태로 구현 가능
-    - get 만 사용한다면 get 명시 없이 return ~~~~ 로 구현할 수도 있다.
+    - get 만 사용한다면 get 명시 없이 return <값> 로 구현할 수도 있다.
  - 상황에 따라 계산되는 속성으로 코드는 훨씬 간결해지고, 직관적이게 된다. 일어난 상황에따라 반응하기 때문이다.
- - 특정 행위를 할때마다 변경 혹은 읽기가 필요한 경우 유용할 수 있다.
+ - 특정 행위를 할 때마다 변경 혹은 읽기가 필요한 경우 유용할 수 있다.
  - **저장프로퍼티, 계산프로퍼티의 특성을 살릴 만한 상황을 잘 판단하여 사용하는 것이 좋다.**
     - ex) indexOfOneAndOnlyFaceUpCard: Int? -> 카드를 뒤집을때 카드의 상태에 따라 다른 처리가 필요한 변수
     
@@ -175,12 +176,12 @@ iOS Study with Stanford
  var foo: Double {
     get {
         // return the calculated value of foo
-        return 계산된 foo의 값
+        return <계산된 foo의 값>
     }
 
     set(newValue) {
-        // do comething based on the fact that foo has changed to newValue
-        // 새로운 값으로 변경이 됄 때 해당 블럭이 실행 된다.
+        // do something based on the fact that foo has changed to newValue
+        // 새로운 값으로 변경이 될 때 해당 블럭이 실행 된다.
     }
  }
  ~~~
@@ -189,27 +190,39 @@ iOS Study with Stanford
 
 ## ♣︎ **접근제어 Access Control**
  - 외부로부터 코드 내부를 접근하는 기준을 지정할 수 있다.
-### - open : 해당 프레임워크 이외의 모듈에서 불러올 뿐만 아니라 할당, 서브클래싱, 오버라이딩 까지 전부 가능하다. 즉 완전개방 상태이다.
-### - public : 해당 프레임워크 이외의 모듈에서도 사용자가 불러와 사용이 가능하다.
+### - open : 해당 프레임워크 이외의 모듈에서 불러올 뿐만 아니라 할당, 서브클래싱(상속), 오버라이딩 까지 전부 가능하다. 즉 완전개방 상태이다.
+- 현재 모듈 뿐 만 아니라 다른 모듈에서도 읽기, 서브클래싱(상속), 오버라이딩, 할당 모두 가능한 완전개방 상태이다.
+### - public : 해당 프레임워크 이외의 모듈에서도 사용자가 불러와 사용이 가능하다. 
+- 다른 모듈에서 불러와 읽을 수 있다. 
+  - 하지만 다른 모듈에서의 서브클래싱(상속), 할당, 오버라이딩은 불가능하다. 
 ### - Internal : default 접근제어, Internal일 경우, 모듈 내에 서는 지정한 객체나 코드이던 해당 메서드, 프로퍼티에 접근이 가능하다.
+- 어떠한 접근제어 명시를 안했을 때 적용되는 Default Access Control 상태
+- 모듈 내에서는 읽기, 서브클래스(상속), 오버라이딩, 할당 모두 가능하다.
+  - 하지만 다른 모듈에서의 읽기, 서브클래식(상속), 할당, 오버라이딩을 불가능하다. 
 ### - Private : 다른 객체로부터 불러올 수 없다. 해당 지정된 블록 내에서만 접근 가능, 접근 비공개상태
+- 현재 정의된 블록 이외의 영역에서는 접근할 수 없다. 
 ### - Private(set) : 다른 객체로부터 불려질 수 있다. 읽기 접근은 되지만 할당은 불가능 하다. 지정 된 내부에서만 할당 가능.
+- 정의 된 블록 내에서만 서브클래싱(상속), 오버라이딩, 할당이 가능하다. 
+- 현재 정의 된 블록 이외의 영역에서는 읽기만 가능하다.
+- public private(set)과 동일한 표현
 ### - fileprivate : 파일 이내에서는 지정 된 메서드, 프로퍼티에 대해서 접근 및 할당 가능
+- 현재 정의 된 파일 영역에서만 읽기, 오버라이딩, 서브클래싱(상속), 할당 등의 접근이 가능하다.
+- 정의 된 파일 영역 이외에서는 접근할 수 없다. 
 
 <br>
 
 ## ♣︎ 확장 Extension
- - 확장은 iOS에서 매우 강력한 도구이다. 비유하자면, 마치 "조심스럽게 다루는 무기"와 같다.
  - extension <객체이름> {} 과 같은 식으로 사용할 수 있다.
- - extension은 저장공간이 있는 변수는 아니다.
- - extension은 간편하여 쉽게 남용 될 수 있다. 
+ - **확장은 iOS에서 매우 강력한 도구**이다. 비유하자면, 마치 **"조심스럽게 다루는 무기"와 같다.**
+ - **extension은 저장공간이 있는 변수는 아니다.**
+ - **extension은 간편하여 쉽게 남용 될 수 있다.**
    - 그러므로 확장 사용 시 불필요한 기능인지 고려할 필요가 있다.
 
 <br>
 
 ## ♣︎ 옵셔널
 - Optional "옵셔널도 enum이다."
-- nil일 수도 있음을 의미. The Enumeration
+- **nil일 수도 있음을 의미.** Optional, The Enumeration
 - 옵셔널의 정의 형태) enum + 배열과 같은 제네릭 형태로 되어있다.
 
 ~~~ swift
@@ -249,24 +262,26 @@ iOS Study with Stanford
 <br> 
 
 ## ♣︎ ARC (Automatic Reference Counting)
- - iOS의 자동 참조할당 해제 방식
- - ARC가 0 이되면 Heap에서 빼내서 할당을 해제한다.
- - strong, weak, unowned 등의 참조 옵션이 존재한다.
+ - **iOS의 자동 참조할당 해제 방식**
+ - **ARC가 0 이되면 Heap에서 빼내서 할당을 해제**한다.
+ - **strong, weak, unowned** 등의 참조 옵션이 존재한다.
 
 ### ➣  Strong
 - 참조카운팅의 기본 설정값.
 - strong으로 설정하고 있는 한 해당 객체는 힙 내에 계속 유지된다.
 
 ### ➣  weak
-- weak은 옵셔널 포인터로 참조타입을 가리킨다.
+- **weak은 옵셔널 포인터로 참조타입을 가리킨다.**
 - 힙 내의 어떤것을 가리키고 있지만, 흥미가 있어야만 사용되는 것
-- 아울렛, 델리게이트 등에 사용될 수 있다. 그 외에에는 사용을 안하는 편이다.
-  - **아울렛(UI요소), MVC델리게이션, 클로저 캡쳐링 등의 상황 시 참조순환을 방지 할 수 있다.**
+- **weak은 아울렛, 델리게이트 등에 사용될 수 있다.** 그 외에에는 사용을 안하는 편이다.
+  - **MVC델리게이션, 클로저 캡쳐링 등의 상황 시 참조순환을 방지 할 수 있다.**
+  - **2015 WWDC @IBOutlet 소개 시, @IBOutlet 정의 간 strong의 사용을 권장하고 있다.**
+    - 관련하여 @IBOutlet 등에 weak 키워드를 지정하는게 좋을 지 좀더 생각해볼 필요가 있다.
 
 ### ➣  unowned
 - **"만약 내가 문제가 있으면 오류를 발생시켜라."**
-   - 반드시 nil이 아니라고 판단될때 사용해야 문제가 없다.
-- 참조순환(메모리 사이클)을 방지하기 위해 사용한다.
+   - 반드시 nil이 아니라고 판단 될때 사용해야 문제가 없다.
+- **참조순환(메모리 사이클)을 방지하기 위해 사용한다.**
    - 클로저를 사용하면 캡쳐링 등의 참조순환 문제가 발생할 수 있는데 이를 방지하기 위해 사용하곤 한다.
 - 매우 위험한 참조카운팅 방식
 - 매우 드물게 사용한다.
@@ -277,15 +292,15 @@ iOS Study with Stanford
 ### => Class, Struct, Enum, Protocol
 
 ## ♣︎ 클래스 Class
-- 클래스는 참조타입, 상속을 지원한다.
-- 참조타입으로서 힙(Heap)영역에 존재하게 된다.
-- 클래스 등의 참조계산 방식은 앞서 언급한 ARC(Automatic Refernce Counting)로 동작한다.
+- **클래스는 참조타입, 상속을 지원한다.**
+- **참조타입으로서 힙(Heap)영역에 존재**하게 된다.
+- **클래스 등의 참조계산 방식은 앞서 언급한 ARC(Automatic Refernce Counting)로 동작**한다.
 
 ## ♣︎ 구조체 Struct
-- 구조체는 값타입, 상속을 지원하지 않는다.
-- 구조체 종류
+- **구조체는 값타입**, 상속을 지원하지 않는다.
+- **구조체 종류**
   - 배열, 딕셔너리, 문자열, 문자, 정수형 ,Double, UInt32 등... 많다.
-- 값타입이므로 내부적으로 변경되야 하는 여지가 있을 때 mutating 예약어를 사용해야 할 수 있다. 
+- **값 타입이므로 내부적으로 변경되야 하는 여지가 있을 때 mutating 예약어를 사용**해야 한다. 
 
 ## ♣︎ 열거형 Enum
 - 타입의 일종, 데이터 구조 타입인 enum, struct, class 중 하나인 열거형.
@@ -293,10 +308,10 @@ iOS Study with Stanford
   - 그 중 구조체(struct)와 동일한 값 타입이다.
 - 메서드, 변수를 가질 수 있지만 저장공간을 가지지는 않는다.
   - enum의 저장공간은 연동자료들 각각에 대해서만 존재한다. 그러므로 enum의 값들은 계산된 변수만을 가질 수 있다.
-    - enum의 연동자료 이외에 대한 저장공간은 존재하지 않는다.
+    - enum의 각 case 내 연동자료를 제외한 저장공간은 존재하지 않는다.
 - swift enum은 다른 언어의 열거형과 흡사하다. 하지만...
 - **다른 언어에 비해 swift의 enum은 매우 강력하다.**
-   - enum 각각의 케이스들이 연동된 데이터 혹은 값을 가질 수 있기 때문이다.
+   - **enum 각각의 케이스들이 연동된 데이터 혹은 값을 가질 수 있기 때문이다.**
 - * 타입 추론이 가능하지만 좌측 혹은 우측 어느 한곳에는 해당 타입을 명시해주어야 추론이 가능하다.
 
 ~~~ swift
@@ -351,9 +366,9 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 ~~~
 
 ### ➣  switch self 
-- enum 내에 switch self 를 구성하여 case에 따른 연동자료를 반환시길 수 있다.
+- **enum 내에 switch self 를 구성하여 case에 따른 연동자료를 반환시길 수 있다.**
 - enum 내부적으로 self를 변경 시킬 수도 있다.
-  - 단, 값타입인 enum 타입 내에서는 mutating 속성이 부여되어 있어야 내부 쓰기가 가능
+  - 단, **값타입인 enum 타입 내에서는 mutating 속성이 부여되어 있어야 내부 쓰기가 가능**
   
 ~~~ swift
 // switch self 사용 예시)
@@ -379,8 +394,8 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 ~~~
 
 ## ♣︎ 프로토콜 Protocol
-- 문자열, 배열 등 많은 것들이 프로토콜을 사용하며 이들의 기초가 된다.
-- 다중상속과 같은 효과 / controller-view 간 델리게이션 사용 등을 통한 블라인드 소통기능 등 다양한 역할을 할 수 있다.
+- **문자열, 배열 등 많은 것들이 프로토콜을 사용하며 이들의 기초가 된다.**
+- **다중상속과 같은 효과 / Controller-View 간 델리게이션 사용 등을 통한 블라인드 소통기능 등 다양한 역할**을 할 수 있다.
 - 4강에서 이어서 알아본다.
 
 <br>
@@ -405,7 +420,15 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 - Swift 핵심 기초문법 훑어보기
   - ARC, Optional
   - Extension
-  - Struct, Class, Enum
+- Swift의 핵심 자료구조
+  - 구조체(Struct), 클래스(Class)
+  - 열거형(Enum)
+    - 열거형 관련 문법
+      - case let, 연동자료 활용
+      - default:
+      - switch self
+  - 프로토콜(Protocol)
+  
 - 집중력게임 내 계산프로퍼티, extension 적용을 통한 코드 간결화
 
 <br>
@@ -428,8 +451,8 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 ### Struct, Class, Enum과 함께 스위프트의 자료구조를 형성하는 네번째 기둥
 - 별도의 구현이 없는 메서드와 변수의 리스트이자 하나의 일급타입
 - 프로토콜은 메서드에 대한 기본 구현을 제공한다.
-- ** 프로토콜은 코드가 없다. 구현방식이 아닌 순수한 선언이기 때문이다. **
-- 만약 ** 특정 프로토콜이 클래스만 받는 프로토콜 이라면, 프로토콜 뒤에 : class 를 표시 ** 해주어야 한다.
+- **프로토콜은 코드가 없다. 구현방식이 아닌 순수한 선언이기 때문이다.**
+- 만약 **특정 프로토콜이 클래스만 받는 프로토콜 이라면, 프로토콜 뒤에 : class 를 표시** 해주어야 한다.
   - **class 선언을 해두면 굳이 mutating 표시를 할 필요가 없다. 
     - 참조타입인 class 에 mutating 을 넣을 일은 없기 때문이다.**
   - extension에 protocol을 채택하여 사용할 수도 있다.
