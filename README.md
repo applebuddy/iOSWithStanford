@@ -871,3 +871,419 @@ arrayOfOperations.append(operation)
 - String
   - Array, String 인덱스의 차이점
 - MVC Delegation패턴의 작동방식, 적용 예
+
+<br>
+<br>
+<br>
+
+# Lecture 5) UIView, Core Graphics 
+## 5강에서 배울 내용
+- UIView의 초기화, 내부 프로퍼티
+- Core Graphics 
+  - CGPoint, CGFloat, CGSize, CGRect
+- 열거형(enum)의 사용
+- Any & AnyObject
+- throws, try/do-catch 에러처리
+
+### 에러 예외처리 방법, Thrown Errors
+  - 예상 치 못한 에러를 어떻게 처리해야 할까?
+- throws : 에러의 여지가 있음을 알려주는 키워드
+  - 사용 예시 ▼
+~~~ Swift
+func save() throws {
+    //...
+}
+
+/// do 블럭 내에 error여지가 있는 작업에 try 실행을 한 후 예외 발 생 시 throw error를 실행
+do {
+    // try : 지금 작업은 오류가 날 여지가 있으니 try 해보자.
+    try context.save()
+       1) try! 를 사용 시 문제 없다면 정상적 값을 리턴 / 실행 간 문제 발생 시 앱이 강제종료 된다.
+       try! context.save()
+       2) try? 를 사용 시 문제 없다면 정상적 값을 리턴 / 실행 간 문제 발생해도 앱 종료 대신 nil반환으로 무시하고 넘어간다.
+       try? context.save()
+} catch let error {
+       에러 발생 시 error는 Error 프로토콜인 NSError등이 적용 될 수 있다.
+    throw error
+}
+~~~
+
+<br>
+<br>
+
+## ♣︎ Any & AnyObject
+- 사실 강타입언어인 Swift와 Any & AnyObject타입은 어울리지 않음
+- Objective-C, Swift 간 호환을 위해 존재
+- 즉, Objective-C와의 하위호환을 위해 존재
+
+<br>
+
+### Any
+  - 어떠한 타입도 될 수 있음(클래스, 구조체, 열거형 등... 뭐든 가능, 어떤 타입일 지 알 수 없음)
+  - Any 가 사용되는 메서드 예시) ▼
+~~~ swift
+// 스토리보드 UIViewController 세그 화면전환 전 실행 되는 메서드, prepare(for segue:,sender:)
+// prepare 메서드를 발생시키는 존재가 어떤 객체인지 모르기 때문에 Any? 타입을 sender parameter로 사용
+func prepare(for segue: UIStoryboardSegue, sender: Any?)
+~~~
+- **본 강의에서는 하위호환 API 호출을 제외하고 Any타입을 사용할 일이 없다.**
+ 
+<br>
+
+### AnyObject
+  - 클래스 타입에 한해서 사용할 수 있는 Any타입
+
+<br>
+
+### Any타입 변환 방법
+- as?, as! 등을 통해 타입을 변경시킬 수 있다.
+
+~~~ swift
+let unknown: Any = ... // 현재 타입을 알 수 없기 때문에 사용이 불가능
+if let foo = unknown as? MyType {
+    // MyType으로 타입 변환이 성공하면 해당 블럭을 실행할 수 있다.
+}
+// MyType으로 타입 변환이 실패하면 해당 블럭 실행하지 않는다.
+~~~
+
+<br>
+
+~~~ swift
+// ConcentrationViewController() 를 UIViewController로 할당해도 문제는 없다.
+// ConcentrationViewController()는 UIViewController 를 상속한 객체이기 때문이다.
+let vc: UIViewController = ConcentrationViewController()
+// => 다만 ConcentrationViewController()의 기능인 flipCard() 등은 사용할 수가 없다.
+//   => flipCard() 등을 사용하기 위해선 ConcentrationViewController 타입으로 변환하여 할당해야 한다.
+if let cvc = vc as? ConcentrationViewController {
+    // ConcentrationViewController타입으로서 실행되므로 ConcentrationViewController 프로퍼티 메서드인 flipCard() 사용이 가능
+    cvc.flipCard(...) // Done.
+}
+~~~
+
+<br>
+
+### NSObject
+- Objective-C 모든 클래스의 루트클래스
+- UIViewController등이 속한 UIKit 내 모든 객체는 Objective-C에서 개발 -> NSObject을 루트클래스로 상속
+- 몇몇 API는 NSObject클래스를 요구하곤 한다.
+- Swift의 Concentration과 같은 객체는 NSObject를 상속하지 않는다.
+
+<br>
+
+### NSNumber
+- 소수나 정수, Boolean 등 모든 숫자를 표현할 수 있는 클래스
+- NSNumber 사용예시) ▼
+~~~ swift
+let num = NSNumber(35.5)
+let num2: NSNumber = 35.5
+// NSNumber타입은 intValue, doubleValue, boolValue 등 다양한 타입 변환 가능
+let intified: Int = num.intValue
+~~~
+
+<br>
+
+### Date
+- 1970년 기준 얼마나 흘렀는지, Date 데이터를 제공한다.
+- 시간을 1/1,000,0000 단위로 측정
+- 나라마다 표현하는 시간방식, 체계가 다르기 때문에 Date만으로 세부날짜를 표현하기는 힘들다.
+  - 관련 클래스와 함께 사용하여 이 문제를 해결할 수 있다.
+- 관련 클래스
+  - Calendar
+  - DateFormatter
+  - DateComponents
+
+<br>
+
+### Data
+- URL등을 통해 얻어온 JSON 등 데이터의 비트가방 역할을 한다.
+
+<br>
+<br>
+
+## ♣︎ Views
+- 좌표계로 구성되는 직사각형의 영역, UIView
+- ViewController의 수많은 졸병과 같다.
+- 최상위의 UIView는 UIViewController의 var view: UIView 이다.
+
+~~~ swift
+func setup() {
+    //...
+}
+
+### UIView 초기화 방법
+- override init(frame: CGRect)
+  - 코드를 통해 UIView를 초기화 할때 사용
+~~~ swift
+override init(frame: CGRect) {
+    super.init(frame: frame)
+    // ...
+}
+~~~
+
+<br>
+    
+~~~ swift
+// 외부 InterfaceBuilder의 스토리보드를 통해 UIView를 초기화 할때 사용
+// coder는 UIView가 NSCoder 프로토콜을 구현하는데 필요하다.
+required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    // ...
+    setup()
+}
+~~~
+
+<br>
+    
+- awakefromNib()
+  - InterfaceBuilder file에서 나온 모든 객체들에게 보내진다.
+  - InterfaceBuilder file에서 나온 View로 초기화 하는 방법 ex) Nib 파일 등...
+  - * Nib은 Interface Builder 파일의 옛날 이름
+
+<br>
+
+### UIView 프로퍼티 변수
+~~~ swift
+var superView: UIView? // 현재 뷰의 상위 뷰를 반환한다. (상위뷰는 없을 수 있으므로 옵셔널 타입이다.)
+var subViews: [UIView] // 현재 뷰의 서브뷰들을 반환한다. (서브뷰는 여러개 있을 수 있으므로 배열타입이다.)
+var opaque: Bool // 불투명 여부를 설정한다. 기본적으로 불투명(true)으로 설정되어있다.
+var alpha: CGFloat // 투명도를 설정할 수 있다. 0...1 범위 CGFloat 타입의 값을 지정 가능하다.
+~~~
+
+<br>
+    
+    
+### UIView 프로퍼티 메서드
+~~~ swift
+func addSubview(_ view: UIView) // 특정 서브뷰를 추가할 때 사용
+func removeFromSuperview() // 슈퍼뷰로부터 뷰를 제거할 때 사용
+~~~
+
+<br>
+
+### UIWindow
+- iOS의 제일 꼭대기에 존재하는 window 객체
+- UIView의 서브 클래스
+- 외부 화면에 앱을 띄울때를 제외하고는 사용할 일이 별로 없다.
+
+<br>
+<br>
+
+## ♣︎ CG Structures
+- **Core Graphics Structures**의 약자.
+- 좌표계 체계 데이터 구조, Coordinate System Data Structures
+- **코어 그래픽스는 4개의 타입**을 갖고 있다.
+  - **CGFloat, CGPoint, CGSize, CGRect**
+
+<br>
+
+### CGFloat
+- 드로잉을 할 지점이 모두 부동 소수점으로 표현된다. 이때 사용되는 타입이 CGFloat이다.
+- 드로잉 간 부동 소수점 좌표는 나타내는 기본 타입
+
+~~~ swift
+let cgFloat = CGFloat(aDouble)
+~~~
+
+<br>
+
+### CGPoint
+- 두개의 CGFloat 기반 x, y를 구성하는 구조체 타입
+- CGFloat기반으로 점의 위치를 나타내는데 사용한다.
+~~~ swift
+// CGPoint는 x, y 두개의 CGFloat 타입 parameter 인자값을 받아 초기화 한다.
+var point = CGPoint(x: 18.0, y: 36.0)
+point.x += 20.0
+point.y -= 16.0
+~~~
+
+<br>
+
+### CGSize
+- 두개의 CGFloat 기반 width, height를 구성하는 구조체 타입
+- 크기(높이, 너비)를 나타내는데 사용한다.
+~~~ swift
+// CGSize는 width, height 두개의 CGFloat 타입 parameter 인자값을 받아 초기화 한다.
+var cgSize = CGSize(width: 120.0, height: 130.0)
+cgSize.width += 42.5
+cgSize.height = += 76.3
+~~~
+
+<br>
+
+### CGRect
+- 점과 크기를 조합한 구조체 타입
+  - CGPoint, CGSize를 동시에 같는다.
+~~~ swift
+struct CGRect {
+    var origin: CGPoint
+    var size: CGSize
+}
+
+// CGPoint, CGSize타입의 두개 인자를 이용해 점과 크기 정보를 갖는 CGRect를 초기화 한다.
+let rect = CGRect(origin: <CGPoint>, size: <CGSize>)
+~~~
+
+<br>
+
+- CGRect 프로퍼티
+~~~ swift
+let rect = CGRect(origin: <CGPoint>, size: <CGSize>)
+var minX: CGFloat // left 끝 x좌표를 반환
+var midY: CGFloat // CGRect의 중간 y좌표를 반환
+rect.intersects(CGRect) -> Bool // 특정 CGRect와 교차하고 있는지 여부를 반환
+rect.intersect(CGRect) // 특정 CGRect와 겹치는 부분의 직사각형을 반환
+rect.contains(CGPoint) -> Bool // 현재 CGRect가 인자값(parameter)로 받는 CGPoint를 포함하는지 여부를 반환
+~~~
+
+<br>
+<br>
+
+## ♣︎ 뷰 좌표계 시스템 View Coordinate System
+- Origin은 좌측 상단에서 시작한다. (Origin is upper left)
+- **좌표계의 단위는 CGPoint이다.**
+  - 픽셀 단위가 아닌 소수점 단위 표현을 하는 CGPoint가 기준이다.
+    - -> 픽셀단위보다 보다 섬세한 표현이 가능하다.(레티나 디스플레이 등에 사용 시 확연한 차이)
+  - ✓ contentScaleFactor: CGFloat : 현재 사용중인 장치의 포인트 당 픽셀 수를 반환한다.
+- frame, bounds
+  - 뷰의 위치 기준을 설정할 때 사용한다.
+  - UIView의 frame, bounds는 서로 크기가 다를 수 있다.
+    - ex) UIView가 회전된 상태이면 bound < frame이 될 수 있음
+  - 즉, 동 UIView의 frame, bounds가 서로 같을 필요는 없다.
+<br>
+<br>
+
+### bounds
+- 현재 사용중인 뷰의 드로잉 좌표계 원점과 높이, 너비 등을 제공한다.
+- **현재 뷰 기준의 좌표 기준, 액자틀**로 생각하면 이해하기 쉽다.
+
+~~~ swift
+var bounds: CGRect
+~~~
+
+<br>
+
+### frame
+- **슈퍼뷰 기준으로 서브뷰가 어디에 위치하는지**를 제공한다.
+
+~~~ swift
+var frame: CGRect
+~~~
+
+<br>
+<br>
+
+## ♣︎ 뷰 그리기 Drawing View
+- **뷰를 그리기 위해선 UIView 서브클래스와 override fraw(CGRect)를 생성**하면 된다.
+- **절대 draw(CGRect)를 직접 호출하지 않는다.**
+  - ✓ draw를 사용하기 위해 대신 사용 가능한 메서드
+    - setNeedsDisplay()
+    - setNeedsDisplay(_ rect: CGRect)
+      - 인자값(parameter)로 받는 CGRect는 최적화를 위해 쓰이는 사각형이다.(**현재의 사각형만 새로 드로잉 할 수 있도록**)
+
+<br>
+<br>
+
+### Core Graphics 적용 개념
+- 1) 뷰에 그릴 내용을 얻는다.
+- 2) 경로를 그린다. (외곽선, 상자(arc) 등...)
+- 3) 드로잉 속성을 설정한다. (색상, 폰트, 텍스쳐, 선두께 등...)
+- 4) 설정한 속성에 맞게 선과 색상을 드로잉한다.
+
+<br>
+
+### UIBezierPath
+- 선 굵기를 지정하거나, 테두리 그리기/채워넣기 등을 지원한다.
+- **드로잉 과정은 draw(rect) 메서드 내에서 처리**한다.
+- 1) 경로를 정의하기, Defining a KeyPath ▼
+~~~ swift
+// UIBezierPath 인스턴스를 생성한다.
+let path = UIBezierPath()
+
+// 경로를 움직인다.
+path.move(to: CGPoint(80,50))
+path.addLine(to: CGPoint(140,150))
+path.addLine(to: CGPoint(10,150))
+
+// 경로를 닫는다.
+path.close()
+~~~
+
+<br>
+
+- 2) 경로 설정 후 선과 색 속성을 설정한다. ▼
+~~~ swift
+// setFill(), setStroke() 메서드는 UIColor를 통해 사용한다.
+// * green, red, blue, gray, loghtGray 등은 UIColor의 정적 변수이다.
+UIColor.green.setFill()
+UIColor.red.setStroke()
+
+// UIBezierPath에서 선굵기를 설정한다.
+path.linewidth = 3.0
+
+// 테두리 션을 제외한 내부 색상을 드로잉한다.
+path.fill()
+// 설정한 테두리 선까리 드로잉한다.
+path.stroke()
+~~~
+
+<br>
+
+- UIBezierPath 기능
+  - addClip() : 현재 뷰를 자르는데 사용한다.
+- contains(_ point: CGPoint) -> Bool // 특정 point가 경로 내에 포함되는지 확인
+
+<br>
+
+### UIColor
+- UIColor를 통해 색상을 설정할 수 있다.
+- UIColor또한 코어그래픽스 레이어 위에 좋어있기 때문에 CGColor를 반환하는 cgColor 프로퍼티를 지닌다.
+- UIColor 사용 예시) ▼
+
+~~~ swift
+// green색상의 객체 할당
+let green = UIColor.green
+~~~
+    
+<br>
+
+- UIColor 프로퍼티
+  - yellow, red, green, blue, gray, lightGray 등의 색상 타입프로퍼티
+    - withAlphaComponent(<알파값 0...1>) : 색상 타입프로퍼티에 다시 접근하여 알파값을 설정할 수 있다.
+      - * 일반적으로 뷰는 Opacue(불투명) 으로 설정이 된다.
+        - -> 투명하게 하려면 UIView의 프로퍼티인 var opaque = false 처리해야 한다. (인터페이스 빌더 설정가능)
+    
+- UIView 내 UIColor 프로퍼티
+~~~ swift
+// 해당 프로퍼티는 Concentration button에 적용한 적이 있다.
+var backgroundColor: UIColor
+~~~
+
+<br>
+
+## ♣︎ Layer
+- **UIView의 애니메이션, 그림자효과, 테두리 등 많은 기능을 제공**하는 객체
+- **UIView에서 사용하는 레이어 객체 클래스 명은 CALayer**
+
+<br>
+<br>
+
+## ➣  5강 용어정리
+* opacue : 불투명한
+
+<br>
+<br>
+
+## ➣  5강 구현결과
+
+<br>
+<br>
+
+## ♣︎ 총 평
+- Any & AnyObject 의미와 타입캐스팅을 통한 변수사용
+- throws, try/do-catch 에러처리
+- UIView의 초기화방법, 프로퍼티 활용방법
+- Core Graphics
+- CGLayer
+
+<br>
+<br>
