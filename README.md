@@ -4,6 +4,37 @@ iOS Study with Stanford
 <br>
 <br>
 
+# 목차
+## [Lecture 1](https://github.com/applebuddy/iOSWithStanford#lecture-1)
+- **기본 Xcode 사용법 & 개발 준비**
+## [Lecture 2](https://github.com/applebuddy/iOSWithStanford#lecture-2)
+- **MVC(Model-View-Controller)패턴** 개념
+- **클래스(Class) vs 구조체(Struct)**
+## [Lecture 3](https://github.com/applebuddy/iOSWithStanford#lecture-3)
+- **오토레이아웃(AutoLayout)**
+- **Swift 핵심 기초문법**
+- **Swift 핵심 자료구조**
+  - **Struct, Class, Enum, Protocol**
+- 확장기능, extension 
+## [Lecture 4](https://github.com/applebuddy/iOSWithStanford#lecture-4)
+- **Protocol의 역할, 사용방법**
+- **Closure의 역할, 사용방법**
+- **클래스(Class) vs 구조체(Struct)** (2)
+- **Extension, String**의 활용
+- **MVC Delegation패턴의 작동방식, 적용 예**
+## [Lecture 5](https://github.com/applebuddy/iOSWithStanford#lecture-5)
+- **Any & AnyObject**
+- **throws, try/do-catch 에러처리**
+- **UIView**
+  - 초기화 방법, 프로퍼티, 뷰 그리기
+- **Core Graphics**
+  - **UIImage, NSAttributedString, UIFont**...
+- 열거형을 활용한 카드 덱 출력 데모
+  
+<br>
+<br>
+<br>
+
 # Lecture 1) 
 ## ♣︎ 기본 Xcode 사용법 및 개발
  * 개발자 문서 내 자주사용하는 클래스의 OverView는 전부 읽어보도록 하자.
@@ -876,7 +907,7 @@ arrayOfOperations.append(operation)
 <br>
 <br>
 
-# Lecture 5) UIView, Core Graphics 
+# Lecture 5)
 ## 5강에서 배울 내용
 - UIView의 초기화, 내부 프로퍼티
 - Core Graphics 
@@ -1411,6 +1442,16 @@ override func layoutSubviews() {
 <br>
 
 ## ➣  5강 구현결과
+<div>
+ <img width=600 src="https://user-images.githubusercontent.com/4410021/64927100-472b3a80-d841-11e9-9376-c49825bed2b4.png"> 
+ &nbsp  <img width=600 src="https://user-images.githubusercontent.com/4410021/64927101-47c3d100-d841-11e9-8713-32356812087c.png">
+</div>
+
+<br>
+
+### 열거형(enum)을 사용한 카드 덱 출력 예시
+- 카드덱 정보 출력 시 CustomStringConvertible 프로토콜 적용 유무에 따른 콘솔 출력 차이를 보여준다. 
+  - * CustomStringConvertible : 콘솔의 특정 값 문자열을 보다 깔끔하게 출력하도록 지원하는 프로토콜
 
 <br>
 <br>
