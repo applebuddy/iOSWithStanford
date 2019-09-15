@@ -5,24 +5,24 @@ iOS Study with Stanford
 <br>
 
 # 목차
-## [Lecture 1](https://github.com/applebuddy/iOSWithStanford#lecture-1)
+## [Lecture 1](https://github.com/applebuddy/iOSWithStanford#lecture-1-1)
 - **기본 Xcode 사용법 & 개발 준비**
-## [Lecture 2](https://github.com/applebuddy/iOSWithStanford#lecture-2)
+## [Lecture 2](https://github.com/applebuddy/iOSWithStanford#lecture-2-1)
 - **MVC(Model-View-Controller)패턴** 개념
 - **클래스(Class) vs 구조체(Struct)**
-## [Lecture 3](https://github.com/applebuddy/iOSWithStanford#lecture-3)
+## [Lecture 3](https://github.com/applebuddy/iOSWithStanford#lecture-3-1)
 - **오토레이아웃(AutoLayout)**
 - **Swift 핵심 기초문법**
 - **Swift 핵심 자료구조**
   - **Struct, Class, Enum, Protocol**
 - 확장기능, extension 
-## [Lecture 4](https://github.com/applebuddy/iOSWithStanford#lecture-4)
+## [Lecture 4](https://github.com/applebuddy/iOSWithStanford#lecture-4-1)
 - **Protocol의 역할, 사용방법**
 - **Closure의 역할, 사용방법**
 - **클래스(Class) vs 구조체(Struct)** (2)
 - **Extension, String**의 활용
 - **MVC Delegation패턴의 작동방식, 적용 예**
-## [Lecture 5](https://github.com/applebuddy/iOSWithStanford#lecture-5)
+## [Lecture 5](https://github.com/applebuddy/iOSWithStanford#lecture-5-1)
 - **Any & AnyObject**
 - **throws, try/do-catch 에러처리**
 - **UIView**
