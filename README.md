@@ -1043,10 +1043,21 @@ required init?(coder aDecoder: NSCoder) {
 
 ### UIView 프로퍼티 변수
 ~~~ swift
-var superView: UIView? // 현재 뷰의 상위 뷰를 반환한다. (상위뷰는 없을 수 있으므로 옵셔널 타입이다.)
-var subViews: [UIView] // 현재 뷰의 서브뷰들을 반환한다. (서브뷰는 여러개 있을 수 있으므로 배열타입이다.)
-var opaque: Bool // 불투명 여부를 설정한다. 기본적으로 불투명(true)으로 설정되어있다.
-var alpha: CGFloat // 투명도를 설정할 수 있다. 0...1 범위 CGFloat 타입의 값을 지정 가능하다.
+// 현재 뷰의 상위 뷰를 반환한다. (상위뷰는 없을 수 있으므로 옵셔널 타입이다.)
+var superView: UIView?
+
+// 현재 뷰의 서브뷰들을 반환한다. (서브뷰는 여러개 있을 수 있으므로 배열타입이다.)
+// * 배열의 첫번째 서브뷰가 제일 뒤에 있는 서브뷰이다.
+var subViews: [UIView]
+
+// 불투명 여부를 설정한다. 기본적으로 불투명(true)으로 설정되어있다.
+var opaque: Bool
+
+// 투명도를 설정할 수 있다. 0...1 범위 CGFloat 타입의 값을 지정 가능하다.
+var alpha: CGFloat
+
+// isHidden 프로퍼티를 통해 View Hierarchy 와 상관없이 뷰를 숨길 수 있다.(isHidden = true) 
+var isHidden: Bool
 ~~~
 
 <br>
@@ -1265,9 +1276,135 @@ var backgroundColor: UIColor
 - **UIView에서 사용하는 레이어 객체 클래스 명은 CALayer**
 
 <br>
+
+### 텍스트 그리기 
+- 일반적으로 텍스트를 화면에 띄울때 UILabel을 사용한다. 
+- NSAttributedString
+  - UIView의 draw(CGRect)에서 텍스트를 그리기 위해서 NSAttributedString을 사용한다. 
+~~~ swift
+let text = NSAttributedString(string: "hello") // 문자내용 이외의 세부 속성을 설정할 수 있다.
+text.draw(at: aCGPoint)
+let textSize: CGSize = text.size
+~~~
+<br>
+  - 문자열 특정 영역의 문자 속성을 변경할 수 있다. 
+    - NSRange값을 설정한 후 addAttribute(_, value:, range:) 메서드로 속성 설정
+  
+~~~ swift 
+let pizzaJoint = "Cafe Pesto"
+var attributedString = NSMutableAttributedString(string: pizzaJoint)
+
+// NSRange 를 설정해 특정 영역의 문자를 설정할 준비를 한다. 
+let firstWordRange = pizzaJoint.startIndex ..< pizzaJoint.indexOf(" ")!
+
+// Range<String.Index> -> NSRange 변환 작업
+let nsrange = NSRange(firstWordRange, in: pizzaJoint) 
+
+// 원하는 영역(NSRange)의 문자 속성을 변경한다. 
+attributedString.addAttribute(.strokeColor, value: UIColor.orange, range: nsrange)
+~~~
+
+<br>
+
+### UIFont
+- UILabel, UIButton 등 UI에 사용가능한 포드객체
+- 제목 / 본문 / 각주 / 캡션폰트... 약 10가지의 폰트 종류를 제공한다.
+~~~ swift
+let font = UIFont(name: "Helvetica", size: 36.0)
+
+// Now get metrics for the text style you want and scale font to the user's desired size ...
+let metrics = UIFontMetrics(forTextStyle: .body) // or UIFontMetrics.default
+let fontToUse = metrics.scaleFont(for: font)
+~~~
+
+<br>
+
+- 시스템 폰트 System fonts
+  - 버튼 같은 곳에서 주로 사용하는 폰트
+~~~ swift
+static func systemFont(ofSize: CGFloat) -> UIFont
+static func boldSystemFont(ofSize: CGFloat) -> UIFont
+~~~
+
+<br>
+
+  - **단, 사용자의 콘텐츠로 systemFont를 사용하는 것은 권장하지 않는다. 선호 폰트(preferred fonts)를 사용해라.**
+
+<br>
+
+### 이미지 그리기
+- UIImageView 
+  - text를 담는 UILabel이 있었다면 image를 담는 UIImageView가 존재한다.
+- UIImage
+  - UIImageView에 담을 수 있는 이미지 객체
+    - 불러온 이미지가 비트가방에 존재하는 지 확인 후 불러온다. (Optioanl Type)
+  - 이미지 파일명으로 가져올 수 있다. 
+~~~ swift
+let image: UIImage? = UIImage(named: "foo") // Optional로 초기화, -> 해당 이미지데이터가 없으면 NIL
+~~~
+
+<br>
+
+  - 파일 시스템에서 jpg, png... 등의 파일을 가져올수 있다.  
+
+~~~ swift 
+let image: UIImage? = UIImage(contentsOfFile: pathString)
+let image: UIImage? = UIImage(data: aData) // raw jpg, png, tiff, etc... -> from image data 
+~~~
+
+<br>
+
+- draw(CGRect) 에서 Image를 그리는 방법
+
+~~~ swift
+let image: UIImage = ... // the upper left corner put at aCGPoint
+image.draw(at point: aCGPoint) // scales the image to fit aCGRect
+image.drawAsPattern(in rect: aCGRect) // tiles the image into aCGRect
+~~~
+
+<br>
+
+### bounds 값이 바뀌었을때 다시 그려주나?
+- 화면 회전 등으로 경계값이 바뀌었을 때 다시 그려주지 않는다. 
+- 오토레이아웃 AutoLayout을 사용하면 되지만, 만약 오토레이아웃을  사용하지 않는다면??
+- 다행히도, UIView 프로퍼티, contentMode로 이를 제어할 수 있다. 
+- **UIViewContentMode**
+
+~~~ swift
+var contentMode: UIViewContentMode
+~~~
+<br>
+
+  - 일부 비트 크기만 배치하는 방식 (비선호)
+    - .left / .right / .top / .bottom / .topRight / .topLeft / .bottomRight / .bottomLeft / .center ...
+  - 전체적인 비트 크기를 설정하는 방식 
+    - 기본값은 scaleToFill, 새로운 공간에 상황에 따라 맞춘다. 
+    - .scaleToFill / .scaleAspectFill / .scaleAspectFit / .scaleToFill ...
+  - 리드로잉 Redrawing
+  
+  <br>
+  
+  ### layoutSubviews
+  - 뷰의 경계가 바뀔 때 layoutSubview() 메서드가 호출된다. 
+  - 오토레이아웃(Autolayout)을 사용하지 않을때 layoutSubviews() 를 사용한다. 
+  
+~~~ swift 
+override func layoutSubviews() {
+    super.layoutSubviews()
+    // 새로운 경계값(new bounds)에 맞게 서브뷰의 frame들을 재배치할 수 있다.
+}
+~~~
+
+<br>
+
+### enum(열거형) 활용 데모
+- CustomStringConvertible 
+  - 콘솔에서 문자열을 출력할 때 활용할 수 있는 프로토콜
+<br>
 <br>
 
 ## ➣  5강 용어정리
+* CustomStringConvertible : 콘솔의 특정 값 문자열을 보다 깔끔하게 출력하도록 지원하는 프로토콜
 * opacue : 불투명한
 
 <br>
@@ -1284,6 +1421,9 @@ var backgroundColor: UIColor
 - UIView의 초기화방법, 프로퍼티 활용방법
 - Core Graphics
 - CGLayer
+- View Drawing 
+  - UIImage, NSAttributedString, UIFont...
+- 열거형을 통한 카드 덱 출력
 
 <br>
 <br>

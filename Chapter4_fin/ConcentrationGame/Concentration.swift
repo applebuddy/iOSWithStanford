@@ -22,6 +22,7 @@ struct Concentration {
             // 2) 만약 앞면인 카드가 하나뿐일 경우면 해당 인덱스를 리턴, 그 이외에는 nil을 반환한다.
             // 각각 인덱스의 카드가 앞면이면 true, 뒷면이면 false를 리턴할 것이다.
             return cards.indices.filter { cards[$0].isFaceUp }.oneAndOnly
+
 //            var foundIndex: Int?
 //            for index in cards.indices {
 //                if cards[index].isFaceUp {
