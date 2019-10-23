@@ -65,7 +65,8 @@ iOS Study with Stanford
 <br>
 
 # Lecture 2) 
-## ♣︎ MVC패턴 : Model + View + Controller 의 모델-뷰-컨트롤러로 구성하는 디자인패턴 기법
+## ♣︎ MVC패턴
+- Model + View + Controller 의 모델-뷰-컨트롤러로 구성하는 디자인패턴 기법
  
  ### ➣  Controller : UIViewController 등의 컨트롤러 요소
  - 모델과 원하는대로 얘기 하며 사용자에게 보여져야 할 데이터를 받는다.(특히 공개적인 데이터와는 무제한적으로 대화가능)
