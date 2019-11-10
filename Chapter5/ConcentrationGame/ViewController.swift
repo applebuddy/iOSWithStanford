@@ -6,7 +6,7 @@
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
 //
 
-// Lecture 6)
+// Lecture 6)..
 
 import UIKit
 
