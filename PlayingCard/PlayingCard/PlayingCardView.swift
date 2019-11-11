@@ -28,6 +28,19 @@ class PlayingCardView: UIView {
     @IBInspectable
     var isFaceUp: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout() } }
 
+    // faceCardScale 값도 변경될때마다 뷰를 갱신하도록 setNeedsDisplay를 호출하여 draw메서드가 실행되도록 한다.
+    var faceCardScale: CGFloat = SizeRatio.faceCardImageSizeToBoundsSize { didSet { setNeedsDisplay() } }
+
+    @objc func adjustFaceCardScale(byHandlingGestureRecognizedBy recognizer: UIPinchGestureRecognizer) {
+        switch recognizer.state {
+        case .changed, .ended:
+            // 핀치 제스쳐의 크기가 커질 수록 카드 큐모가 커지도록 설정한다.
+            faceCardScale *= recognizer.scale
+            recognizer.scale = 1.0
+        default: break
+        }
+    }
+
     // MARK: - Methods
 
     /// 카드 내 문자열에 사용할 커스텀 문자열 속성을 부여하는 메서드
@@ -108,7 +121,8 @@ class PlayingCardView: UIView {
         if isFaceUp {
             if let faceCardImage = UIImage(named: rankString + suit, in: Bundle(for: self.classForCoder), compatibleWith: traitCollection) {
                 // 이미지를 상위 뷰 바운스 내에 넣되, 75% 정도로 축소해서 그린다.
-                faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundsSize))
+                // faceCardScale의 가변변수를 사용하여 팬 제스쳐에 따른 확대축소가 가능하게 된다.
+                faceCardImage.draw(in: bounds.zoom(by: faceCardScale))
             } else {
                 drawPips()
             }
