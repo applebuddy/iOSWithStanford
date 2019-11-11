@@ -58,12 +58,12 @@ struct PlayingCard: CustomStringConvertible {
             allRanks += [Rank.face("J"), .face("Q"), .face("K")]
             return allRanks
         }
-        
+
         var description: String {
             switch self {
             case .ace: return "A"
-            case .numeric(let pips): return String(pips)
-            case .face(let kind): return kind
+            case let .numeric(pips): return String(pips)
+            case let .face(kind): return kind
             }
         }
     }
