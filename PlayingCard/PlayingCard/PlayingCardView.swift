@@ -17,10 +17,15 @@ class PlayingCardView: UIView {
     // MARK: - Properties
 
     // 내용이 바뀐 때마다 드로잉을 새로 하는 경우에, 프로퍼티에 didSet 프로퍼티 감시자 기능을 정의하여 사용할 수 있다.
-    var rank: Int = 5 { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    // ### @IBInspectable
+    // - 인터페이스 빌더의 우측 Atribute Inspecteor에서 변수를 커스텀으로 조작할 수 있게 해주는 노테이션, @IBInspectable
+    @IBInspectable
+    var rank: Int = 11 { didSet { setNeedsDisplay(); setNeedsLayout() } }
+    @IBInspectable
     var suit: String = "❤️" { didSet { setNeedsDisplay(); setNeedsLayout() } }
 
     // 카드가 뒷면일 경우 별도의 드로잉은 필요가 없다.
+    @IBInspectable
     var isFaceUp: Bool = true { didSet { setNeedsDisplay(); setNeedsLayout() } }
 
     // MARK: - Methods
@@ -101,7 +106,7 @@ class PlayingCardView: UIView {
 
         // faceCardImage는 랭크숫자+이미지모양이름 조합으로 이름이 구성되어 있다.
         if isFaceUp {
-            if let faceCardImage = UIImage(named: rankString + suit) {
+            if let faceCardImage = UIImage(named: rankString + suit, in: Bundle(for: self.classForCoder), compatibleWith: traitCollection) {
                 // 이미지를 상위 뷰 바운스 내에 넣되, 75% 정도로 축소해서 그린다.
                 faceCardImage.draw(in: bounds.zoom(by: SizeRatio.faceCardImageSizeToBoundsSize))
             } else {
@@ -109,7 +114,7 @@ class PlayingCardView: UIView {
             }
         } else {
             // 카드가 뒷면일 경우에는 뒷면에 맞는 이미지를 그린다.
-            if let cardBackImage = UIImage(named: "cardback") {
+            if let cardBackImage = UIImage(named: "cardback", in: Bundle(for: self.classForCoder), compatibleWith: traitCollection) {
                 cardBackImage.draw(in: bounds)
             }
         }
