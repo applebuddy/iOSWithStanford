@@ -1,5 +1,5 @@
 # iOS With Stanford
-iOS Study with Stanford
+iOS Study with Stanford Lection Study 1~5
 
 <br>
 <br>
@@ -30,6 +30,7 @@ iOS Study with Stanford
 - **Core Graphics**
   - **UIImage, NSAttributedString, UIFont**...
 - 열거형을 활용한 카드 덱 출력 데모
+
   
 <br>
 <br>
@@ -1466,6 +1467,34 @@ override func layoutSubviews() {
 - View Drawing 
   - UIImage, NSAttributedString, UIFont...
 - 열거형을 통한 카드 덱 출력
+
+<br>
+<br>
+
+# Lecture 6) 
+## ♣︎ 멀티터치, 제스쳐
+ * 오토레이아웃을 통한 뷰 갱신 원리
+   
+ * 멀티터치 및 제스처에 대한 CoreGraphic 동작 이해
+ * IBDesignable, IBInspectable 노테이션의 기능
+ 
+### ▪︎ Xcode Interface 요소
+
+
+<br>
+
+### - 6강 용어정리
+
+<br>
+
+### -  6강 구현결과
+<div>
+</div>
+
+<br>
+
+## ♣︎ 총 평
+- Xcode 기본 인터페이스, 집중력게임 기본로직 개발
 
 <br>
 <br>

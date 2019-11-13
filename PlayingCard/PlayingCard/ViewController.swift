@@ -12,7 +12,7 @@
 // 뷰에게 확대/축소나 탭을 인식하라고 부탁할 수 있다.
 // 스토리보드에서도 많이 사용하며, 필요 시 뷰 자체가 뷰 자신에게 인식을 요청할 수도 있다.
 // 1) UIView에 제스처 인식기를 추가할 수 있다.
-
+//
 // ~~~ swift
 // ### UIPangestureRecognizer
 //// iOS가 이동 제스처의 아울렛을 묶어서 뷰에 전달할 때 아울렛의 UIView를 전달하는데 이때 해당 UIView의 didSet이 작동한다.
@@ -137,7 +137,7 @@ class ViewController: UIViewController {
 
             // 핀치 제스쳐에 대한 인식기, 셀렉터를 설정한다.
             let pinchGestureRecognizer = UIPinchGestureRecognizer(target: playingCardView, action: #selector(PlayingCardView.adjustFaceCardScale(byHandlingGestureRecognizedBy:)))
-            playingCardView.addGestureRecognizer(pinchGestureRecognizer)
+            playingCardView.addGestureRecognizer(pinchGestureRecognizer) œ
         }
     }
 
