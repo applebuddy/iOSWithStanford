@@ -384,15 +384,16 @@ lowerRightCornerLabel.transform = CGAffineTransform.identity
 
 ## ♣︎ 멀티 MVC, 타이머, 애니메이션
 
-- 
+- MVCs를 구성하는 방법 종류
+- 타이머의 사용방법
+- UIView, UIViewController등 다양한 애니메이션 종류
 
 
-
-## Multiple MVCs
+### Multiple MVCs
 
 - 텝바(TabBar), 네비게이션(Navigation) & 스플릿(Split) 뷰 컨트롤러
 
-## 함께 작동하는 MVC들
+### 함께 작동하는 MVC들
 
 - 앱 상에서는 수많은 Model, View, Controller 들이 함께 교류하며 작동한다. 
 - 이번에는 **다른 MVC가 뷰가 되는 MVC를 만드는 방법에 대해 이야기** 한다. 
@@ -401,7 +402,10 @@ lowerRightCornerLabel.transform = CGAffineTransform.identity
   - UISplitViewController
   - UINavigationController
 
-### UITabBarController
+<br>
+<br>
+
+## UITabBarController
 
 - MVCs 에서 가장 간단한, 쉬운 형태의 ViewController
 - 각 탭을 선택하면 그에 맞는 뷰가 나타난다. 
@@ -410,15 +414,82 @@ lowerRightCornerLabel.transform = CGAffineTransform.identity
 - 일반적으로 TabBarController에는 다섯 개 이상의 MVC를 사용하지 않는 것이 좋다.
   - 최대 5개까지가 적당한 UI배치를 이룰 수 있다. 
 
+
+
+<br>
+<br>
+
+
 ## UISplitViewController
 
 - 두개의 MVC로 이루어져 있는 ViewController
 - 왼쪽의 작은 MVC를 Master, 좌측을 Detail이라고 부른다. 
 - iPad, iPhone Plus 등에서 작동한다. 
+  - iPad, iPhone Plus의 landscape상태에서 masterView, detailView의 형태로 나타낼 수 있다. 
+  - 이 중 iPhone Plus는 특히 portrait 상태에서는 detailView만 나오는 아이폰~아이패드 중간의 위치라고 할 수 있다. 
 - 세로 모드(Land scape)에서는 Detail만 나타나고, Master MVC는 옵션으로 밀어내기 식으로 좌측에서 나오게 할 수 있다. 
 - iPad에서만 완벽하게 동작할 수 있는것이 UISplitViewController 이다.
 
 
+
+### SplitViewController 지원여부에 따른 Segue 활용 & 데이터 처리 예시
+
+~~~ swift
+/// MARK: - Perform Segue
+/// Segue의 Identifier를 사용해서 특정 Segue를 실행하여 화면 전환을 할 수 있다.
+@IBAction func changeTheme(_ sender: Any) {
+    // 스플릿뷰의 디테일 뷰 컨트롤러가 존재하는 지 확인
+    if let splitDetailViewController = splitViewDetailConcentrationViewController {
+        // 현재 타이틀 이름이 존재하는지 확인
+        // 현재 주제에 맞는 배열을 디테일 뷰에 전달
+        // ✭ PerformSegue를 통해 새로운 MVC 인스턴스를 생성한 것이 아닌, @IBAction 타겟메서드를 통해 디테일 뷰 컨트롤러에 접근함으로서 게임이 초기화 되지 않고 테마만 변경되게 할 수 있게 된다.
+        if let themeName = (sender as? UIButton)?.currentTitle,
+            let theme = themes[themeName] {
+            splitDetailViewController.theme = theme
+        }
+    } else if let concentrationViewController = lastSeguedToConcentrationViewController {
+        // splitViewController가 정상적으로 활성화 되지 않았을 경우, 캐싱되어있는 징중력게임 뷰컨트롤러가 존재하는지 확인하고 있다면 활용한다.
+        if let themeName = (sender as? UIButton)?.currentTitle,
+            let theme = themes[themeName] {
+            concentrationViewController.theme = theme
+        }
+        navigationController?.pushViewController(concentrationViewController, animated: true)
+    } else {
+        // 주제 타이틀을 못할을 경우 예외처리 용으로만 performSegue를 사용하도록 설정한다.
+        self.performSegue(withIdentifier: "Choose Theme", sender: sender)
+    }
+}
+~~~
+
+<br>
+
+
+
+#### SplitViewController Delegate 활용
+
+- SplitViewController Delegate를 활용해서 초기 실행 시 SplitView의 화면을 masterView 혹은, detailView로 설정할 수 있다.
+
+~~~ swift
+// IB객체를 부를때 사용하는 awakeFromNib()
+    override func awakeFromNib() {
+        // splitViewController 델리게이트를 채택
+        splitViewController?.delegate = self
+    }
+    
+    // 만약 splitView의 masterView가 가리는것을 원치 않으면, true를 리턴, 가리는 것을 원한다면 false를 리턴한다.
+    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
+        if let concentrationViewController = secondaryViewController as? ConcentrationViewController {
+            if concentrationViewController.theme == nil {
+                // 만약 splitView가 한번도 설정되지 않은 상태라면, masterView로 덮는다.
+                return true
+            }
+        }
+        // 만약 splitView가 설정이 되어잇다면 masterView로 가릴 필요는 없다.
+        return false
+    }
+~~~
+
+<br><br>
 
 ## UINavigationController
 
@@ -432,8 +503,6 @@ lowerRightCornerLabel.transform = CGAffineTransform.identity
 ~~~ swift
 // visibleViewController로 가장 위에 나타난 UIViewController를 알아낼 수 있다. 
 ~~~
-
-
 
 
 
@@ -464,38 +533,156 @@ if let defail: UIViewController? = splitViewController?.viewControllers[1] { ...
 ~~~
 
 <br>
+<br>
 
 
-
-### MVCs를 묶기
+## MVCs를 묶기
 
 - 여러가지 MVCs 컨테이너를 선택해서 스토리보드에서 사용할 수 있다. 
   - *단축키 : 쉬프트+커맨드+L*
 - 아니면 기존의 UIViewController를 선택 후 Xcode 상단 바의 Editor -> Embed in -> 을 통해 MVCs를 선택적으로 묶을 수 있다.
 - 이때 embed in 처리 된 UIViewController는 rootViewController 가 된다. 
 
-~
+
+
+<br>
+<br>
+
+
+### Segue
+
+- ViewController 간 화면전환에 사용하는 객체
+  - Segue는 IB에서 구현하거나 코드로 구현할 수 있다. 
+- **Segue는 항상 새로운 MVC 인스턴스를 만든다. **
+  - 전에 사용한 MVC를 재사용하지 않는다.
+  - UINavigationController의 NavigationItem 뒤로가기 버튼은 Segue가 아니다. 
+    - 하단의 스택 요소로 돌아가는 것일 뿐, 새로운 MVC인스턴스가 생기는 것이 아니기 때문이다!
+
+#### Segue Identifier
+
+- 수동으로 특정 Segue를 실행하고자 할때 사용하는 것이 Segue 식별자(Segue Identifier) 이다.
+- 식별자는 nil이 되어선 안된다.(사용 시, 반드시 지정해주어야 한다.)
+
+#### Preparing For a Segue
+
+- Segue를 실행하기 전 준비해야할 사항을 prepare 메서드에서 구현해 놓을 수 있다. 
+- 즉, 새로운 MVC의 생성을 준비하기 위한 작업을 prepare(for segue: UIStoryboardSegue, sender: Any?) 에서 수행한다. 
+- prepare 메서드를 통해 생성할 MVC에 특정 객체를 전달할 수도 있다.(sender: Any?)
+- performSegue 실행 전 prepare 메서드 사용 예시▼
+
+~~~ swift
+func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+  if let identifier = segue.identifier {
+    switch identifier {
+      case "Show Graph":
+      // segue.destination 을 통해 현재 준비하는 Segue의 목적지 ViewController를 접근할 수 있다. 
+      // 정확한 특정 목적지 ViewController 객체에 전달하기 위해서는 UIViewController -> 특정 ViewController 클래스로 타입 캐스팅 처리를 해주어야 한다. 
+      if let vc = segue.destination as? GraphController {
+          // 접근한 목적이 ViewController에 특정 값을 전달하는 과정
+          vc.property1 = ...
+          vc.callMethodToSetItUp(...)
+        // ✭ 해당 위치에서 get/set 설정이 되지 않은 목적지 viewController의 @IB 프로퍼티에 접근할 경우 오류가 발생할 수 있다. 
+        }
+      default: break
+    }
+  }
+}
+
+~~~
+
+
 
 <br>
 
+
+
+#### preventing Perform Segue
+
+- shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool 메서드를 통해 특정 조건이 충족되지 않았을때 Segue의 실행을 방지할 수도 있다. 
+
+~~~ swift
+func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool
+~~~
+
+<br>
+
+
+#### show Segue
+
+- NavigationController에서 작동하는 Segue
+
+#### show Detail Segue
+
+- SplitViewController의 Detail부분을 변경하는 Segue
+
+#### Modal
+
+- 화면 전체를 차지, 화면은 MVC로 가득 채우는 Segue
+- 앱이 멈춘 것 같은 상태에 빠질 수 있어(스택방식의 전환이 아님) 많이 사용하지는 않는다. 
+
+#### PopOver
+
+- Modal과 비슷하지만 전체를 MVC로 꽉 채우는게 아닌 팝업이 뜨게 한다는 특정이 있는 Segue
+- 기존의 뷰와 상호작용 할 수 없어 Modal처럼 사용에 주의가 따른다. 
+
+<br>
+<br>
+
 ## Timer
+
+- 주기적으로 특정 코드를 실행할때 사용하는 타이머 객체
+
+#### 타이머의 사용
+
+- scheduledTimer(withTimeInterval:, repeats:) { timer in ... } 의 사용 
+  - 일정간격으로 특정 코드를 지정한 만큼 반복해서 실행한다.
+- 타이머 변수앞에 weak를 사용하는 이유?
+  - 타이머가 실행을 멈췄을 때 nil이 될 수 있다. 이러한 특성을 확인하기 위해 weak 키워드를 앞에 사용한다.
+
+#### 타이머의 종료
+
+- invalidate() 를 사용해서 weak var timer 객체를 nil로 설정하면 종료할 수 있다. 
+
+#### 타이머 오차범위 설정
+
+- tolerance를 통해 타이머의 오차범위를 설정할 수 있다. 
+  - 오차 설정을 통해 타이머 사용 간 무리한 사용을 방지, 배터리 효율성을 증가시킬 수 있다.
+- 타이머 자체가 1/10~1/100초 단위의 정확성을 갖고 있기때문에 tolerance를 0으로 설정한다고 정교한 타이머 간격 실행이 되는 것은 아니다. 
+
+~~~ swift
+// tolerance 사용예시)
+myOneMinuteTimer.tolerance = 10 // in seconds
+~~~
 
 <br>
 
 ## Animation
 
+#### Kinds Of Animation
+
+- ViewController 전환 애니메이션
+- UIView 애니메이션에 사용될 수 있는 프로퍼티
+  - 부모뷰 상대 좌표/ 중앙좌표, Frame/center
+  - 내부 기준좌표, bounds
+  - 회전, transform
+  - 투명도, alpha(opacity)
+  - 배경색, backgoundColor
+- 코어 애니메이션(CA, Core Animation) -> 레이어 애니메이션 등 
+- OpenGL, Metal과 같은 멋진 Full 3D 애니메이션
+- SpriteKit : 슈퍼마리오같은 2.5D애니메이션 에 사용가능한 프레임워크
+- Dynamic Animation : 물리기반(속도 탄성, 상호작용 등) 설정, 실행 애니메이션 기능
+
+<br>
 
 
-
-### - 6강 용어정리
-
+### - 7강 용어정리
 
 
 <br>
 
 
 
-### - 6강 구현결과
+### - 7강 구현결과
 
 <div>
 
@@ -509,13 +696,27 @@ if let defail: UIViewController? = splitViewController?.viewControllers[1] { ...
 
 
 
-## ♣︎ 총 
+## ♣︎ 총 평
 
-- 멀티터치, 핀치, 패닝, 탭 제스쳐 등의 동작 원리 이해 
-- UIView의 갱신 그려지는 원리
-  - layoutSubviews
-  - setNeedsDisplay
-  - setNeedsLayout
-
+- MVCs의 구성방법
+  - UINavigationViewController
+    - navigationItem
+  - UISplitViewController
+    - masterView
+    - detailView
+    - iPad/iPhone+/iPhone기종 별 지원에 따른 UISplitViewControlerDelegate를 통한 대응방법
+  - UITabBarController
+    - tabBarItem
+- MVCs 내의 세부 viewController 접근방법
+- 타이머(Timer)
+  - scheduledTimer(withTimeInterval:, repeats:) { timer in ... } 
+  - invalidate()
+  - tolerance()
+  - timer에 weak 키워드를 추가하는 이유
+- Animation의 종류
+  - UIViewController 애니메이션
+  - UIView 애니메이션
+  - 애니메이션 프레임워크 종류
+  
 <br>
 <br>

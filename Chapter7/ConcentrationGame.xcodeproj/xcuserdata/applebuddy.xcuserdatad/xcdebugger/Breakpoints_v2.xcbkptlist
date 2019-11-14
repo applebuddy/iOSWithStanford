@@ -7,17 +7,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "5AC661CD-903C-48AF-B511-6460740BB060"
+            uuid = "DA9FAB46-938C-40D3-8CD7-D7C8C3E3F7A0"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ConcentrationGame/Concentration.swift"
-            timestampString = "588672272.01581"
+            filePath = "ConcentrationGame/ConcentrationThemeChooserViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
-            landmarkName = "init(numberOfPairsOfCards:)"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "changeTheme(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7B560B0C-F9FE-43A9-B20A-2CBA390B9D48"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ConcentrationGame/ConcentrationThemeChooserViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "changeTheme(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
