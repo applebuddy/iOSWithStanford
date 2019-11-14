@@ -704,7 +704,7 @@ myOneMinuteTimer.tolerance = 10 // in seconds
 
 
 
-## ♣︎ 총 평
+## ♣︎ 총 정리
 
 - MVCs의 구성방법
   - UINavigationViewController
@@ -716,6 +716,9 @@ myOneMinuteTimer.tolerance = 10 // in seconds
   - UITabBarController
     - tabBarItem
 - MVCs 내의 세부 viewController 접근방법
+- Segue
+  - Segue 종류
+  - Segue 사용방법
 - 타이머(Timer)
   - scheduledTimer(withTimeInterval:, repeats:) { timer in ... } 
   - invalidate()
