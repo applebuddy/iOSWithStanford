@@ -7,8 +7,8 @@ iOS Study with Stanford Lection Study 6~10
 
 # 목차
 
-## [Lecture 6](https://github.com/applebuddy/iOSWithStanford#lecture-6-1)
-## [Lecture 7](https://github.com/applebuddy/iOSWithStanford#lecture-7-1)
+## [Lecture 6](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-6-1)
+## [Lecture 7](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-7-1)
 
 <br>
 <br>
@@ -509,7 +509,7 @@ if let defail: UIViewController? = splitViewController?.viewControllers[1] { ...
 
 
 
-## ♣︎ 총 평
+## ♣︎ 총 
 
 - 멀티터치, 핀치, 패닝, 탭 제스쳐 등의 동작 원리 이해 
 - UIView의 갱신 그려지는 원리
