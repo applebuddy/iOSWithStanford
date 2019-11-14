@@ -8,6 +8,7 @@ iOS Study with Stanford Lection Study 6~10
 # 목차
 
 ## [Lecture 6](https://github.com/applebuddy/iOSWithStanford#lecture-6-1)
+## [Lecture 7](https://github.com/applebuddy/iOSWithStanford#lecture-7-1)
 
 <br>
 <br>
@@ -366,7 +367,7 @@ lowerRightCornerLabel.transform = CGAffineTransform.identity
 
 
 
-## ♣︎ 총 평
+## ♣︎ 총 정리
 
 - 멀티터치, 핀치, 패닝, 탭 제스쳐 등의 동작 원리 이해 
 - UIView의 갱신 그려지는 원리
@@ -374,6 +375,147 @@ lowerRightCornerLabel.transform = CGAffineTransform.identity
   - setNeedsDisplay
   - setNeedsLayout
 
+
+<br>
+<br>
+
+
+# Lecture 7) 
+
+## ♣︎ 멀티 MVC, 타이머, 애니메이션
+
+- 
+
+
+
+## Multiple MVCs
+
+- 텝바(TabBar), 네비게이션(Navigation) & 스플릿(Split) 뷰 컨트롤러
+
+## 함께 작동하는 MVC들
+
+- 앱 상에서는 수많은 Model, View, Controller 들이 함께 교류하며 작동한다. 
+- 이번에는 **다른 MVC가 뷰가 되는 MVC를 만드는 방법에 대해 이야기** 한다. 
+- 99%의 경우 아래의 세가지 컨트롤러 중 하나를 사용하게 될 것이다. 
+  - UITabBarController
+  - UISplitViewController
+  - UINavigationController
+
+### UITabBarController
+
+- MVCs 에서 가장 간단한, 쉬운 형태의 ViewController
+- 각 탭을 선택하면 그에 맞는 뷰가 나타난다. 
+  - 이 때의 각각의 뷰는 각각의 MVC라고 할 수 있다. 
+- 각각의 텝은 각각의 다른 MVC를 작동시키는 것이다. 
+- 일반적으로 TabBarController에는 다섯 개 이상의 MVC를 사용하지 않는 것이 좋다.
+  - 최대 5개까지가 적당한 UI배치를 이룰 수 있다. 
+
+## UISplitViewController
+
+- 두개의 MVC로 이루어져 있는 ViewController
+- 왼쪽의 작은 MVC를 Master, 좌측을 Detail이라고 부른다. 
+- iPad, iPhone Plus 등에서 작동한다. 
+- 세로 모드(Land scape)에서는 Detail만 나타나고, Master MVC는 옵션으로 밀어내기 식으로 좌측에서 나오게 할 수 있다. 
+- iPad에서만 완벽하게 동작할 수 있는것이 UISplitViewController 이다.
+
+
+
+## UINavigationController
+
+- **MVC 중 가장 유연하고 강력한 MVC**
+- 가장 초기의 ViewController를 rootViewController 라고 부른다. 
+- iOS앱에서 가장 자주 볼 수 있는 MVCs
+- **카드 스택방식**으로 **MVC를 push, pop하며 화면을 구성**한다. 
+  - 새로운 뷰로 전환되면 이전의 뷰를 새로운 뷰가 덮는 구조
+- 각종 타이틀, 버튼을 가진 navigationItem, toolBarItem을 갖고 있다.
+
+~~~ swift
+// visibleViewController로 가장 위에 나타난 UIViewController를 알아낼 수 있다. 
+~~~
+
+
+
+
+
+<br>
+
+
+
+### Sub-MVCs에 접근하기
+
+- MVCs의 viewControllers 프로퍼티에 접근 해서 세부 viewController에 접근할 수 있다. 
+
+  
+
+~~~ swift
+var viewController: [UIViewController]? { get set } // 옵셔널상태일 수 있음
+// 보통 left to right 배열 구조로 구성되어 있음
+
+// UIViewController는 다양한 프로퍼티를 통해 어떤 MVCs 컨테이너에 속하는지 확인할 수도 있다.
+// 실질적으로 해당 ViewController가 어디에 속하는지에 상관없이 아래의 프로퍼티를 전부 활용할 수 있다. 
+var tabBarController: UITabBarController? { get }
+var splitViewController: UISplitViewController? { get }
+var navigationController: UINavigationController? { get }
+
+// 옵셔널 체이닝 접근을 통한 특정 컨테이너의 뷰컨트롤러 유무 확인 예시)
+if let defail: UIViewController? = splitViewController?.viewControllers[1] { ... }
+
+
+~~~
+
+<br>
+
+
+
+### MVCs를 묶기
+
+- 여러가지 MVCs 컨테이너를 선택해서 스토리보드에서 사용할 수 있다. 
+  - *단축키 : 쉬프트+커맨드+L*
+- 아니면 기존의 UIViewController를 선택 후 Xcode 상단 바의 Editor -> Embed in -> 을 통해 MVCs를 선택적으로 묶을 수 있다.
+- 이때 embed in 처리 된 UIViewController는 rootViewController 가 된다. 
+
+~
+
+<br>
+
+## Timer
+
+<br>
+
+## Animation
+
+
+
+
+### - 6강 용어정리
+
+
+
+<br>
+
+
+
+### - 6강 구현결과
+
+<div>
+
+
+
+</div>
+
+
+
+<br>
+
+
+
+## ♣︎ 총 평
+
+- 멀티터치, 핀치, 패닝, 탭 제스쳐 등의 동작 원리 이해 
+- UIView의 갱신 그려지는 원리
+  - layoutSubviews
+  - setNeedsDisplay
+  - setNeedsLayout
 
 <br>
 <br>
