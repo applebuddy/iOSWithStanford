@@ -5,24 +5,24 @@ iOS Study with Stanford Lection Study 1~5
 <br>
 
 # 목차
-## [Lecture 1](https://github.com/applebuddy/iOSWithStanford#lecture-1-1)
+## [Lecture 1](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_1~5.md#lecture-1-1)
 - **기본 Xcode 사용법 & 개발 준비**
-## [Lecture 2](https://github.com/applebuddy/iOSWithStanford#lecture-2-1)
+## [Lecture 2](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_1~5.md#lecture-2-1)
 - **MVC(Model-View-Controller)패턴** 개념
 - **클래스(Class) vs 구조체(Struct)**
-## [Lecture 3](https://github.com/applebuddy/iOSWithStanford#lecture-3-1)
+## [Lecture 3](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_1~5.md#lecture-3-1)
 - **오토레이아웃(AutoLayout)**
 - **Swift 핵심 기초문법**
 - **Swift 핵심 자료구조**
   - **Struct, Class, Enum, Protocol**
 - 확장기능, extension 
-## [Lecture 4](https://github.com/applebuddy/iOSWithStanford#lecture-4-1)
+## [Lecture 4](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_1~5.md#lecture-4-1)
 - **Protocol의 역할, 사용방법**
 - **Closure의 역할, 사용방법**
 - **클래스(Class) vs 구조체(Struct)** (2)
 - **Extension, String**의 활용
 - **MVC Delegation패턴의 작동방식, 적용 예**
-## [Lecture 5](https://github.com/applebuddy/iOSWithStanford#lecture-5-1)
+## [Lecture 5](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_1~5.md#lecture-5-1)
 - **Any & AnyObject**
 - **throws, try/do-catch 에러처리**
 - **UIView**
@@ -59,7 +59,7 @@ iOS Study with Stanford Lection Study 1~5
 
 <br>
 
-## ♣︎ 총 평
+## ♣︎ 총 정리
 - Xcode 기본 인터페이스, 집중력게임 기본로직 개발
 
 <br>
@@ -113,7 +113,7 @@ iOS Study with Stanford Lection Study 1~5
 
 <br>
 
-## ♣︎ 총 평
+## ♣︎ 총 정리
 - MVC(Model-View-Controller)패턴의 개념 이해
 - 집중력게임의 MVC 디자인패턴 적용연습
 - 클래스(Class) vs 구조체(Struct)
@@ -448,7 +448,7 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 </div>
 <br>
 
-## ♣︎ 총 평
+## ♣︎ 총 정리
 - 집중력게임(Concentratino Game)의 오토레이아웃 적용
 - Swift 핵심 기초문법 훑어보기
   - ARC, Optional
@@ -895,7 +895,7 @@ arrayOfOperations.append(operation)
 
 <br>
 
-## ♣︎ 총 평
+## ♣︎ 총 정리
 - Protocol의 역할과 사용방법
 - Closure의 역할과 사용방법, 사용 시 주의사항
 - Class vs Struct
@@ -1458,7 +1458,7 @@ override func layoutSubviews() {
 <br>
 <br>
 
-## ♣︎ 총 평
+## ♣︎ 총 정리
 - Any & AnyObject 의미와 타입캐스팅을 통한 변수사용
 - throws, try/do-catch 에러처리
 - UIView의 초기화방법, 프로퍼티 활용방법
@@ -1493,7 +1493,7 @@ override func layoutSubviews() {
 
 <br>
 
-## ♣︎ 총 평
+## ♣︎ 총 정리
 - Xcode 기본 인터페이스, 집중력게임 기본로직 개발
 
 <br>
