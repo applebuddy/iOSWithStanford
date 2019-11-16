@@ -1470,31 +1470,3 @@ override func layoutSubviews() {
 
 <br>
 <br>
-
-# Lecture 6) 
-## ♣︎ 멀티터치, 제스쳐
- * 오토레이아웃을 통한 뷰 갱신 원리
-   
- * 멀티터치 및 제스처에 대한 CoreGraphic 동작 이해
- * IBDesignable, IBInspectable 노테이션의 기능
- 
-### ▪︎ Xcode Interface 요소
-
-
-<br>
-
-### - 6강 용어정리
-
-<br>
-
-### -  6강 구현결과
-<div>
-</div>
-
-<br>
-
-## ♣︎ 총 정리
-- Xcode 기본 인터페이스, 집중력게임 기본로직 개발
-
-<br>
-<br>
