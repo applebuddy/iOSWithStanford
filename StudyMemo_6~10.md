@@ -181,7 +181,7 @@ var scale: CGFloat
 
 // 1초당 속도를 반환하는 프로퍼티
 
-var velocity: CGFloat { **get** }
+var velocity: CGFloat { get }
 
  ~~~
 
@@ -522,7 +522,7 @@ if let defail: UIViewController? = splitViewController?.viewControllers[1] { ...
 
 - ViewController 간 화면전환에 사용하는 객체
   - Segue는 IB에서 구현하거나 코드로 구현할 수 있다. 
-- **Segue는 항상 새로운 MVC 인스턴스를 만든다. **
+- **Segue는 항상 새로운 MVC 인스턴스를 만든다.**
   - 전에 사용한 MVC를 재사용하지 않는다.
   - UINavigationController의 NavigationItem 뒤로가기 버튼은 Segue가 아니다. 
     - 하단의 스택 요소로 돌아가는 것일 뿐, 새로운 MVC인스턴스가 생기는 것이 아니기 때문이다!
