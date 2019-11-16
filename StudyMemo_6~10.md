@@ -181,7 +181,7 @@ var scale: CGFloat
 
 // 1초당 속도를 반환하는 프로퍼티
 
-var velocity: CGFloat { **get** }
+var velocity: CGFloat { get }
 
  ~~~
 
@@ -430,42 +430,11 @@ lowerRightCornerLabel.transform = CGAffineTransform.identity
 - 세로 모드(Land scape)에서는 Detail만 나타나고, Master MVC는 옵션으로 밀어내기 식으로 좌측에서 나오게 할 수 있다. 
 - iPad에서만 완벽하게 동작할 수 있는것이 UISplitViewController 이다.
 
-
-
-### SplitViewController 지원여부에 따른 Segue 활용 & 데이터 처리 예시
-
-~~~ swift
-/// MARK: - Perform Segue
-/// Segue의 Identifier를 사용해서 특정 Segue를 실행하여 화면 전환을 할 수 있다.
-@IBAction func changeTheme(_ sender: Any) {
-    // 스플릿뷰의 디테일 뷰 컨트롤러가 존재하는 지 확인
-    if let splitDetailViewController = splitViewDetailConcentrationViewController {
-        // 현재 타이틀 이름이 존재하는지 확인
-        // 현재 주제에 맞는 배열을 디테일 뷰에 전달
-        // ✭ PerformSegue를 통해 새로운 MVC 인스턴스를 생성한 것이 아닌, @IBAction 타겟메서드를 통해 디테일 뷰 컨트롤러에 접근함으로서 게임이 초기화 되지 않고 테마만 변경되게 할 수 있게 된다.
-        if let themeName = (sender as? UIButton)?.currentTitle,
-            let theme = themes[themeName] {
-            splitDetailViewController.theme = theme
-        }
-    } else if let concentrationViewController = lastSeguedToConcentrationViewController {
-        // splitViewController가 정상적으로 활성화 되지 않았을 경우, 캐싱되어있는 징중력게임 뷰컨트롤러가 존재하는지 확인하고 있다면 활용한다.
-        if let themeName = (sender as? UIButton)?.currentTitle,
-            let theme = themes[themeName] {
-            concentrationViewController.theme = theme
-        }
-        navigationController?.pushViewController(concentrationViewController, animated: true)
-    } else {
-        // 주제 타이틀을 못할을 경우 예외처리 용으로만 performSegue를 사용하도록 설정한다.
-        self.performSegue(withIdentifier: "Choose Theme", sender: sender)
-    }
-}
-~~~
-
 <br>
 
 
 
-#### SplitViewController Delegate 활용
+### SplitViewController Delegate 활용
 
 - SplitViewController Delegate를 활용해서 초기 실행 시 SplitView의 화면을 masterView 혹은, detailView로 설정할 수 있다.
 
@@ -549,21 +518,21 @@ if let defail: UIViewController? = splitViewController?.viewControllers[1] { ...
 <br>
 
 
-### Segue
+## Segue
 
 - ViewController 간 화면전환에 사용하는 객체
   - Segue는 IB에서 구현하거나 코드로 구현할 수 있다. 
-- **Segue는 항상 새로운 MVC 인스턴스를 만든다. **
+- **Segue는 항상 새로운 MVC 인스턴스를 만든다.**
   - 전에 사용한 MVC를 재사용하지 않는다.
   - UINavigationController의 NavigationItem 뒤로가기 버튼은 Segue가 아니다. 
     - 하단의 스택 요소로 돌아가는 것일 뿐, 새로운 MVC인스턴스가 생기는 것이 아니기 때문이다!
 
-#### Segue Identifier
+### Segue Identifier
 
 - 수동으로 특정 Segue를 실행하고자 할때 사용하는 것이 Segue 식별자(Segue Identifier) 이다.
 - 식별자는 nil이 되어선 안된다.(사용 시, 반드시 지정해주어야 한다.)
 
-#### Preparing For a Segue
+### Preparing For a Segue
 
 - Segue를 실행하기 전 준비해야할 사항을 prepare 메서드에서 구현해 놓을 수 있다. 
 - 즉, 새로운 MVC의 생성을 준비하기 위한 작업을 prepare(for segue: UIStoryboardSegue, sender: Any?) 에서 수행한다. 
@@ -596,7 +565,7 @@ func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 
 
-#### preventing Perform Segue
+### preventing Perform Segue
 
 - shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool 메서드를 통해 특정 조건이 충족되지 않았을때 Segue의 실행을 방지할 수도 있다. 
 
@@ -607,20 +576,20 @@ func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Boo
 <br>
 
 
-#### show Segue
+### show Segue
 
 - NavigationController에서 작동하는 Segue
 
-#### show Detail Segue
+### show Detail Segue
 
 - SplitViewController의 Detail부분을 변경하는 Segue
 
-#### Modal
+### Modal
 
 - 화면 전체를 차지, 화면은 MVC로 가득 채우는 Segue
 - 앱이 멈춘 것 같은 상태에 빠질 수 있어(스택방식의 전환이 아님) 많이 사용하지는 않는다. 
 
-#### PopOver
+### PopOver
 
 - Modal과 비슷하지만 전체를 MVC로 꽉 채우는게 아닌 팝업이 뜨게 한다는 특정이 있는 Segue
 - 기존의 뷰와 상호작용 할 수 없어 Modal처럼 사용에 주의가 따른다. 
@@ -632,18 +601,18 @@ func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Boo
 
 - 주기적으로 특정 코드를 실행할때 사용하는 타이머 객체
 
-#### 타이머의 사용
+### 타이머의 사용
 
 - scheduledTimer(withTimeInterval:, repeats:) { timer in ... } 의 사용 
   - 일정간격으로 특정 코드를 지정한 만큼 반복해서 실행한다.
 - 타이머 변수앞에 weak를 사용하는 이유?
   - 타이머가 실행을 멈췄을 때 nil이 될 수 있다. 이러한 특성을 확인하기 위해 weak 키워드를 앞에 사용한다.
 
-#### 타이머의 종료
+### 타이머의 종료
 
 - invalidate() 를 사용해서 weak var timer 객체를 nil로 설정하면 종료할 수 있다. 
 
-#### 타이머 오차범위 설정
+### 타이머 오차범위 설정
 
 - tolerance를 통해 타이머의 오차범위를 설정할 수 있다. 
   - 오차 설정을 통해 타이머 사용 간 무리한 사용을 방지, 배터리 효율성을 증가시킬 수 있다.
@@ -658,7 +627,7 @@ myOneMinuteTimer.tolerance = 10 // in seconds
 
 ## Animation
 
-#### Kinds Of Animation
+### Kinds Of Animation
 
 - ViewController 전환 애니메이션
 - UIView 애니메이션에 사용될 수 있는 프로퍼티
@@ -683,10 +652,49 @@ myOneMinuteTimer.tolerance = 10 // in seconds
 
 
 ### - 7강 구현결과
+- 새로운 MVC 인스턴스를 생성하는 performSegue를 사용하지 않고, masterView의 타겟매서드를 이용해 가장 최근의 detailViewController 데이터를 저장, 새로운 masterView의 옵션 선택에도 초기화 없이 다른 테마로 게임을 이어갈 수 있게 된다. 
+- 만약 UISplitViewController를 지원하지않는 iPhone+, iPad 이외의 기종은 만약 SplitViewController가 정상 작동 하지 않을경우) 
+  - 1. 가장 최근 사용된 detailViewController 이미지 데이터를 masterView 내 concentrationViewController 프로퍼티에 별도 관리
+  - 2. 테마가 변경되었을 때 기 저장된 masterViewController의 concentrationViewController.theme 정보를 detailViewController에 전달 
+  - 3. navigationViewController의 pushViewController를 통해 해당 뷰에 이동함으로서 테마 변경시에 게임이 초기화되는 문제를 해결
+
+### SplitViewController 지원여부에 따른 Segue 활용 & 데이터 처리 예시
+
+~~~ swift
+/// MARK: - Perform Segue
+/// Segue의 Identifier를 사용해서 특정 Segue를 실행하여 화면 전환을 할 수 있다.
+@IBAction func changeTheme(_ sender: Any) {
+    // 스플릿뷰의 디테일 뷰 컨트롤러가 존재하는 지 확인
+    if let splitDetailViewController = splitViewDetailConcentrationViewController {
+        // 현재 타이틀 이름이 존재하는지 확인
+        // 현재 주제에 맞는 배열을 디테일 뷰에 전달
+        // ✭ PerformSegue를 통해 새로운 MVC 인스턴스를 생성한 것이 아닌, @IBAction 타겟메서드를 통해 디테일 뷰 컨트롤러에 접근함으로서 게임이 초기화 되지 않고 테마만 변경되게 할 수 있게 된다.
+        if let themeName = (sender as? UIButton)?.currentTitle,
+            let theme = themes[themeName] {
+            splitDetailViewController.theme = theme
+        }
+    } else if let concentrationViewController = lastSeguedToConcentrationViewController {
+        // splitViewController가 정상적으로 활성화 되지 않았을 경우, 캐싱되어있는 징중력게임 뷰컨트롤러가 존재하는지 확인하고 있다면 활용한다.
+        if let themeName = (sender as? UIButton)?.currentTitle,
+            let theme = themes[themeName] {
+            concentrationViewController.theme = theme
+        }
+        navigationController?.pushViewController(concentrationViewController, animated: true)
+    } else {
+        // 주제 타이틀을 못할을 경우 예외처리 용으로만 performSegue를 사용하도록 설정한다.
+        self.performSegue(withIdentifier: "Choose Theme", sender: sender)
+    }
+}
+~~~
+
+<br>
 
 <div>
 
-
+<img width="200" src="https://user-images.githubusercontent.com/4410021/68859914-b4692800-072b-11ea-8e9b-237f4e70db00.png"> &nbsp;
+<img width="200" src="https://user-images.githubusercontent.com/4410021/68859916-b4692800-072b-11ea-96f1-84ca306911c9.png"> &nbsp;
+<img width="200" src="https://user-images.githubusercontent.com/4410021/68859917-b4692800-072b-11ea-92c5-2bbb275bc087.png"> &nbsp;
+<img width="200" src="https://user-images.githubusercontent.com/4410021/68859920-b501be80-072b-11ea-8239-7f6f8c77f639.png"> 
 
 </div>
 
@@ -696,7 +704,7 @@ myOneMinuteTimer.tolerance = 10 // in seconds
 
 
 
-## ♣︎ 총 평
+## ♣︎ 총 정리
 
 - MVCs의 구성방법
   - UINavigationViewController
@@ -708,6 +716,9 @@ myOneMinuteTimer.tolerance = 10 // in seconds
   - UITabBarController
     - tabBarItem
 - MVCs 내의 세부 viewController 접근방법
+- Segue
+  - Segue 종류
+  - Segue 사용방법
 - 타이머(Timer)
   - scheduledTimer(withTimeInterval:, repeats:) { timer in ... } 
   - invalidate()
