@@ -729,5 +729,254 @@ myOneMinuteTimer.tolerance = 10 // in seconds
   - UIView 애니메이션
   - 애니메이션 프레임워크 종류
   
+
 <br>
 <br>
+
+
+
+# Lecture 8) 
+
+## ♣︎ 애니메이션 Animation
+
+- UIView Animation
+  - Frame / center : 뷰의 위치를 움직이게 하는 프로퍼티
+  - bounds : 뷰를 움직이게 할 수 있는 프로퍼티
+  - transform : 회전, 크기 변환 등 강력한 효과의 프로퍼티
+  - alpha : 투명도 설정 프로퍼티
+  - backgroundColor : 배경색 프로퍼티
+- 애니메이션을 사용하는 방법
+- UIView, UIViewController등 다양한 애니메이션 종류
+
+<br>
+
+### 애니메이션 동작 방식
+
+- 일반적으로 특정 시간동안 어떠한 변환을 줄 지 정의 -> 클로저(UIViewPropertyAnimator)에서 해당 동작을 실행한다. 
+
+
+
+## UIView Animation
+
+- 세부 서브 뷰, 혹은 전체적인 뷰를 애니메이션 동작 수행할 수 있다. 
+
+
+
+### UIView 애니메이션 구현 예시
+
+- playingCard 뒤집기 애니메이션 동작 예시
+
+~~~ swift
+// playingCard 뒤집기 애니메이션 동작 예시
+// 0.75초 간 palyingCard의 왼쪽 모서리를 잡고 뒤집는 효과의 애니메이션 수행 
+UIView.transition(
+  with: myPlayingCardView,
+  duration: 0.75,
+  options: [.transitionFlipFromLeft],
+  animations: { cardIsFaceUp = !cardIsFaceup }
+  completion: nil
+)
+~~~
+
+<br>
+
+
+
+
+
+
+
+<br>
+
+
+
+
+
+## UIViewPropertyAnimator
+
+- 애니메이션 동작에 사용하는 UIViewPropertyAnimator를 가장 쉽게 사용하는 방법
+
+- **UIViewPropertyAnimator** 구성요소
+
+  - **withDuration: TimeInterval**
+    - 얼마나 애니메이션이 지속될지를 정의
+  - **Dalay: TimeInterval**
+    - 애니메이션 시작 전 얼마나 기다려야 하는지를 정의
+  - **Options: UIViewAnimationOptions** 
+    - 애니메이션 실행 방법 정의
+  - **Animations: () -> Void** 
+  - **Completion: ((position: UIViewAnimatingPosition) -> Void)? = nil** 
+    - 애니메이션 종료 시점에 실행되는 핸들러
+    - 매개변수인 position은 enum형태로 되어있음 (.end, .current 등... )
+    - 종료시점은 중간종료, 완전종료 등의 상황이 있다. (보통 특정 속성값을 뒤늦게 바꾸는 애니메이션 쪽 이 우선순위로 동작한다. )
+
+  ~~~ swift
+  class func runningPropertyAnimator(
+  	withDuration: TimeInterval, // 얼마나 지속될지를 정의
+    delay: TimeInterval, // 애니메이션 시작 전 얼마나 기다려야하는지 정의
+    options: UIViewAnimationOptions, // 애니메이션 실행 방법 정의
+    animations: () -> Void, // animation은 인자를 받지도, 리턴하지도 않음
+    completion: ((position: UIViewAnimatingPosition) -> Void)? = nil // 애니메이션 특정 시점에서(실행 완료, 진행중 중단 등) 실행
+  )
+  ~~~
+
+<br>
+
+- UIView Animation 사용 예시
+
+~~~ swift 
+// myView의 투명도가 1.0 이라면, 2초를 기다렸다가 3초간 천천히 투명도를 0.0으로 변화시키는 애니메이션을 실행한다. 
+// 애니메이션 동작 중에도 유저 제스쳐 동작등은 허용된다. (options: [.allowUserInteraction])
+// 애니메이션이 종료하면 myView를 슈퍼뷰로부터 제거한다. (myView.removeFromSuperview)
+if myView.alpha == 1.0 {
+  UIViewPropertyAnimator.runningPropertyAnimator(
+  	withDuration: 3.0,
+    dalay: 2.0,
+    options: [.allowUserInteraction],
+    animations: { myView.alpha = 0.0 },
+    completion: { if $0 == .end { myView.removeFromSuperview() } }
+  )
+  print("alpha = \(myView.alpha)") // 애니메이션 실행 후의 값인 0.0을 출력
+}
+~~~
+
+<br>
+
+
+
+### UIViewAnimationOptions
+
+- 애니메이션의 동작 옵션 값 지정 매개변수
+- UIViewAnimationOptions 종류 
+  - beginFromCurrentState
+  - allowUserInteraction
+    - 애니메이션 동작 간 유저 제스쳐를 허용
+  - layoutSubviews
+  - repeat
+    - 무한으로 해당 애니메이션을 반복 실행 
+  - autoreverse 
+    - 순방향, 역방향으로 애니메이션을 실행 
+  - overrideInheritedDuration
+  - overrideInheritedCurve
+  - allowAnimatedContent
+  - curveEaseInEaseOut
+    - 천천히 ~~ 빠르다가 ~~ 천천히 실행되며 종료
+  - curveEaseIn
+    - 천천히 시작 .... 점차 빠르게 실행되며 종료
+  - curveLinear
+    - 일정한 속도로 애니메이션이 실행 
+
+
+
+<br>
+
+
+
+## Dynamic Animation
+
+- 물리적(밀도, 중력, 충돌 등... ) 애니메이션 수행
+- **UIDynamicAnimator**를 사용
+
+~~~ swift
+// UIDynamicAnimator 사용방법
+var animator = UIDynamicAnimator(referenceView: UIView)
+~~~
+
+
+
+### UIDynamicItem protocol
+
+- 애니메이션 가능한 객체라면 채택해 사용할 수 있는 프로토콜
+
+~~~ swift
+protocol UIDynamicItem {
+  var bounds: CGRect { get } // 아이템 사이즈
+  var center: CGPoint { get set } // 아이템 위치
+  var transform: CGAffineTRansform { get set } // 보통 회전(변환)
+  var colllisionBoundsType: UIDynamicItemCollisionBoundsType { get set }
+  var colliisionBoundingPath: UIBezierPath { get set } 
+}
+
+/// ... 만약 center나 transform 등을 설정하고자 한다면 UIDynamicAnimator의 아래 메서드를 사용한다. 
+func updateItemUsingCurrentState(item: UIDynamicItem)
+~~~
+
+
+
+### Dynamic Animation Behaviors
+
+- **UIGravityBehavior**
+
+  - 실제 중력 값에 따라 작동하도록 가능하다.
+
+  ~~~swift
+  var angle: CGFloat // 각도, 라디안 기준, 0부터해서 시계방향으로 표현
+  var magnitude: CGFloat // 규모, 1.0은 1000포인트/초/초
+  ~~~
+
+- **UIAttachmentBehavior**
+
+  - 부착 동작 행위
+  - 쇠막대기 하나가 두 아이템 사이에 연결(부착)되어 있을때 막대기가 두 마이템을 연결하는 효과와 같음.
+  - 만약 떨어져 바닥에 충돌하면 탄력있는 진자운동과 같은 효과를 낼 수 있음.
+
+  ~~~ swift
+  var length: CGFloat // 
+  var anchorPoint: CGPoint // 
+  ~~~
+
+- **UICollisionBehavior**
+
+  - 경계선 충돌 동작 행위
+  - 튀게 하는 등의 동작 효과 
+  - 충돌 여부를 한 프레임에 한 번씩 확인한다. 
+  - 충돌 상황을 감지하는 Delegate 가 존재한다. 
+
+  ~~~ swift
+  var translatesReferenceBoundsIntoBoundary: Bool //
+  ~~~
+
+- **UISnapBehavior**
+
+  - 동적 애니메이션을 사용할 때 어떻게 움직일지 결정할때 사용
+  - 화면상 움직이다 멈추는 동작 보다 자연스럽게 설정할 수 있다.  
+
+  ~~~ swift
+  var damping: CGFloat // damping을 조절할 수 있음
+  ~~~
+
+- **UIPushBehavior**
+
+  - 객체를 미는 동작 효과 구현에 사용 
+
+  ~~~ swift
+  var mode: UIPushBehaviorMode // .continuous or .instantaneous
+  var pushDirection: CGVector
+  //.... ...
+  var angle: CGFloat // 각도, 시계방향
+  var magnitude: CGFloa // 규모, 1.0 -> 100 pts/s/s 
+  ~~~
+
+  
+
+
+### - 7강 용어정리
+
+
+<br>
+
+
+
+### - 7강 구현결과
+
+- 
+
+<br>
+
+
+
+## ♣︎ 총 정리
+
+- <br>
+  <br>
+
