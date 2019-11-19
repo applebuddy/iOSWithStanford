@@ -882,7 +882,7 @@ if myView.alpha == 1.0 {
 var animator = UIDynamicAnimator(referenceView: UIView)
 ~~~
 
-
+<br>
 
 ### UIDynamicItem protocol
 
@@ -901,7 +901,7 @@ protocol UIDynamicItem {
 func updateItemUsingCurrentState(item: UIDynamicItem)
 ~~~
 
-
+<br>
 
 ### Dynamic Animation Behaviors
 
@@ -914,7 +914,9 @@ func updateItemUsingCurrentState(item: UIDynamicItem)
   var magnitude: CGFloat // 규모, 1.0은 1000포인트/초/초
   ~~~
 
-- **UIAttachmentBehavior**
+<br>
+
+- UIAttachmentBehavior**
 
   - 부착 동작 행위
   - 쇠막대기 하나가 두 아이템 사이에 연결(부착)되어 있을때 막대기가 두 마이템을 연결하는 효과와 같음.
@@ -925,7 +927,9 @@ func updateItemUsingCurrentState(item: UIDynamicItem)
   var anchorPoint: CGPoint // 
   ~~~
 
-- **UICollisionBehavior**
+<br>
+
+- UICollisionBehavior**
 
   - 경계선 충돌 동작 행위
   - 튀게 하는 등의 동작 효과 
@@ -936,7 +940,9 @@ func updateItemUsingCurrentState(item: UIDynamicItem)
   var translatesReferenceBoundsIntoBoundary: Bool //
   ~~~
 
-- **UISnapBehavior**
+<br>
+
+- UISnapBehavior**
 
   - 동적 애니메이션을 사용할 때 어떻게 움직일지 결정할때 사용
   - 화면상 움직이다 멈추는 동작 보다 자연스럽게 설정할 수 있다.  
@@ -945,9 +951,12 @@ func updateItemUsingCurrentState(item: UIDynamicItem)
   var damping: CGFloat // damping을 조절할 수 있음
   ~~~
 
+<br>
+
 - **UIPushBehavior**
 
   - 객체를 미는 동작 효과 구현에 사용 
+  - 미는 동작의 크기, 각도 등을 조절할 수 있다. 
 
   ~~~ swift
   var mode: UIPushBehaviorMode // .continuous or .instantaneous
@@ -957,17 +966,119 @@ func updateItemUsingCurrentState(item: UIDynamicItem)
   var magnitude: CGFloa // 규모, 1.0 -> 100 pts/s/s 
   ~~~
 
+<br>
+
+- UIDynamicItemBehavior
+
+  - 메타 동작으로서 마찰, 탄성 ,회전 등의 동작을 지정할 수 있다.
+  - colllisionBehavior나 gravityBehavior 같은 동작들을 모아서 한 동작으로 쓰일때 사용한다.  
+
+  ~~~ swift
+  var allowsRotation: Bool
+  var frictino: CGFloat
+  var elasticity: CGFloat
+  var dynamicAnimator: UIDynamicAnimator? { get } // 애니메이션을 수행하는 객체 
+  var action: (() -> Void)? // 해당 클로져는 UIDynamicBehavior가 작동할 때 항상 실행된다.
+  // -> 애니메이션 속성에 따라 많은 호출이 있을 수 있으므로, action 클로저에 복잡한 코드를 넣을때는 주의가 필요하다. 
+  ~~~
+
+<br>
+
+### 애니메이터의 정지 (Stasis)
+
+- 애니메이션이 중단될 때를 UIDynamicAnimator's 델리게이트가 감지할 수 있다. 
+- 
+
+### 애니메이션 간 메모리 사이클의 방지
+
+- removeBehavior()를 사용했을 때 메모리 사이클이 생길 수 있는 경우 예시▼
+
+~~~ swift
+if let pushBehavior = UIPushBehavior(items: [...], mode: .instantaneous) {
+  pushBehavior.magnitude = ...
+  pushBehavior.angle = ...
+  pushBehavior.action = {
+    // behavior 동작 자체를 제거
+    pushBehavior.dynamicAnimator!.removeBehavior(pushBehavior)
+  }
+  animator.addBehavior(pushBehavior) // will push right away
+}
+// pushBehavior는 closure를 가리키고 있고, 
+// closure는 또다시 pushBehavior를 가리키고 있기때문에 메모리 사이클이 발생한다. 
+// 둘다 힙을 가리리고 힙에 머물러 있게 된다. 
+~~~
+
+<br>
+
+### 클로저 캡쳐링 (Closure Capturing) 
+
+- 클로저 내에서 메모리 사이클이 발생하는 현상을 말한다. 
+
+#### 클로저 캡쳐링의 예)
+
+~~~ swift
+class Zerg {
+	private var foo = {
+    self.bar()
+  }
   
+  private func bar() { ... }
+}
+// Zerg는 foo 클로저를 메모리 안에 가지고 있는데 foo는 Zerg의 self 를 접근하고 있어 메모리 순환이 일어난다. 
+~~~
+
+<br>
+
+#### 해결방법
+
+- 클로저 시작점에 지역변수를 두어 활용할 수 있음 그때 앞에 "weak" 키워드를 넣어서 옵셔널로서 활용 가능
+- weak으로 지정 된 변수는 heap에 저장되지 않기 때문에 메모리 순환을 방지할 수 있다. 
+- weak 대신 unowned로 선언해서 메모리 캡쳐링을 대비할 수 있다.(대신 크래시가 날 수 있음)
+  - 이로서 strong포인터가 self를 가리키지 않으므로, 힙에서 이를 잡아두지않는다.  그렇게 클로저 캡쳐링문제를 방지할 수 있는 것이다. 
+    - weak, unowned 지정된 변수들은 ARC에서 관리하지 않음
+    - weak는 옵셔널로서 존재하지 않을경우 실행을 하지 않는 식으로 클로져 캡쳐링 방지
+    - unowned는 힙에 해당 멤버가 반드시 존재한다고 가정, 만약 힙에 해당 멤버가 없으면 크래시를 발생시킴으로서 클로져 캡쳐링 방지
+- 클로저 내부 맨 처음에  **[weak self = self], [weak self] 등을 지정하면 메모리 순환을 방지할 수 있음**
+
+~~~ swift
+class Zerg {
+  private var foo = { [weak weakSelf = self] in 
+    // heap에서 weakSelf를 잡아두지 않는다. weak, unowned로 지정된 변수들은 힙에 저장하지 않는다. 
+    weakSelf?.bar() // weakSelf는 Optional이기때문에 옵셔널 체이닝을 통해 접근한다. 
+  }
+  private func bar() { ... }
+}
+~~~
+
+<br>
+
+~~~ swift
+var foo = { [weak x = someInstanceOfaClass, y = "hello"] in 
+          	// x, y를 여기서 사용하면 됨.
+          }
+~~~
+
+#### Weak, unowned의 용도
+
+- weak나 unowned 지정 변수는 지역 변수가 아니더라도 힙에 저장되지 않는다.(힙에서 소유하지 않음) 
 
 
-### - 7강 용어정리
+
+<br>
+
+### Coming Up 
+
+- PlayingCard Game Demo
+
+
+### - 8강 용어정리
 
 
 <br>
 
 
 
-### - 7강 구현결과
+### - 8강 구현결과
 
 - 
 
