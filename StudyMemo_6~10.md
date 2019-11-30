@@ -1098,12 +1098,8 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 
 ## ♣︎ 총 정리
 
-- Animation
-- Closure Capturing
-
-
-
-
+- **Animation**
+- **Closure Capturing**
 
 
 
@@ -1117,7 +1113,7 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 
 - **ViewControlller LifeCycle, ScrollView**
 
-
+<br>
 
 ## 뷰 컨트롤러 생애주기
 
@@ -1148,12 +1144,14 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 - **화면 전환 시 호출 메서드**
   - **viewWillTransition**
 
-
+<br>
 
 ### loadView()
 
 - **뷰컨트롤러 최상위 뷰의 load 메서드**
 - **스토리보드 없이 코드로만 구현할 때, 커스텀 뷰를 이곳에서 지정해서 사용**할 수 있다. 
+
+<br>
 
 ### viewDidLoad()
 
@@ -1166,7 +1164,7 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
   - 그러므로 기하변경 관련 기능은 viewDidLoad()에 넣으면 안된다.
 - **사용 시 super.viewDidLoad()를 붙여야 한다.** 
 
-
+<br>
 
 ### viewWillAppear()
 
@@ -1174,7 +1172,7 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 - **하지만 아직 뷰가 계층구조로 쌓이진 않은 시점**이다.
 - **사용 시 super.viewWillAppear()를 불러야 한다.** 
 
-
+<br>
 
 ### viewDidAppear()
 
@@ -1184,19 +1182,21 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
   - **뷰가 나타났으므로 이전 생애주기보다 비용이 비교적 큰 작업을 설정**할 수 있다. 
     - **네트워크 작업을 통한 뷰와의 교류작업 등의 고비용 작업 가능**
 
-
+<br>
 
 ### viewWillDisappear()
 
 - **뷰가 화면에서 사라지기 직전에 호출되는 생애주기 메서드**
 
-
+<br>
 
 ### viewWillLayoutSubviews()
 
 - **viewController의 최상위 뷰, self.view의 layoutSubviews 가 실행되기 직전에 호출**
   - **서브뷰가 이동하거나 경계가 바뀌는 등의 상황에서 layoutSubviews를 받게 된다.**
   - 기하변경 관련 기능을 적용하기 좋은 시점의 메서드
+
+<br>
 
 ### viewDidLayoutSubviews()
 
@@ -1211,14 +1211,14 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 - **viewWillLayoutSubviews(), viewDidLayoutSubviews()** 두개의 메서드는 **불필요한 호출이 많을 수 있으니 주의하여 사용해야하는 메서드**이다.
   - viewWillLayoutSubviews / viewDidLayoutSubviews 메서드의 경우 **뷰의 경계등이 그대로인데도 여러번 호출되는 경우가 발생 할 수 있다.**
 
-
+<br>
 
 ### viewDidDisappear()
 
 - **뷰가 화면에서 완전히 사라진 뒤 호출되는 생애주기 메서드**
 - **MVC를 정리하기에 좋은 시점**
 
-
+<br>
 
 ### didReceiveMemoryWarning()
 
@@ -1226,7 +1226,7 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 - 해당 메서드에서 불필요한 메모리가 필요시 힙에서 해제할 수 있도록 작업을 설정할 수 있다.
   - **제대로 관리가 되지 않고, 메모리 누수가 지속되면 iOS는 앱을 강제로 종료시킬 수 있다! (물론 거의 일어날일은 없지만)**
 
-
+<br>
 
 ### awakeFromNib()
 
@@ -1237,7 +1237,7 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 
 - **아울렛 연결 전에 호출**된다.
 
-
+<br>
 
 ### AutoRotation 
 
@@ -1245,7 +1245,7 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
   - 하지만 이에 따라 세부적인 레이아웃의 변경이 필요할 경우 커스텀 정의가 필요할 수 있다. 
 - **viewWillTransition() 메서드를 통해 회전했을 때의 작업을 커스텀 정의를 할 수 있다.**
 
-
+<br>
 
 ### ViewController LifeCycle Demo
 
@@ -1363,7 +1363,20 @@ func scrollViewDidEndZooming(UIScrollView, with view: UIView, atScale: CGFloat)
 
 ## ScrollView Demo
 
-- MVC가 화면에 표시됐는지 확인하는 방법
+- **ScrollView의 설정 예시**
+
+~~~ swift
+@IBOutlet var scrollView: UIScrollView! {
+		didSet {
+				scrollView.minimumZoomScale = 1 / 25 // 최소 축소는 1/25 크기까지 가능 
+      	scrollView.maximumZoomScale = 1.0 // 최대 확대는 원본크기까지만 가능
+      	scrollView.delegate = self // UIScrollViewDelegate 메서드 사용을 위해 델리게이트를 설정 (viewController 자기 자신, self가 scrollView의 델리게이트로 설정 됨)
+      	scrollView.addSubview(imageView) // 스크롤뷰의 subView로 imageView를 추가
+    }
+}
+~~~
+
+- **MVC가 화면에 표시됐는지 확인하는 방법**
   - **view.window가 존재하는 지 확인한다.**
 
 ~~~ swift
@@ -1414,11 +1427,76 @@ private func fetchImage() {
 }
 ~~~
 
+<br>
+
+- **이미지 상태에 따른 스크롤뷰의  ContentSize 설정 예시)**
+
+~~~  swift
+
+// url은 셋팅이 되면 해당 url에 맞는 image를 fetchImage()를 통해 설정하도록 감시 프로퍼티로 정의된다.
+var imageURL: URL? {
+  	didSet {
+      	imageView.image = nil
+      	scrollView.contentSize = imageView.frame.size
+      	if view.window != nil {
+						fetchImage()
+        }
+    }
+}
+
+// UIImage 계산 프로퍼티, image
+private var image: UIImage? {
+  	get {
+      	return imageView.image
+    }
+  
+  	set {
+      	imageView.image = newValue
+        // 이미지를 셋팅할때마다 그에 맞게 imageView와 scrollView의 크기를 조정한다. 
+      	imageView.sizeToFit() // imageView를 설정에 맞게 IntrinsicContentSize를 설정한다. 
+      	scrollView.contentSize = imageView.frame.size // 갱신된 imageView Size에 맞게 스크롤뷰도 contentSize를 설정한다.
+    }
+}
+
+private func fetchImage() {
+  	if let url = imageURL {
+      	let urlContents = try? Data(contentsOf: url)
+      	if let imageData = urlContents {
+          	image = UIImage(data: imageData)
+        }
+    }
+}
+~~~
+
+<br>
+
+
+
+- **viewForZooming(in scrollView:) 사용예시**
+
+~~~swift
+func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    // scrollView의 subview인 imageView가 scrollView 확대, 축소기능의 적용대상이 된다.
+		return imageView	
+}
+~~~
+
+<br>
 
 
 
 
 
+### 추가 iOS팁
+
+- **UILabel, Button, Switch, TextField 등은 width, height에 대한 고유의 사이즈, Intrinsic Content Size가 존재**한다. 
+  - **imageView, TextView 등은  content에 따라 content Size가 변화**한다.
+  - **UIView는 Intrinsic Content Size를 갖고 있지 않는다.**
+  - **Slider는 width 값만  Intrinsic Content Size를 갖는다.**
+- **ImageView의 Intrinsic Content Size를 PlaceHolder로 커스텀 설정하며 이미지가 비어있을때 크기를 설정 하여 InterfaceBuilder가 ImageView의 크기를 인지하도록**할 수 있다. 
+
+- **SizeToFit**
+  - **sizeToFit은 스스로를  Intrinsic Content Size(고유 크기)로 지정하는 메서드**이다. 
 
 <br>
 
@@ -1434,4 +1512,18 @@ private func fetchImage() {
 
 ## ♣︎ 총 정리
 
-- 
+- **ViewController의 LifeCycle**
+  - **Init, awakeFromNib**
+  - **loadView, viewDidLoad, viewWillAppear, viewDidAppear, viewWillDisappear, viewDidDisappear**
+  - **화면전환 시 호출되는  viewWillTransittion**
+  - **최상위 self.view의 layoutSubviews가 호출 되기 전/후 호출되는 메서드**
+    - **viewWillLayoutSubviews / viewDidLayoutSubviews**
+    - **기하변겅 등이 필요할 때 사용가능**하지만, 스**토리보드의  AutoLayout이 생긴 뒤로 자주 쓰진 않는 메서드**
+  - **메모리 부족 시 호출되는 메서드**
+    - **didReceiveMemoryWarning**
+    - viewWillUnload / viewDidUnload의 deprecated
+- **ScrollView**
+  - **contentSize**
+  - **확대 / 축소가 가능한 뷰**
+  - **생성 및 사용방법**
+  - **ScrollViewDelegate**
