@@ -1247,17 +1247,22 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 
 <br>
 
-### ViewController LifeCycle Demo
+## ViewController LifeCycle Demo
 
 - VCLLoggingViewControlller(Custom ViewController)를 대신 상속 후 ConcentrationGame의 뷰 컨틀롤러를 재설정
   - **뷰컨트롤러의 생애주기 로그 출력 연습**
   - **ViewController LifeCycle 출력 예시 ▼**
 
 - **세그웨이 전환 시 이전 뷰는 이동한 뷰컨트롤러의 viewDidLoad() 메서드 호출 전에 Heap에서 제거**된다.
+- **ViewController LifeCycle 로그 출력 예시 ▼**
+
+<div> 
+<img width=500 src="https://user-images.githubusercontent.com/4410021/69900906-9c94d380-13bc-11ea-8b82-aa96cacfef99.png"> 
+</div>
 
 
-
-<br><br>
+<br>
+<br>
 
 
 
@@ -1503,8 +1508,10 @@ func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 
 
 ### - 9강 구현결과
-
-- 
+<div> 
+<img width=500 src="https://user-images.githubusercontent.com/4410021/69900903-9bfc3d00-13bc-11ea-8954-46eab58ab2f9.png"> &nbsp;
+<img width=250 src="https://user-images.githubusercontent.com/4410021/69900904-9c94d380-13bc-11ea-9f36-54aa12e3f81d.png"> 
+</div>
 
 <br>
 
