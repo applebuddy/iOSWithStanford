@@ -1123,10 +1123,10 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 
 - **대부분의 뷰컨트롤러는 스토리보드를 통해 생성**된다. 
   - 그 이후 ViewController의 세그웨이, IBOutlet, IBAction 설정 등... 살을 붙인다. 
-- **뷰컨트롤러 생애주기 메서드** (일반적인 생성 -> 소멸 시 메서드 호출순서)
-  - init(coder:) - created via InterfaceBuilder
-  - (awakeFromNib) -> 스토리보드로부터 불러왔을 경우
-  - (loadView)
+- **뷰컨트롤러 생애주기 메서드** (**볼드체가 ViewController 생애주기**, **일반적인 생성 -> 소멸 시 메서드 호출순서**)
+  - **init(coder:)** - created via InterfaceBuilder
+  - (awakeFromNib) -> 스토리보드로부터 UI객체 불러와 쓸 때 사용
+  - **loadView** -> 코드로 구현 시 view를 지정해줄 수 있는 메서드
   - **viewDidLoad**
   - **viewWillAppear**
   - (viewWillLayoutSubviews / viewDidLayoutSubviews)
@@ -1145,6 +1145,8 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
   - **viewWillTransition**
 
 <br>
+
+
 
 ### loadView()
 
@@ -1520,17 +1522,21 @@ func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 ## ♣︎ 총 정리
 
 - **ViewController의 LifeCycle**
-  - **Init, awakeFromNib**
+  - Init
   - **loadView, viewDidLoad, viewWillAppear, viewDidAppear, viewWillDisappear, viewDidDisappear**
-  - **화면전환 시 호출되는  viewWillTransittion**
+- **상황에 따라 활용할 수 있는 주기 메서드**
+  - **awakeFromNib : 스토리보드로부터 불러와 사용할 때** 
+  - **viewWillTransition : 화면전환 시 호출되는 메서드**
   - **최상위 self.view의 layoutSubviews가 호출 되기 전/후 호출되는 메서드**
     - **viewWillLayoutSubviews / viewDidLayoutSubviews**
-    - **기하변겅 등이 필요할 때 사용가능**하지만, 스**토리보드의  AutoLayout이 생긴 뒤로 자주 쓰진 않는 메서드**
+      - **기하변겅 등이 필요할 때 사용가능**하지만, **스토리보드의  AutoLayout이 생긴 뒤로 자주 쓰진 않는 메서드**
   - **메모리 부족 시 호출되는 메서드**
     - **didReceiveMemoryWarning**
-    - viewWillUnload / viewDidUnload의 deprecated
+    - **viewWillUnload / viewDidUnload의 deprecated **
+      - **-> iOS6 이후로 시스템이 임의로 뷰의 헤제 등에 관여하지 않음**
 - **ScrollView**
   - **contentSize**
   - **확대 / 축소가 가능한 뷰**
   - **생성 및 사용방법**
   - **ScrollViewDelegate**
+
