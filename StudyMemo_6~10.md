@@ -1111,7 +1111,7 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 
 
 
-# Lecture 8) 
+# Lecture 9) 
 
 ## ♣︎ 뷰 컨트롤러 생애주기, 스크롤뷰
 
@@ -1281,7 +1281,7 @@ scrollView.addSubview(logo)
 
 - contentOffset.x / contentOffset.y를 통해 contentSize 내의 스크롤뷰 위치를 알 수 있다. 
 
-
+<br>
 
 ### ScrollView를 만드는 방법
 
@@ -1292,7 +1292,7 @@ scrollView.addSubview(logo)
   - **contentSize가 지정이 제대로 되지 않으면 width=0, height=0의 공간에서 스크롤를 하는 꼴이 되기 때문**이다.
   - **이미지 or 뷰가 보이지만 이동이나 축소/확대 작업에 제한이 생긴다면 contentSize가 제대로 설정되어있지 않을 가능성**이 크다!
 
-
+<br>
 
 ### **현재 ScrollView의 직사각형 화면 정보를 알 수 있는 방법**
 
@@ -1329,7 +1329,7 @@ scrollView.maximumZoomScale = 2.0 // 2.0은 원본 사이즈의 2배 크기를 �
 
 - **zoomToRect를 통해서도 특정 직사각형에 맞게 화면을 맞추며 축소 / 확대가 가능**하다.
 
-
+<br>
 
 ### viewForZooming
 
@@ -1347,8 +1347,6 @@ func viewForZooming(in scrollView: UIScrollView) -> UIView
 
 <br>
 
-
-
 ### scrollViewDidEndZooming
 
 - 스크롤 뷰 의 스크롤이 끝났을때를 감지하는 델리게이트 메서드
@@ -1363,10 +1361,64 @@ func scrollViewDidEndZooming(UIScrollView, with view: UIView, atScale: CGFloat)
 
 
 
+## ScrollView Demo
+
+- MVC가 화면에 표시됐는지 확인하는 방법
+  - **view.window가 존재하는 지 확인한다.**
+
+~~~ swift
+// view.window를 체크하여 MVC가 화면에 보이는지 확인 하는 방법 예시)
+/// 프로퍼티 감시자, imageURL
+var imageURL: URL? {
+  	didSet {
+      	imageView.image = nil
+      	// 현재 MVC가 화면에 표시되는지 확인하기 위해 view.window가 nil인지 체크한다. 
+      	if view.window != nil {
+          	// view.window가 nil이 아니라면 화면에 해당 MVC가 보임을 의미한다. 
+          	fetchImage()
+        }
+    }
+}
+
+// MARK: - Life Cycle
+override func viewDidAppear(_ animated: Bool) {
+  	super.viewDidAppear(animated)
+  	if imageView.image == nil {
+      	// 만약 현재 이미지가 설정되어있지 않으면 fetchImage()메서드를 실행하여 이미지를 설정한다. 
+      	fetchImage()
+    }
+}
+
+override func viewDidLoad() {
+  	super.viewDidLoad() {
+      	if imageURL == nil {
+						// url 설정이 되어있지않다면, stanford 이미지 관련 이미지의 URL을 불러와 할당한다.
+          	imageURL = DemoURLs.stanford
+        }
+    }
+}
+
+
+private func fetchImage() {
+  	if let url = imageURL {
+      	// url이 정상적으로 존재하면, URL을 통해 데이터를 가져와 이미지를 설정한다. 
+        // Data(contentsOf: URL)은 throws가 추가 정의되어 있으므로 try를 통해 접근한다. 
+      	// Data 처리 시 오류가 발생하면...?)
+           // 1) do + try + catch let 블럭을 통해 예외처리를 하거나...
+           // 2) if let ... + try? 를 사용해서 nil을 할당하거나 예외 처리를 한다. 
+            if let imageData = try? Data(contentsOf: url) {
+              	imageView.image = UIImage(data: imageData)
+            }
+    }
+  	
+}
+~~~
 
 
 
-### - 9강 용어정리
+
+
+
 
 <br>
 
