@@ -1127,8 +1127,33 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 
 - **대부분의 뷰컨트롤러는 스토리보드를 통해 생성**된다. 
   - 그 이후 ViewController의 세그웨이, IBOutlet, IBAction 설정 등... 살을 붙인다. 
+- **뷰컨트롤러 생애주기 메서드** (일반적인 생성 -> 소멸 시 메서드 호출순서)
+  - init(coder:) - created via InterfaceBuilder
+  - (awakeFromNib) -> 스토리보드로부터 불러왔을 경우
+  - (loadView)
+  - **viewDidLoad**
+  - **viewWillAppear**
+  - (viewWillLayoutSubviews / viewDidLayoutSubviews)
+  - **viewDidAppear**
+  - **viewWillDisppear**
+  - (viewWillLayoutSubviews / viewDidLayoutSubviews)
+  - **viewDidDisappear**
+  - viewWillUnload / viewDidUnload 
+    - **-> 둘다 필요없게 되면서 deprecated 처리 됨**
+- **기하변경 등 작업 메서드 (layoutSubviews 호출 전/후 시점)** 
+  - **viewWillLayoutSubviews**
+  - **viewDidLayoutSubviews**
+- **메모리 부족 시 호출 메서드**
+  - **didReceiveMemoryWarning**
+- **화면 전환 시 호출 메서드**
+  - **viewWillTransition**
 
 
+
+### loadView()
+
+- **뷰컨트롤러 최상위 뷰의 load 메서드**
+- **스토리보드 없이 코드로만 구현할 때, 커스텀 뷰를 이곳에서 지정해서 사용**할 수 있다. 
 
 ### viewDidLoad()
 
@@ -1161,6 +1186,12 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 
 
 
+### viewWillDisappear()
+
+- **뷰가 화면에서 사라지기 직전에 호출되는 생애주기 메서드**
+
+
+
 ### viewWillLayoutSubviews()
 
 - **viewController의 최상위 뷰, self.view의 layoutSubviews 가 실행되기 직전에 호출**
@@ -1178,12 +1209,7 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
   - **AutoLayout을 통해 설정하면 최상위 뷰의 layoutSubviews에서 자동으로 작업을 진행하기 때문**이다. 
   - 만약 **AutoLayout 대신 컨트롤러에서 기하변경 작업을 하고 싶다면, viewWillLayoutSubviews(), viewDidLayoutSubviews()를 사용**하면 된다.
 - **viewWillLayoutSubviews(), viewDidLayoutSubviews()** 두개의 메서드는 **불필요한 호출이 많을 수 있으니 주의하여 사용해야하는 메서드**이다.
-
-
-
-### viewWillDisappear()
-
-- **뷰가 화면에서 사라지기 직전에 호출되는 생애주기 메서드**
+  - viewWillLayoutSubviews / viewDidLayoutSubviews 메서드의 경우 **뷰의 경계등이 그대로인데도 여러번 호출되는 경우가 발생 할 수 있다.**
 
 
 
@@ -1194,23 +1220,146 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 
 
 
+### didReceiveMemoryWarning()
+
+- **대용량 메모리 누수 등으로 인해 메모리가 부족하게 되면 해당 메서드가 호출**될 수 있다.
+- 해당 메서드에서 불필요한 메모리가 필요시 힙에서 해제할 수 있도록 작업을 설정할 수 있다.
+  - **제대로 관리가 되지 않고, 메모리 누수가 지속되면 iOS는 앱을 강제로 종료시킬 수 있다! (물론 거의 일어날일은 없지만)**
+
+
+
+### awakeFromNib()
+
+- **super.awakeFromNib()을 붙혀 실행해야 한다.**
+
+- **엄밀히 말하면 해당 메서드는 생애주기 메서드는 아님**
+- **스토리보드로부터 UI 객체(뷰, 뷰컨트롤러 등...)를 불러올 때 사용하는 메서드**
+
+- **아울렛 연결 전에 호출**된다.
+
+
+
 ### AutoRotation 
 
 - **iOS에서는 자동회전기능을 제공**한다. 
   - 하지만 이에 따라 세부적인 레이아웃의 변경이 필요할 경우 커스텀 정의가 필요할 수 있다. 
 - **viewWillTransition() 메서드를 통해 회전했을 때의 작업을 커스텀 정의를 할 수 있다.**
 
+
+
+### ViewController LifeCycle Demo
+
+- VCLLoggingViewControlller(Custom ViewController)를 대신 상속 후 ConcentrationGame의 뷰 컨틀롤러를 재설정
+  - **뷰컨트롤러의 생애주기 로그 출력 연습**
+  - **ViewController LifeCycle 출력 예시 ▼**
+
+- **세그웨이 전환 시 이전 뷰는 이동한 뷰컨트롤러의 viewDidLoad() 메서드 호출 전에 Heap에서 제거**된다.
+
+
+
 <br><br>
 
 
 
+## 스크롤뷰 ScrollView
+
+### **ScrollView**
+
+- **ScrollView는 매우 유용하게 사용될 수 있는 View**이다.
+- **ScrollView는 안전 영역(Safe Area)에 대해 매우 똑똑한 UI**이다.
+- **손가락으로 스크롤하고 확대/축소 등이 가능한 뷰**
+- **ScrollView는 contentSize를 지정**해서 사용한다. 
+
+~~~ swift
+// 스크롤뷰의 contentSize를 지정하고 addSubview를 통해 subview를 추가할 수 있다.
+scrollView.contentSize = CGSize(width: 3000, height: 2000)
+logo.frame = CGRect(x: 2700, y: 50, width: 120, height: 180)
+scrollView.addSubview(logo)
+~~~
+
+<br>
+
+- contentOffset.x / contentOffset.y를 통해 contentSize 내의 스크롤뷰 위치를 알 수 있다. 
 
 
-## 스크롤뷰
 
-- **ScrollView**
+### ScrollView를 만드는 방법
+
+- **Storyboard에서 UIView처럼 드래그해서 생성**할 수 있다. 
+- **Embed In -> Scroll View 를 통해 생성**할 수 있다. 
+- **addSubview를 통해 subViews를 ScrollView에 추가**할 수 있다.
+  - **ScrollView에 addSubview를 해도 contentSize를 지정하지 않으면 화면에 보이지 않을 수 있다.** 
+  - **contentSize가 지정이 제대로 되지 않으면 width=0, height=0의 공간에서 스크롤를 하는 꼴이 되기 때문**이다.
+  - **이미지 or 뷰가 보이지만 이동이나 축소/확대 작업에 제한이 생긴다면 contentSize가 제대로 설정되어있지 않을 가능성**이 크다!
 
 
+
+### **현재 ScrollView의 직사각형 화면 정보를 알 수 있는 방법**
+
+~~~ swift
+// 스크롤뷰에서 현재 보이는 화면의 CGRect값을 확인 할 수 있다.
+// aerial.convert(scrollView.bounds, from: scrollView)
+let visibleRect: CGRect = aerial.convert(scrollView.bounds, from: scrollView)
+~~~
+
+<br>
+
+### 코드로 스크롤링 설정하기 
+
+- **Scrolling Programmatically**
+
+~~~ swift
+// 스크롤뷰에서 특정 CGRect 위치를 보이도록 설정하는 코드 + 애니메이션 설정도 가능하다.
+func scrollrectToVisible(CGRect, animated: Bool)
+~~~
+
+<br>
+
+### 스크롤뷰 확대/축소하기
+
+- **최소 ~ 최대 확대 범위 제약을 주는 방법 How Set Zooming Range**
+
+~~~  swift
+// minimumZoomScale, maximumZoomScale을 통해 ZoomIn / ZoomOut의 한도를 지정할 수 있다.
+scrollView.minimumZoomScale = 0.5 // 0.5는 원본 사이즈의 절반 크기를 의미한다. 
+scrollView.maximumZoomScale = 2.0 // 2.0은 원본 사이즈의 2배 크기를 의미한다. 
+~~~
+
+<br>
+
+- **zoomToRect를 통해서도 특정 직사각형에 맞게 화면을 맞추며 축소 / 확대가 가능**하다.
+
+
+
+### viewForZooming
+
+- 스크롤뷰 내 특정 뷰 확대/축소 여부 설정하기
+
+- viewForZooming(in scrollView: UIScrollView) -> UIView 를 사용한다.
+  - 스크롤뷰의 의  delegate 지정을 한 뒤에 컨트롤러에서 사용 가능하다.
+  - viewForZooming의 설정에 따라 확대/축소하는 뷰가 달라질 수 있다. 
+
+~~~ swift
+// viewForZooming 사용 예시
+// Part of UIScrollViewDelegate Method
+func viewForZooming(in scrollView: UIScrollView) -> UIView
+~~~
+
+<br>
+
+
+
+### scrollViewDidEndZooming
+
+- 스크롤 뷰 의 스크롤이 끝났을때를 감지하는 델리게이트 메서드
+- 가령 **확대 or 축소 후에 Zooming이 끝나면 현재 보이는 화면을 선명하게 만드는 등의 처리를 scrollViewDidEndZooming에서 처리**할 수 있을 것이다.
+
+~~~ swift
+// Part of UIScrollViewDelegate Method
+func scrollViewDidEndZooming(UIScrollView, with view: UIView, atScale: CGFloat)
+~~~
+
+<br>
 
 
 
