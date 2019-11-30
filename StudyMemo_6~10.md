@@ -10,6 +10,10 @@ iOS Study with Stanford Lection Study 6~10
 ## [Lecture 6](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-6-1)
 ## [Lecture 7](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-7-1)
 
+## [Lecture 8](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-8-1)
+
+## [Lecture 9](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-9-1)
+
 <br>
 <br>
 <br>
@@ -1058,17 +1062,23 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
           }
 ~~~
 
+<br>
+
 #### Weak, unowned의 용도
 
 - weak나 unowned 지정 변수는 지역 변수가 아니더라도 힙에 저장되지 않는다.(힙에서 소유하지 않음) 
 
+<br><br>
+
+## PlayingCard Game Demo 
+
+- 앱이 실행되면 자동으로 카드를 날리며 돌린다.  -> 도착하면 멈친다. 
+- 새로운 카드를 돌리면 기존의 카드는 작아지고 아랫 여백에 카드가 추가된다. 
+- 3개의 카드를 선택하면 카드가 뒤집히고 날라다니며 바뀐다. -> 새로운 카드로 바뀐다.
 
 
-<br>
 
-### Coming Up 
 
-- PlayingCard Game Demo
 
 
 ### - 8강 용어정리
@@ -1088,6 +1098,139 @@ var foo = { [weak x = someInstanceOfaClass, y = "hello"] in
 
 ## ♣︎ 총 정리
 
-- <br>
-  <br>
+- Animation
+- Closure Capturing
 
+
+
+
+
+
+
+<br><br>
+
+
+
+# Lecture 8) 
+
+## ♣︎ 뷰 컨트롤러 생애주기, 스크롤뷰
+
+- **ViewControlller LifeCycle, ScrollView**
+
+
+
+## 뷰 컨트롤러 생애주기
+
+- **ViewController LifeCycle**
+  - **뷰컨트롤러의 생성 ~ 소멸 까지의 단계를 의미**
+  - **생애주기 중 메모리가 부족할 경우 메모리를 비우라는 경고 신호가 호출**되기도 한다.
+
+- **대부분의 뷰컨트롤러는 스토리보드를 통해 생성**된다. 
+  - 그 이후 ViewController의 세그웨이, IBOutlet, IBAction 설정 등... 살을 붙인다. 
+
+
+
+### viewDidLoad()
+
+- **뷰컨트롤러의 프로퍼티 등을 초기화하기 좋은 생애주기 메서드**
+- **각 뷰컨트롤러 일생에서 단 한번만 불리게 되는 메서드**
+  - loadView() -> viewDidLoad()
+  - 뷰컨트롤러가 메모리에 올라온 뒤에 호출** 된다.
+- viewDidLoad()가 실행될때 아직 경계는 지정되지 않는다.**
+  - **그러므로 화면의 크기와 관련된 것들을 해당 메소드에서 정의하면 안된다.** 
+  - 그러므로 기하변경 관련 기능은 viewDidLoad()에 넣으면 안된다.
+- **사용 시 super.viewDidLoad()를 붙여야 한다.** 
+
+
+
+### viewWillAppear()
+
+- **뷰컨트롤러의 뷰가 곧 화면에 나타날 시점에 호출되는 생애주기 메서드**
+- **하지만 아직 뷰가 계층구조로 쌓이진 않은 시점**이다.
+- **사용 시 super.viewWillAppear()를 불러야 한다.** 
+
+
+
+### viewDidAppear()
+
+- **뷰가 화면에 나타난 뒤에 호출되는 생애주기 메서드**
+  - **표현할 뷰가 게층구조로 쌓이고 화면에 보여진 뒤 호출**되는 메서드
+  - **뷰가 표시된 이후이므로 애니메이션, 타이머시작, 관찰 시작 등의 기능을 해당 메서드에서 구현**할 수 있다.
+  - **뷰가 나타났으므로 이전 생애주기보다 비용이 비교적 큰 작업을 설정**할 수 있다. 
+    - **네트워크 작업을 통한 뷰와의 교류작업 등의 고비용 작업 가능**
+
+
+
+### viewWillLayoutSubviews()
+
+- **viewController의 최상위 뷰, self.view의 layoutSubviews 가 실행되기 직전에 호출**
+  - **서브뷰가 이동하거나 경계가 바뀌는 등의 상황에서 layoutSubviews를 받게 된다.**
+  - 기하변경 관련 기능을 적용하기 좋은 시점의 메서드
+
+### viewDidLayoutSubviews()
+
+- **viewController의 최상위 뷰, self.view의 layoutSubviews 가 실행된 이후 호출**
+- 기하변경 관련 기능을 적용하기 좋은 시점의 메서드
+
+
+
+- → 하지만, **viewWillLayoutSubview(), viewDidLayoutSubviews()는 많이 쓰이지 않는다. AutoLayout이 생겨서 따로 대체할 수단이 생겼기 떄문**이다.
+  - **AutoLayout을 통해 설정하면 최상위 뷰의 layoutSubviews에서 자동으로 작업을 진행하기 때문**이다. 
+  - 만약 **AutoLayout 대신 컨트롤러에서 기하변경 작업을 하고 싶다면, viewWillLayoutSubviews(), viewDidLayoutSubviews()를 사용**하면 된다.
+- **viewWillLayoutSubviews(), viewDidLayoutSubviews()** 두개의 메서드는 **불필요한 호출이 많을 수 있으니 주의하여 사용해야하는 메서드**이다.
+
+
+
+### viewWillDisappear()
+
+- **뷰가 화면에서 사라지기 직전에 호출되는 생애주기 메서드**
+
+
+
+### viewDidDisappear()
+
+- **뷰가 화면에서 완전히 사라진 뒤 호출되는 생애주기 메서드**
+- **MVC를 정리하기에 좋은 시점**
+
+
+
+### AutoRotation 
+
+- **iOS에서는 자동회전기능을 제공**한다. 
+  - 하지만 이에 따라 세부적인 레이아웃의 변경이 필요할 경우 커스텀 정의가 필요할 수 있다. 
+- **viewWillTransition() 메서드를 통해 회전했을 때의 작업을 커스텀 정의를 할 수 있다.**
+
+<br><br>
+
+
+
+
+
+## 스크롤뷰
+
+- **ScrollView**
+
+
+
+
+
+
+
+
+### - 9강 용어정리
+
+<br>
+
+
+
+### - 9강 구현결과
+
+- 
+
+<br>
+
+
+
+## ♣︎ 총 정리
+
+- 
