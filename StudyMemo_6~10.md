@@ -14,6 +14,8 @@ iOS Study with Stanford Lection Study 6~10
 
 ## [Lecture 9](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-9-1)
 
+## [Lecture 10](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-10-1)
+
 <br>
 <br>
 <br>
@@ -378,7 +380,6 @@ lowerRightCornerLabel.transform = CGAffineTransform.identity
   - layoutSubviews
   - setNeedsDisplay
   - setNeedsLayout
-
 
 <br>
 <br>
@@ -1540,3 +1541,180 @@ func viewForZooming(in scrollView: UIScrollView) -> UIView? {
   - **생성 및 사용방법**
   - **ScrollViewDelegate**
 
+
+
+<br>
+
+<br>
+
+
+
+# Lecture 10) 
+
+## ♣︎ 멀티스레딩, 오토레이아웃
+
+
+
+## 멀티스레딩
+
+- **Multithrading**
+
+<br>
+
+## 스레드 (Thread)
+
+- **iOS에서의 스레드는 실행스레드**를 말한다.
+- **근본적으로 코드를 실행할 기회를 의미**한다.
+- **멀티프로세서 or 멀티코어프로세서를 사용한다면, 병렬로 작동시키는 것이 가능**하다. 
+
+<br>
+
+## 디스패치 큐 (DispatchQueue)
+
+- **iOS에서 멀티스레딩은 큐를 이용해 작동**한다. 
+  - **여기서 말하는 큐는  FIFO방식의  큐(Queue)를 말하는 것**이다.
+
+- **큐의 종류**
+  - **직렬 큐 (Serial Queue)**
+    - **하나의 큐 작업이 끝날때까지 기다리고 그 다음 다음 큐의 작업을 순차적으로 실행**한다. 
+  - **병렬 큐 (Concurrent Queue)**
+    - **큐에 접근해서 스레드를 꺼내어 실행**하는데 이때 **이미 다른 큐 작업이 진행중일때도 다른 다수의 작업을 동시에 실행**한다.
+
+<br>
+
+### 메인 큐 (Main Queue)
+
+- **메인큐는 Serial Queue**이다.
+  - **Serial Queue이므로 모두 하나의 스레드에서 실행**된다.
+- **메인큐는 메인스레드 (Main Thread)에서 실행**된다.
+- **UI를 실행하는 코드블록은 전부 메인큐에만 저장되어 처리**된다.
+  - **UI를 처리하는 경우에는 반드시 메인 큐에서 작동되어야 한다.**
+
+<br>
+
+### 메인 큐 사용방법
+
+~~~ swift
+// DispatchQueue는 main이라는 정적 변수를 갖고 있다.
+// main큐 사용 방식
+let mainQueue = DispatchQueue.main
+
+// * URLSession dataTask 처리등을 할때의 결과를 받는 블럭은 background에서 작동하므로 이곳에서 UI를 처리하기 위해서는 메인큐를 사용해야 한다. 
+let session = URLSession(configuration: .default)  
+if let url = URL(string: "http://stanford.edu/...") { // ► 0번째 순서 행
+  	let task = session.dataTask(with: url) { (data: Data?, response, error) in  // ► 1번째 순서 행
+    		
+        // BACKGROUND TASK // ► 4번째 순서 행
+        // 이곳은 background 이므로 UI처리를 위해서는 main 스레드에서 작동하도록 해야한다!!
+				DispatchQueue.main.async { // ► 5번째 순서 행
+          	// do UI stuff her // ► 7번째 순서 행
+        }
+				print("Did some stuff with the data, but UI part hasn't happened yet") // ► 6번째 순서 행
+		}
+    task.resume() // ► 2번째 순서 행
+}
+
+print("dont firing off the request for the url's contents") // ► 3번째 순서 행
+
+// MARK: - Code 실행순서
+// 1) take = session.dataTask... 가 바로 반환됨
+// 2) task.resume()이 실행 -> 네트워크를 통해 URL 데이터를 전송 (Background에서 진행)
+// 3) 맨 밑의 print("dont firing off the request for the url's contents") 행이 실행
+// 4) 이 후, "// BACKGROUND TASK..." 행이 실행
+// 5) BACKGROUND TASK 중 DispatchQueue.main.async { ... } 행이 실행 
+      // but, 아직 Background이므로 메인큐 동작은 진행 안됨
+// 6) print("Did some stuff with the data, but UI part hasn't happened yet") 행이 실행
+// 7) ★ Background 동작이 실행되고, 메인큐가 여유롭게 되면 마지막으로 DispatchQueue.main.async의 코드블럭이 실행
+// 단, 이 순서는 환경에 따라 바뀔 수 있음. 
+~~~
+
+
+
+<br>
+
+
+
+### 글로벌 큐 (Global Queue)
+
+- **Main큐 이외의 큐**
+- **UI를 건드리지 않는 작업이면 글로벌 큐로 처리**할 수 있다.
+
+<br>
+
+### 글로벌 큐 사용방법
+
+- **글로벌 큐는 다양한 서비스 품질 옵션(QoS, Quility Of Service)을 갖고 있다.**
+
+~~~ swift
+// 특정 qos옵선의 global 큐를 선언하는 방식
+let backgroundQueue = DispatchQueue.global(qos: DispatchQos)
+
+// QoS(Quility Of Service 종류)
+DispatchQoS.userInteractive // 거의 사용하지 않음, 작은 작업을 짧고 빠르게 무언가 동작시키고자 할 때 사용
+DispatchQoS.userInitiated // 가장 흔하게 사용함, 유자가 바로 요청하는 가능한 빨리 동작해야하는 작업들에 대해 사용
+DispatchQoS.background // 유저가 바로 요청한 것은 아니지만, 가능할 빨리 완료되는 좋은 작업들에 사용
+DispatchQoS.utilit // 앱 아키텍쳐의 일부분으로서 실행되는 작업에 사용 (DB 작업 등)
+
+~~~
+
+<br>
+
+### 큐 블록코드 사용방법
+
+- **Async / Sync 를 통해 블록코드를 실행**시킬 수 있다.
+- **Main Queue는 도중에 멈춰지는걸 원치 않으므로, main.sync는 사용하면 안된다!**
+
+~~~ swift
+queue.async { ... } // 비동기로 작동하는 async, 현재 진행중인 다른 동작과 함께 동작한다. 
+queue.sync { ... } // 동기로 작동하는 sync, 큐에 블록을 넣으면 현재까지의 다른 동작은 해당 블럭이 실행될때까지 정지한다.
+~~~
+
+
+
+<br>
+
+## Operation, OperationQueue
+
+- **많은 병렬 프로세싱일 필요한 작업에 OperationQueue를 사용할 수 있다.**
+- **병렬작업들은 서로 의존되는 경우가 많은데 Operation은 이러한 의존성을 설정해줄 수 있다.**
+
+<br>
+
+## MultiThreading Demo
+
+- 멀티 스레딩 데모
+
+
+
+
+
+
+
+
+
+ 
+
+<br>
+
+
+
+### - 추가 iOS 팁
+
+
+
+<br>
+
+
+
+### - 6강 구현결과
+
+<br>
+
+
+
+## ♣︎ 총 정리
+
+- 멀티스레딩 (Multithreading)
+- 오토레이아웃 (AutoLayout)
+
+<br>
