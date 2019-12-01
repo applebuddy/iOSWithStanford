@@ -1815,6 +1815,15 @@ flipCountLabel.attributedText = attributedString
 - Concentration게임. Portrait 모드로는 문제없어보이지만....
   - **LandScape 상태에서 "Flips: X" 라벨이 보이지 않고, 카드의 길이가 부자연스럽다!**
     - **이 문제를 SizeClass 별 제약 설정으로 해결**해 본다. 
+    
+
+<div>
+<img width=450 src="https://user-images.githubusercontent.com/4410021/69914041-f233b380-1482-11ea-8543-74940a99ae41.png"> &nbsp;
+<img width=225 src="https://user-images.githubusercontent.com/4410021/69914042-f233b380-1482-11ea-8bb5-0f93517e558c.png">
+</div>
+
+<br>
+
 - **속성인스펙터, AttributInspector의 속성 별 좌측에 '+' 버튼이 있는 것** 을 볼 수 있다. **이 버튼을 통해 Size 별 설정을 할 수 있다.**
   - **UI 속성들을 SizeClass별로 정의할 수 있는 것**이다.
   - **SizeClass별 속성을 추가하면 wC(width Compact), hC(height Compact), hR(height Regular) 등의 표시와 함게 속성이 추가되는 것을 확인**할수 있다.
@@ -1823,7 +1832,9 @@ flipCountLabel.attributedText = attributedString
   - **InterfaceBuilder 좌측 하단에 Document Outline 창 버튼을 눌러 창을 좌측에서 띄울 수 있다.**
   - **현재 스토리보드 상태에 적용되는 제약값이 무엇인지를 목록의 제약값 밝기로 알 수 있다.**
     - **어두운것은 현재 SizeClass 상태에서 적용되지 않는 제약 값**이다.
-
+<div>
+<img width=500 src="https://user-images.githubusercontent.com/4410021/69914085-52c2f080-1483-11ea-8cde-ff002f2d33bc.png">
+</div>
 
 
 <br>
@@ -1864,8 +1875,15 @@ override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollect
 <br>
 
 
-
 ### - 10강 구현결과
+- SizeClass 별 제약 설정으로 가로 / 세로 모드에서의 뷰배치가 보다 자연스럽게 되었다!
+
+<div>
+<img width=250 src="https://user-images.githubusercontent.com/4410021/69914104-83a32580-1483-11ea-8faf-724c91b259f8.png"> &nbsp;
+<img width=250 src="https://user-images.githubusercontent.com/4410021/69914105-83a32580-1483-11ea-979b-1006c52967d2.png">
+</div>
+
+
 
 <br>
 
