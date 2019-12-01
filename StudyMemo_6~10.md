@@ -1553,7 +1553,7 @@ func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 
 ## ♣︎ 멀티스레딩, 오토레이아웃
 
-
+<br>
 
 ## 멀티스레딩
 
@@ -1654,7 +1654,7 @@ let backgroundQueue = DispatchQueue.global(qos: DispatchQos)
 DispatchQoS.userInteractive // 거의 사용하지 않음, 작은 작업을 짧고 빠르게 무언가 동작시키고자 할 때 사용
 DispatchQoS.userInitiated // 가장 흔하게 사용함, 유자가 바로 요청하는 가능한 빨리 동작해야하는 작업들에 대해 사용
 DispatchQoS.background // 유저가 바로 요청한 것은 아니지만, 가능할 빨리 완료되는 좋은 작업들에 사용
-DispatchQoS.utilit // 앱 아키텍쳐의 일부분으로서 실행되는 작업에 사용 (DB 작업 등)
+DispatchQoS.utility // 앱 아키텍쳐의 일부분으로서 실행되는 작업에 사용 (DB 작업 등)
 
 ~~~
 
@@ -1797,21 +1797,69 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
   // 반환 값은 enum형태로 .compact / .regular (or .unspecified)등이 있다.
   ~~~
 
+~~~ swift
+// SizeClass 값에 따른 String 설정 예시)
+// 높이가 .compact 상태일 경우 String text의 Flips, flipCount를 2행으로 표현, .compact 상태가 아닐 경우 1행으로 표현하는 코드 예시)
+let attributedString = NSAttributedString(
+		string: traitCollection.verticalSizeClass == .compact ? "Flips\n\(flipCount)" : "Flips: \(filpCount)"
+)
+
+// 커스텀한 String 속성을 filpCountLabel의 text 속성으로 적용
+flipCountLabel.attributedText = attributedString
+~~~
+
 <br>
 
 ### AutoLayout Demo
 
-- 
+- Concentration게임. Portrait 모드로는 문제없어보이지만....
+  - **LandScape 상태에서 "Flips: X" 라벨이 보이지 않고, 카드의 길이가 부자연스럽다!**
+    - **이 문제를 SizeClass 별 제약 설정으로 해결**해 본다. 
+- **속성인스펙터, AttributInspector의 속성 별 좌측에 '+' 버튼이 있는 것** 을 볼 수 있다. **이 버튼을 통해 Size 별 설정을 할 수 있다.**
+  - **UI 속성들을 SizeClass별로 정의할 수 있는 것**이다.
+  - **SizeClass별 속성을 추가하면 wC(width Compact), hC(height Compact), hR(height Regular) 등의 표시와 함게 속성이 추가되는 것을 확인**할수 있다.
+    - **이를 통해 세로가 좁을때 일부 카드를 숨기거나, 세로가 넓을 때 추가 카드를 보이게 할수 있다.**
+- **Document Outline을 통해 제약값의 세부 목록을 확인**할 수 있다. 
+  - **InterfaceBuilder 좌측 하단에 Document Outline 창 버튼을 눌러 창을 좌측에서 띄울 수 있다.**
+  - **현재 스토리보드 상태에 적용되는 제약값이 무엇인지를 목록의 제약값 밝기로 알 수 있다.**
+    - **어두운것은 현재 SizeClass 상태에서 적용되지 않는 제약 값**이다.
 
 
 
-### In Next Lecture...
+<br>
+
+- **layoutSubviews가 호출 된 직후 시점인 viewDidLayoutSubviews에서 updateViewFromModel()을 호출하여 모델에 따른 뷰 갱신이 가능**하다.
+
+~~~ swift
+// viewDidLayoutSubviews 활용 예시)
+override func viewDidLayoutSubviews() {
+  	super.viewDidLayoutSubviews()
+  	updateViewFromModel()
+}
+~~~
+
+<br>
+
+- **SizeClass가 변할때는 감지하는 방법**
+
+~~~ swift
+// SizeClass가 변할때마다 해당 메서드가 호출된다.
+override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+  	super.traitCollectionDidChange(previousTraitCollection) 
+  	// SizeClass가 변경될 때마다 이에 맞게 CountLabel의 내용을 갱신한다.
+    updateFlipCountLabel()
+}
+~~~
+
+<br>
+
+
+
+### In Next Lecture11...
 
 - **TableView**
 - **CollectionView**
 - **Drag and Drop**
-
-<br>
 
 <br>
 
@@ -1825,7 +1873,25 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 ## ♣︎ 총 정리
 
-- 멀티스레딩 (Multithreading)
-- 오토레이아웃 (AutoLayout)
+- **멀티스레딩 (Multithreading)**
+  - **Main Queue**
+    - **Main Queue는  Serial Queue**
+    - **UI처리는  Main에서 처리해야한다.**
+    - **Sync 사용하면 안됨**
+    - **Async**
+  - **Global Queue**
+    - **Serial / Concurrent Queue**
+    - **QoS**
+      - **userInteractive**
+      - **userInitiated**
+      - **Background**
+      - **Utility**
+    - **Sync**
+    - **Async**
+- **오토레이아웃 (AutoLayout)**
+  - **UITraitEnvironment**
+  - **SizeClass**
+    - **Compact / Regular로 분류하여 상황에 맞는 제약설정 가능**
+    - **traitCollectionDidChange**
 
 <br>
