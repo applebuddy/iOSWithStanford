@@ -1558,6 +1558,7 @@ func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 ## 멀티스레딩
 
 - **Multithrading**
+- **iOS 앱 개발에서 매우 중요한 부분을 차지하는 기능**
 
 <br>
 
@@ -1683,22 +1684,45 @@ queue.sync { ... } // 동기로 작동하는 sync, 큐에 블록을 넣으면 �
 ## MultiThreading Demo
 
 - 멀티 스레딩 데모
+- **DispatchQueue 사용 예시**
+
+~~~ swift 
+// DispatchQueue의 mainQueue / globalQueue 사용 예시
+private func fetchImage() {
+  	if let url = imageURL {
+        // DispatchQueue 처리 과정에서 힙이 self 요소를 쓸데없이 붙잡고 메모리 사이클이 일어나는 것을 방지하기 위해 
+        // [weak self]를 클로저 맨 앞에 정의하여 메모리사이클 요소를 사전 제거한다.
+				DispatchQueue.global(qos: .userInitiated).async { [weak self] in 
+						// UI요소가 아닌 데이터는 Global 큐에서 Background 처리가 가능하다.
+        		let urlContents = try? Data(contentOf: url) 
+						DispatchQueue.main.async {
+                // UI요소는 메인스레드에서만 동작해야 한다.
+                // url에 맞는 정확한 이미지 컨텐츠 설정을 위해 url와 imageData를 함께 확인한다.
+              	if let imageData = urlContents, url == self?.imageURL {
+                  	self?.image = UIImage(data: imageData)
+                }
+            }
+ 				}
+    }
+}
+~~~
+
+<br>
+
+### Activity Indicator View
+
+- **네트워킹 동작 중 네트워킹 로딩 중임을 나타낼 수 있는 달팽이 동작 (Spinner Animation)**
+- **스토리보드에서 Command + Shift + L + ActivityIndicatorView 선택 + 드래그로 꺼내어 사용**할 수 있다.
 
 
 
 
-
-
-
-
-
- 
 
 <br>
 
 
 
-### - 추가 iOS 팁
+### - 10강 추가 iOS 팁
 
 
 
@@ -1706,7 +1730,7 @@ queue.sync { ... } // 동기로 작동하는 sync, 큐에 블록을 넣으면 �
 
 
 
-### - 6강 구현결과
+### - 10강 구현결과
 
 <br>
 
