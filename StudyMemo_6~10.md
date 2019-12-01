@@ -1709,22 +1709,109 @@ private func fetchImage() {
 
 <br>
 
+- **segue prepare 메서드에서 특정 목적지 뷰컨트롤러를 접근하는 방법**
+
+~~~ swift
+override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+  	if let identifier = segue.identifier {
+      	if let url = DemoURLs.NANA[identifier] {
+          	if let imageVC = segue.destination.contents as? ImageViewController {
+              	imageVC.imageURL = url
+              	imageVC.title (sender as? UIButton)?.currentTitle
+            }
+        }
+    }
+}
+~~~
+
+<br>
+
 ### Activity Indicator View
 
 - **네트워킹 동작 중 네트워킹 로딩 중임을 나타낼 수 있는 달팽이 동작 (Spinner Animation)**
 - **스토리보드에서 Command + Shift + L + ActivityIndicatorView 선택 + 드래그로 꺼내어 사용**할 수 있다.
 
-
-
-
+<br>
 
 <br>
 
 
 
-### - 10강 추가 iOS 팁
+## 오토레이아웃 AutoLayout
+
+- 이미 지금까지 스탠포드 강의 중 많은 AutoLayout의 활용을 했다.
+- **InterfaceBuilder에서 뷰의 크기, 위치를 조정하고 Size Inspector에서 사이즈와 제약값을 수정 가능**하다.
+- **오토레이아웃은 InterfaceBuilder에서 구현할 수 있지만 코드로도 구현 가능**하다.
+
+<br>
+
+### 오토레이아웃에 익숙해지기
+
+- **오토레이아웃을 마스터하는데는 경험이 요구**된다. (Mastering Autolayout requires experience)
+- **오토레이아웃은 직적 만지고 결과를 확인해보며 배우는 것이 좋다.**
+  - 그렇기에 **Autolayout은 매우 중요한 요소이지만 경험이 필요**하다.
+
+<br>
+
+### **사이즈 클래스 Size Class**
+
+- **기기 별 세로/가로에 대한 크기설정을 어떻게 할 수 있을까?**
+  - **Solution? We can vary our UI based on its "size class"**
+  - **size class에서 기기별 가로/세로 크기를 compact / regular로 분류**하여 알려준다.
+  - **size class 기기의 가로 / 세로 너비에 따라 compact / regular로 분류**한다.
+- **기기 별 Compact / Regular 크기** **(*알 : Regular, *컴 : Compact)**
+  - **아이폰 : (세로)컴알 / (가로)컴컴**
+  - **아이폰+ : (세로)컴알 / (가로)알컴**
+  - **아이패드 : (세로)알알 / (가로)알알**
+    - **다만 MVC환경에 따라 campact가 될 수도 있다.**
+      - **ex) splitView's Master**
+
+<br>
 
 
+
+### UITraitEnvironment
+
+- **앱에 대한 iOS 인터페이스 환경을 구성해줄 수 있는 메서드의 집합이 정의되어 있는 프로토콜**
+- **UIScreen, UIWindow, UIViewController, UIPresentationController, UIView 등이 UITraitEnvironment 프로토콜을 채택해서 사용**한다.
+
+
+
+<br>
+
+### 사이즈 클래스의 사용
+
+- **size class에 기반하여 무엇을 할 수 있을까? What can we do based on our size class?**
+
+  - **UI의 폰트와 같은 화면에 보여지는 프로퍼티를 크기에 따라 설정** 가능하다.
+  - **제약(Constaint)들을 SizeClass와 묶어 설정할 수 있다.** 
+    - **SizeClass에 따라 제약값이 다르게 설정 될 수 있는 것**이다.
+
+- **Size Class 정보를 사용하는 방법 예시 ▼)**
+
+  ~~~ swift
+  // viewController 또한 UITraitEnvironment프로토콜을 채택하므로 
+  // -> traitCollection 프로퍼티를 접근 하여 SizeClass 정보를 얻을 수 있다.
+  let myHorizSizeClass: UIUserInterfaceSizeClass = traitCollection.horizontalSizeClass 
+  
+  // 반환 값은 enum형태로 .compact / .regular (or .unspecified)등이 있다.
+  ~~~
+
+<br>
+
+### AutoLayout Demo
+
+- 
+
+
+
+### In Next Lecture...
+
+- **TableView**
+- **CollectionView**
+- **Drag and Drop**
+
+<br>
 
 <br>
 
