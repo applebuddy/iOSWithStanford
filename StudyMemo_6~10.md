@@ -1,6 +1,6 @@
 # iOS With Stanford
 
-iOS Study with Stanford Lection Study 6~10
+- **iOS Study with Stanford Lection Study 6~10**
 
 <br>
 <br>
@@ -1543,9 +1543,7 @@ func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 
 
 
-<br>
-
-<br>
+<br><br>
 
 
 
@@ -1574,6 +1572,7 @@ func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 
 - **iOS에서 멀티스레딩은 큐를 이용해 작동**한다. 
   - **여기서 말하는 큐는  FIFO방식의  큐(Queue)를 말하는 것**이다.
+
 
 - **큐의 종류**
   - **직렬 큐 (Serial Queue)**
@@ -1660,7 +1659,7 @@ DispatchQoS.utility // 앱 아키텍쳐의 일부분으로서 실행되는 작�
 
 <br>
 
-### 큐 블록코드 사용방법
+### Queue 블록코드 사용방법
 
 - **Async / Sync 를 통해 블록코드를 실행**시킬 수 있다.
 - **Main Queue는 도중에 멈춰지는걸 원치 않으므로, main.sync는 사용하면 안된다!**
@@ -1733,10 +1732,6 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 <br>
 
-<br>
-
-
-
 ## 오토레이아웃 AutoLayout
 
 - 이미 지금까지 스탠포드 강의 중 많은 AutoLayout의 활용을 했다.
@@ -1759,7 +1754,10 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
   - **Solution? We can vary our UI based on its "size class"**
   - **size class에서 기기별 가로/세로 크기를 compact / regular로 분류**하여 알려준다.
   - **size class 기기의 가로 / 세로 너비에 따라 compact / regular로 분류**한다.
-- **기기 별 Compact / Regular 크기** **(*알 : Regular, *컴 : Compact)**
+
+<br>
+
+- **기기 별 Compact / Regular 크기 (알 : Regular, 컴 : Compact)**
   - **아이폰 : (세로)컴알 / (가로)컴컴**
   - **아이폰+ : (세로)컴알 / (가로)알컴**
   - **아이패드 : (세로)알알 / (가로)알알**
@@ -1782,20 +1780,18 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 ### 사이즈 클래스의 사용
 
 - **size class에 기반하여 무엇을 할 수 있을까? What can we do based on our size class?**
-
-  - **UI의 폰트와 같은 화면에 보여지는 프로퍼티를 크기에 따라 설정** 가능하다.
+- **UI의 폰트와 같은 화면에 보여지는 프로퍼티를 크기에 따라 설정** 가능하다.
   - **제약(Constaint)들을 SizeClass와 묶어 설정할 수 있다.** 
     - **SizeClass에 따라 제약값이 다르게 설정 될 수 있는 것**이다.
+- **Size Class 정보를 사용하는 방법 예시 ▼**
 
-- **Size Class 정보를 사용하는 방법 예시 ▼)**
+~~~ swift
+// viewController 또한 UITraitEnvironment프로토콜을 채택하므로 
+// -> traitCollection 프로퍼티를 접근 하여 SizeClass 정보를 얻을 수 있다.
+let myHorizSizeClass: UIUserInterfaceSizeClass = traitCollection.horizontalSizeClass 
 
-  ~~~ swift
-  // viewController 또한 UITraitEnvironment프로토콜을 채택하므로 
-  // -> traitCollection 프로퍼티를 접근 하여 SizeClass 정보를 얻을 수 있다.
-  let myHorizSizeClass: UIUserInterfaceSizeClass = traitCollection.horizontalSizeClass 
-  
-  // 반환 값은 enum형태로 .compact / .regular (or .unspecified)등이 있다.
-  ~~~
+// 반환 값은 enum형태로 .compact / .regular (or .unspecified)등이 있다.
+~~~
 
 ~~~ swift
 // SizeClass 값에 따른 String 설정 예시)
@@ -1828,6 +1824,9 @@ flipCountLabel.attributedText = attributedString
   - **UI 속성들을 SizeClass별로 정의할 수 있는 것**이다.
   - **SizeClass별 속성을 추가하면 wC(width Compact), hC(height Compact), hR(height Regular) 등의 표시와 함게 속성이 추가되는 것을 확인**할수 있다.
     - **이를 통해 세로가 좁을때 일부 카드를 숨기거나, 세로가 넓을 때 추가 카드를 보이게 할수 있다.**
+
+<br>
+
 - **Document Outline을 통해 제약값의 세부 목록을 확인**할 수 있다. 
   - **InterfaceBuilder 좌측 하단에 Document Outline 창 버튼을 눌러 창을 좌측에서 띄울 수 있다.**
   - **현재 스토리보드 상태에 적용되는 제약값이 무엇인지를 목록의 제약값 밝기로 알 수 있다.**
@@ -1876,7 +1875,7 @@ override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollect
 
 
 ### - 10강 구현결과
-- SizeClass 별 제약 설정으로 가로 / 세로 모드에서의 뷰배치가 보다 자연스럽게 되었다!
+- **SizeClass 별 제약 설정으로 가로 / 세로 모드에서의 뷰배치가 보다 자연스럽게 되었다!**
 
 <div>
 <img width=250 src="https://user-images.githubusercontent.com/4410021/69914104-83a32580-1483-11ea-8faf-724c91b259f8.png"> &nbsp;
@@ -1906,6 +1905,9 @@ override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollect
       - **Utility**
     - **Sync**
     - **Async**
+
+<br>
+
 - **오토레이아웃 (AutoLayout)**
   - **UITraitEnvironment**
   - **SizeClass**
