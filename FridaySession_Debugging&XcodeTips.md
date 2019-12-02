@@ -2,7 +2,7 @@
 
 # iOS With Stanford
 
-## Friday Session
+## Friday Session 1
 
 - **Xcode Tips**
   - Commnads
