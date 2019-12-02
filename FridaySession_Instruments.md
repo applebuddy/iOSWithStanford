@@ -1,5 +1,5 @@
 <br>
-
+<br>
 <br>
 
 # iOS With Stanford
@@ -17,7 +17,6 @@
   - ...
 
 <br>
-
 <br>
 
 ## 과거의 프로파일 방법
@@ -29,7 +28,6 @@
 - **이런 문제에 대한 해결 책, 인스트루먼츠 (Instruments)**
 
 <br>
-
 <br>
 
 ## 인스트루먼츠
@@ -54,12 +52,15 @@
   - **이후 인스트루먼츠를 선택할 수 있는 창이 나타난다.**
 
 <br>
-
 <br>
 
 ## 인스트루먼츠 종류
 
+<br>
+
 ### Activity Monitor
+
+<img width="600" alt="ActivityMonitor" src="https://user-images.githubusercontent.com/4410021/69972244-9c373c80-1564-11ea-9349-f0daefbe752f.png">
 
 - **CPU 메모리 디스크를 확인**하거나 **프로세스와 파일 시스템의 네트워크 사용 통계를 보여주는 Instrument**
   - 시스템 상 일어나는 일반적인 통계를 보여줌
@@ -69,8 +70,13 @@
   - **특정 프로젝트에 대해서만 보고 싶다면 좌측 하단의 검색창에 해당 프로젝트 키워드를 넣고 검색**하면 된다.
 
 <br>
+<br>
 
 ### Time Profiler
+
+<img width="600" alt="TimeProfiller" src="https://user-images.githubusercontent.com/4410021/69972312-bb35ce80-1564-11ea-89a6-0a1a2b3ea30a.png">
+<br>
+<img width="600" alt="TimeProfiller2" src="https://user-images.githubusercontent.com/4410021/69972318-bcff9200-1564-11ea-80ec-89d331f6f40e.png">
 
 - **Time Profiler는 실행시간 동안의 CPU, 메인스레드/백그라운드 사용량**을 보여준다. 
 - **어떤 코드에서 많은 실행시간, CPU시간을 차지하는지 알 수 있어 유용**하다.
@@ -82,17 +88,22 @@
 - **소요가 큰 작업을 메인스레드에서 동작시키면 CPU Usage, Main Thread 칸의 그래프가 치솟는것을 확인**할 수 있다. 
 
 <br>
+<br>
 
 ### Allocations
+
+<img width="600" alt="Allocations" src="https://user-images.githubusercontent.com/4410021/69972418-ef10f400-1564-11ea-9e13-f96d349220bd.png">
 
 - **프로그램 안에서 실행 시간 동안 얼마나 시간에 따라 얼마나 많은 메모리가 할당되며 동작하는지를 보여주는 instruments**
 - **작업을 종료했는데도 메모리 할당 그래프가 내려오지 않으면 무언가 문제가 있음을 의미**한다.
   - **메모리가 할당 후 제대로 해제되지 않는 것을 보고 메모리가 효율적으로 할당되지 않는 경우를 발견**할 수 있다.
-  - 
 
+<br>
 <br>
 
 ### Leaks
+
+<img width="600" alt="Leaks" src="https://user-images.githubusercontent.com/4410021/69972471-0354f100-1565-11ea-97bc-dee6772ba22e.png">
 
 - **메모리 누수를 파악하고 수정하도록 해주는 Instruments**
 - **Leak Checks 를 통해 메모리 누수가 있는지의 상태를 확인할 수 있다.**
@@ -109,15 +120,17 @@
   - **꼭 RC(Reference Counting)가 필요 없는 경우, 꼭 클래스로 만들 필요가 없는 경우에는 클래스 대신 구조체로 지정하여 사용하면 순환참조 문제를 해결** 할 수 있다. 
     - **구조체는 주소참조타입이 아니며, RC로 관리되지 않는 값참조 타입이기때문에 메모리 할당 누수문제가 발생하지 않는다.**
 
-<br><br>
+<br>
+<br>
 
 ### 그 외 다양한 Instruments
 
 - **이 외에도 Core Animation 등 다양한 상황에서 사용할 수 있는 Instruments들이 존재**한다.
 
+<br>
+<br>
 
-
-### 총 정리
+## 총 정리
 
 - **Instruments**
 
