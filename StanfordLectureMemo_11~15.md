@@ -7,7 +7,7 @@
 
 # 목차
 
-## [Lecture 11](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-11-1)
+## [Lecture 11](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_11~15.md#lecture-11-1)
 
 
 <br>
@@ -582,6 +582,9 @@ func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> U
 - **FoodForThought App Demo**
 - **UITableViewController를 CocoaTouch Class로 생성할 경우 기본적으로 제공하는 DataSource Mehods ▼**
 
+<img width="600" alt="dataSourceExam" src="https://user-images.githubusercontent.com/4410021/70063584-63ae6600-162b-11ea-9364-47caaaf07988.png">
+
+<br>
 
 
 ~~~ swift
@@ -627,8 +630,17 @@ class EmojiArtDocumentTableViewController: UITableViewController {
 
 <br>
 
+- **테이블 뷰의 행 추가 & 삭제 예시)**
+
+<img width="600" alt="Demo" src="https://user-images.githubusercontent.com/4410021/70063583-63ae6600-162b-11ea-8bdb-a6190fa7099c.png">
+
+
 <br>
 
+<img width="600" alt="Demo2" src="https://user-images.githubusercontent.com/4410021/70063581-627d3900-162b-11ea-8a24-44e2a20ca2f2.png">
+
+<br>
+<br>
 
 
 ## ♣︎ 총 정리
