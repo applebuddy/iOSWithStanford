@@ -1,6 +1,6 @@
 # iOS With Stanford
 
-- **iOS Study with Stanford Lection Study 6~10**
+- **iOS Study with Stanford Lecture Study 6~10**
 
 <br>
 <br>
