@@ -257,6 +257,76 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate {
 - **Plain**
 - **Inset Grouped**
 
+
+
+<br>
+
+
+
+### Static TableView
+
+- **한정된 고정 데이터를 표현할때 Static TableView를 사용**할 수 있다.
+  - **ex) 앱 환경설정 기능 등...**
+- **AttributeInspector -> Static Cells + Grouped Style로 사용**한다.
+
+- **간단하게 표현**되여 자주 사용된다.
+
+- **Static TableView의 섹션 별 행 추가방법**
+  - **Document Outline의 섹션을 클릭 후 AttibuteInspector에서 행의 갯수(rows) 설정**
+
+
+
+### TableView 세그웨이 사용
+
+- **UITableView의 AttributeInspector -> Assessory -> Detail Disclosure를 선택하면 테이블 셀 우측에 버튼이 생긴다.** 
+  - **일반 셀 영역 or Detail Disclosure 영역 등에 세그웨이를 붙어 화면전환에 활용** 할 수 있다.
+  - **세그웨이 추가를 원하는 영역을 Control + 클릭 후 드래그 하여 화면전환을 원하는 뷰컨트롤러에 높으면 세그웨이 옵션을 선택 가능**
+    - 이후 세그웨이 별 식별자 지정을 하는 등 방식은 기존 세그웨이 구현방식과 동일
+- **UIStoryboardSegue 식별자 별 세그웨이 실행 예시 ▼**
+
+~~~ swift
+func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+  	if let identifier = segue.identifier {
+      	switch identifier {
+          	case "XyzSegue": // XyzSegue일경우 해당 case가 실행 될 것이다. 
+          	case "AbcSegue": //......
+            //...
+            default: break
+        }
+    }
+}
+~~~
+
+<br>
+
+### 특정 셀에 대한 IndexPath값 반환하기
+
+~~~ swift
+func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+  	if let identifier = segue.identifier {
+      	switch identifier {
+          	case "XyzSegue": // XyzSegue일경우 해당 case가 실행 될 것이다. 
+          	case "AbcSegue": 
+          			if let cell = sender as? MyTableViewCell,
+                  let indexPath = tableView.indexPath(for: cell) {
+                      // 현재 포커스 된 셀의 IndexPath값을 식별해서 해당 셀 위치의 데이터를 다른 곳에 넘겨주는증의 처리가 가능하다. 
+                    	let seguedToMVC = segue.destination as? MyVC {
+                        	// 선택한 셀의 세그웨이 목적지에 맞는 데이터를 전달할 수 있다. 
+                        	seguedToMVC.publicAPI = data[indexPath.section][indexPath.row]
+                      }
+                  }
+            //...
+            default: break
+        }
+    }
+}
+
+~~~
+
+
+
+<br>
+
 <br>
 
 ## UICollectionView
@@ -269,6 +339,27 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate {
 - **별도의 스타일이 없으며, 컬렉션뷰의 모든 셀은 전부 커스텀으로 이루어진다.**
 - **컬렉션뷰도 섹션을 가질 수 있어 섹션 별로 아이템을 분류하여 표현할 수 있다.** 
 
+
+
+<br>
+
+
+
+### CollectionView 세그웨이 사용
+
+- **UICollectionViewDelegate Method의 활용**
+
+~~~ swift
+func collectinoView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: IndexPath) {
+  	// 이 곳에서 performSegue(withIdentifier:)를 사용하는 방법이 있다. 
+  	.... 
+}
+~~~
+
+
+
+<br>
+
 <br>
 
 ### UITableView, UICollectionView 생성방법
@@ -279,7 +370,11 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate {
     - **뷰 자체가 테이블뷰, 컬렉션뷰로만 이루어진 MVC가 필요하다면 사용 가능**
 - **코드로도 구현가능**하다.
 
+<br>
 
+<br>
+
+## UITableView, UICollectionView 데이터처리
 
 ### UITableView, UICollectionView 데이터 표현방법
 
@@ -305,7 +400,29 @@ var delegate: UICollectionViewDelegate
 
 
 
-### UITableView 프로토콜 메서드
+### UITableView, UICollectionView UI 데이터 갱신방법
+
+- **reloadData, reloadRows** 등이 이다.
+- **reloadData**
+  - **테이블뷰/컬렉션뷰가 가지고 있는 모든 데이터를 다시 갱신**한다. 
+  - **전체적으로 갱신하므로 비교적 무거운 메서드**
+- **reloadRows**
+  - **테이블/컬렉션뷰의 특정 row/item에 대해 갱신**한다.
+
+~~~ swift
+// reloadData : 테이블뷰가 가지고 있는 모든 데이터를 다시 갱신한다. 
+// 비교적 무거운 메서드이다. 
+func reloadData()
+
+// reloadRows : 특정 행들에 대해서만 갱신할 수 있는 메서드
+func reloadRows(at indexPaths: [IndexPath], with animation: UITableViewRowAnimation)
+~~~
+
+<br>
+
+<br>
+
+## UITableView 프로토콜 메서드
 
 - **UITableViewDataSource Method**
 
@@ -317,11 +434,29 @@ func numberOfSections(in tableView: UITableView) -> Int
 func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int 
 ~~~
 
+- **UITableViewDelegate Method**
+  - **heightForRowAt**
+    - **행의 높이를 지정할 때 해당 델리게이트 메서드를 사용**한다. 
+    - **InterfaeBuilder에서 스토리보드로 설정하는 방법도 있다.**
+  - estimatedRowHeight
+    - 테이블뷰에게 셀이 스크린에 있지 않을때 이정도 크기로 가정하라고 알려주는 것
+
+~~~ swift
+// 행의 높이를 지정하는 UITableViewDelegate Method
+func tableView(UITableView, estimated/heightForRowAt indexPath: IndexPath) -> CGFloat {
+  	return {행의 높이}
+}
+~~~
+
+
+
+<br>
+
 <br>
 
 
 
-### UICollectionview 프로토콜 메서드
+## UICollectionview 프로토콜 메서드
 
 - **UICollectionViewDataSource Method**
 
@@ -335,25 +470,64 @@ func collectionView(_ collectionView: UIColletionView, numberOfItemsInSection se
 // cellForRowAt : 각 위치의 셀 별 데이터를 표현하는데 사용한다. 
 // cellForRowAt 메서드 사용 예시 ▼
 func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		guard let myCell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as? MyTableViewCell else { return UITableViewCell() }	
+  	myCell.textLabel?.text = food(at: indexPath)
+  	myCell.detailTextLabel?.text = emoji(at: indexPath)
+
+  	// myCell.configureCell()
+  	return myCell // 설정한 Cell을 반환
+}
+~~~
+
+<br>
+
+- **UICollectionViewDelegate Method**
+
+~~~ swift 
+// sizeForItemAt CollectionView는 행의 높이가 아닌 각 item의 사각형의 크기로 셀이 이루어진다.
+func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+		// 셀의 크기를 CGSize타입으로 설정 후 반환
+  	return CGSize(width: 1123, height: 1234)
+}
+~~~
+
+
+
+
+
+<br>
+
+<br>
+
+### Cell의 재사용 (Cell Reuse)
+
+- **만약 테이블뷰의 셀이 몇만개를 갖고 있다고 할때 이를 화면에 전부 보이지도 않는데 전부 생성해서 사용하는 것은 비효율적**이다.
+  - **테이블 뷰에서는 화면에 보이는 경우에 대해서만 셀을 생성**한다.
+  - **셀들은 각기 자신의 뷰클래스에서 각기 표현되어질 UI요소를 지정**한다.
+  - **스크롤을 해서 보이는 셀이 바뀌면 위에 가려진 셀을 다시 재사용해서 새로 보여지는 셀에 재사용** 한다. 
+  - **dequeueReusableCell 메소드를 통해 셀은 재사용 되어진다.**
+    - 이렇게 재사용되어지는 셀들은 
+      - **1) 스토리보드의 identifier설정 된 셀 or 코드로 cellIdentifier등록(register)이 되어있는 프로토타입 셀들을**
+      - **2) cellForRowAt 델리게이트 메서드 등에서 dequeueReusableCell 메서드를 사용할 때 식별자 identifier로 불러와 생성**된다.
+        - **사용될 커스텀 셀은 아래의 두가지 설정을 한 뒤 사용해야 한다.(스토리보드 기준)**
+          - **1) IdentityInspector에 클래스파일과의 연동**
+          - **2) AttributeInspector에 identifier 설정**
+    - **재사용 되는 셀은 평범한 BasicCell이 될수도, Custom Cell이 될 수도 있다.**
+
+~~~ swift
+// cellForRowAt 내 dequeueReusableCell 메서드 사용 예시 ▼
+func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  	// 커스텀 UITableViewCell, MyTableViewCell 의 재사용
+  	// 만약 타입캐스팅에 실패한다면, Basic TableViewCell인 UITableViewCell()을 반환한다.
+  	// 특정 커스텀 셀 클래스로 타입캐스팅을 해야 특정 커스텀 셀의 세부 UI에 접근하여 UI를 설정할 수 있다.
 		guard let myCell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as? MyTableViewCell else { return UITableViewCell() }
   
-  	myCell.configureCell()
   	return myCell
 }
 ~~~
 
 
 
-### Cell의 재사용 (Cell Reuse)
-
-- **만약 테이블뷰의 셀이 몇만개를 갖고 있다고 할때 이를 화면에 전부 보이지도 않는데 전부 생성해서 사용하는 것은 비효율적**이다.
-  - **테이블 뷰에서는 화면에 보이는 경우에 대해서만 셀을 생성**한다.
-  - **스크롤을 해서 보이는 셀이 바뀌면 위에 가려진 셀을 다시 재사용해서 새로 보여지는 셀에 재사용** 한다. 
-  - **dequeueReusableCell 메소드를 통해 셀은 재사용 되어진다.**
-    - 이렇게 재사용되어지는 셀들은 
-      - **1) 스토리보드의 identifier설정 된 셀 or 코드로 cellIdentifier등록(register)이 되어있는 프로토타입 셀들을**
-      - **2) cellForRowAt 델리게이트 메서드 등에서 dequeueReusableCell 메서드를 사용할 때 식별자 identifier로 불러와 생성**된다.
-    - **재사용 되는 셀은 평범한 BasicCell이 될수도, Custom Cell이 될 수도 있다.**
 - **셀들은 재사용 되어지기 때문**에 **비교적 작업 소요가 큰 이미지등이 셀에 들어가게 될 경우 정확한 셀에 이미지가 표현될 수 있도록 신경을 써야한다.** 
   - **그렇지 않으면 재사용 되어지는 셀에 잘못된 이미지가 표현되는 경우가 생길 수 있다.**
 
