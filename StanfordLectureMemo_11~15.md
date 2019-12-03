@@ -270,6 +270,7 @@ class EmojiArtViewController: UIViewController, UIDropInteractionDelegate {
 - **AttributeInspector -> Static Cells + Grouped Style로 사용**한다.
 
 - **간단하게 표현**되여 자주 사용된다.
+- **각 섹션 별 헤더(Header), 푸터(Footer)를 가질 수 있다.**
 
 - **Static TableView의 섹션 별 행 추가방법**
   - **Document Outline의 섹션을 클릭 후 AttibuteInspector에서 행의 갯수(rows) 설정**
@@ -338,6 +339,8 @@ func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     - **필요에 따라 커스텀 FlowLayout을 정의하여 컬렉션뷰 레이아웃으로 정의가능** 하다.
 - **별도의 스타일이 없으며, 컬렉션뷰의 모든 셀은 전부 커스텀으로 이루어진다.**
 - **컬렉션뷰도 섹션을 가질 수 있어 섹션 별로 아이템을 분류하여 표현할 수 있다.** 
+- 테이블뷰와 달리 컬렉션뷰의 헤더/푸터뷰는 만들기 좀더 어렵다.
+  - **테이블뷰처럼 String(titleForHeaderInSection Method in UITableViewDataSource) 만으로 타이틀을 설정 불가능**
 
 
 
@@ -425,6 +428,14 @@ func reloadRows(at indexPaths: [IndexPath], with animation: UITableViewRowAnimat
 ## UITableView 프로토콜 메서드
 
 - **UITableViewDataSource Method**
+  - **numberOfSecions** 
+    - **섹션의 갯수를 지정**
+  - **numberOfRowsInSection**
+    - **섹션 별 행의 갯수를 지정**
+  - **titleForHeaderInSection**
+    - **섹션 별 헤더뷰 타이틀을 지정**
+  - **cellForRowAt**
+    - **각 위치의 셀 선택 및 데이터를 지정**
 
 ~~~ swift
 // 테이블 뷰 섹션의 갯수를 지정한다. default 값은 1
@@ -432,7 +443,25 @@ func numberOfSections(in tableView: UITableView) -> Int
 
 // 한개의 섹션에 몇개의 행이 존재하는 지 지정한다. 
 func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int 
+
+// titleForHeaderInSection : 섹션 별 헤더뷰의 타이틀을 지정
+func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+
+// cellForRowAt : 각 위치의 셀 별 데이터를 표현하는데 사용한다. 
+// cellForRowAt 메서드 사용 예시 ▼
+func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		guard let myCell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as? MyTableViewCell else { return UITableViewCell() }	
+  	myCell.textLabel?.text = food(at: indexPath)
+  	myCell.detailTextLabel?.text = emoji(at: indexPath)
+
+  	// myCell.configureCell()
+  	return myCell // 설정한 Cell을 반환
+}
+
+// ... 이 외에도 다양한 메서드가 존재
 ~~~
+
+<br>
 
 - **UITableViewDelegate Method**
   - **heightForRowAt**
@@ -446,6 +475,8 @@ func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> 
 func tableView(UITableView, estimated/heightForRowAt indexPath: IndexPath) -> CGFloat {
   	return {행의 높이}
 }
+
+// ... 이 외에도 다양한 메서드가 존재
 ~~~
 
 
@@ -459,6 +490,13 @@ func tableView(UITableView, estimated/heightForRowAt indexPath: IndexPath) -> CG
 ## UICollectionview 프로토콜 메서드
 
 - **UICollectionViewDataSource Method**
+  - **numberOfSections**
+    - **섹션의 갯수를 지정**
+  - **numberOfItemsInSection** 
+    - **섹션 별 아이템의 갯수를 지정**
+    - **테이블뷰(row)와 달리 컬렉션뷰의 셀 단위는 Item**이다.
+  - viewForSupplementaryElementOfKind
+    - **특정 위치의 헤더 설정 등(SupplementaryElement)에 사용**
 
 ~~~ swift
 // numberOfSections : 컬렉션 뷰 섹션의 갯수를 지정한다. default 값은 1
@@ -467,21 +505,17 @@ func numberOfSecitons(in collectionVIew: UICollectionView) -> Int
 // numberOfItemsInSection : 한개의 섹션에 몇개의 아이템이 존재하는 지 지정한다. 
 func collectionView(_ collectionView: UIColletionView, numberOfItemsInSection section: Int) -> Int
 
-// cellForRowAt : 각 위치의 셀 별 데이터를 표현하는데 사용한다. 
-// cellForRowAt 메서드 사용 예시 ▼
-func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let myCell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as? MyTableViewCell else { return UITableViewCell() }	
-  	myCell.textLabel?.text = food(at: indexPath)
-  	myCell.detailTextLabel?.text = emoji(at: indexPath)
+// viewForSupplementaryElementOfKind : 컬렉션뷰의 헤더뷰 등을 설정할 때 사용
+func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView
 
-  	// myCell.configureCell()
-  	return myCell // 설정한 Cell을 반환
-}
+// ... 이 외에도 다양한 메서드가 존재
 ~~~
 
 <br>
 
 - **UICollectionViewDelegate Method**
+  - **sizeForItemAt**
+    - **각 Item 셀 별 크기를 지정**
 
 ~~~ swift 
 // sizeForItemAt CollectionView는 행의 높이가 아닌 각 item의 사각형의 크기로 셀이 이루어진다.
@@ -489,9 +523,9 @@ func collectionView(_ collectionView: UICollectionView, layout collectionViewLay
 		// 셀의 크기를 CGSize타입으로 설정 후 반환
   	return CGSize(width: 1123, height: 1234)
 }
+
+// ... 이 외에도 다양한 메서드가 존재
 ~~~
-
-
 
 
 
@@ -541,7 +575,12 @@ func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> U
 
 <br>
 
+<br>
 
+## UITableView Demo
+
+- **FoodForThought App Demo**
+- 
 
 
 
