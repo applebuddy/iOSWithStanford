@@ -19,7 +19,9 @@
 ## ♣︎ Drag/Drop, UITable/UICollectionView
 
 - **Drag and Drop**
+  - **드래그 & 드롭**
 - **UITableView and UICollectionView**
+  - **테이블뷰 & 컬렉션뷰**
 
  
 
@@ -164,25 +166,210 @@ session.location(in: view)
 
   
 
+- **Xcode Tip**
+  - **Interface Builder의 Document Outline**
+    - **스토리보드에서 포커싱하기 어려운 세부 뷰의 경우** **좌측의 Document Outline의 뷰 계층 목록을 활용하면 쉽게 해당 뷰에 대한 작업**을 할 수 있다.
+      - **ex) 여러개의 뷰 케층에 묻여있는 세뷰 뷰들, 쉽게 커서로 포커싱 하기 어려운 뷰들**
+    - **Document Outline의 목록에서 control을 눌러 에디터에 드래그하면 스토리보드와 마찬가지로 @IBOutlet, @IBAction등의 메서드를 생성할 수 있다.** 
 
+~~~ swift
+import UIKit
 
+class EmojiArtViewController: UIViewController, UIDropInteractionDelegate {
+  	// dropZone UIView에 Interaction을 추가한다.
+    // addInteraction 메서드 사용을 위해서는 UIDropInteractionDelegate 프로토콜을 채택해야 한다. 
+  	@IBOutlet weak var dropZone: UIView! {
+      	dropZone.addInteraction(UIDropInteraction(delegate: self))
+    }
+  
+  	// NSURL타입과 UIImage타입을 모두 얻을 수 있으면 true, 없으면 false를 반환하는 canHandle Delegate Method
+  	func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+				return session.canLoadObjects(ofClas: NSURL.self) && session.canLoadObjects(ofClass: UIImage.self)
+    }
 
+  	// session이 업데이트 되었을때 드롭 시 결정을 .copy로 설정하여 드롭 아이템을 복사하도록 설정한다. 
+  	func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+      	return UIDropProposal(operation: .copy)
+    }
 
+  	// 드래그를 통해 설정에 따라 원하는 데이터를 받아오고 드롭을 했을때 해당 메서드가 호출 된다. 
+    // 처리를 원하는 타입은 NSURL, UIImage 두가지 이므로 두가지에 대한 loadObjects 클로저를 처리한다. 
+  	func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+      	imageFetcher = ImageFatcher() { (url, image) in 
+        		// 해당 부분은 메인큐에 존재하는 영역이 아님      
+						DispatchQueue.main.async {
+              	self.emojiArtView.backgroundImage = image 
+            }
+				}
+      
+        // NSURL type에 대한 loadObjects Closure
+      	session.loadObjects(ofClass: NSURL.self) { nsUrls in 
+						if let url = nsUrls.first as? URL {
+                selfimageFetcher.fetch(url)              
+            }
 
-
-
-
-
-
-
-
-
-
-
-
-
+				}
+      
+      	// UIImage type에 대한 loadObjects Closure
+      	session.loadObjects(ofClass: UIImage.self) { images in 
+						if let image = images.first as? UIImage {
+              	self.imageFetcher.backup = image 
+            }
+				}
+    } 	
+  
+  	@IBOutlet weak var emojiArtView: EmojiArtView!
+}
+~~~
 
 <br>
+
+
+
+## UITableView & UICollectionView
+
+- 테이블뷰와 컬렉션뷰
+- **UIScrollView는 바운딩 되지 않는 범위에서 정보를 확대/축소하여 보여주었었다.**
+- **테이블뷰, 컬렉션 뷰는 UIScrollView와는 다른 방식으로 정보를 표현**한다.
+  - **하지만 테이블뷰, 컬렉션 뷰가 사용하는 API는 매우 유사**하다. 
+
+<br>
+
+## UITableView
+
+- **정보를 섹션과 행 등으로 이루어진 긴 리스트를 통해 제공하는 View**
+- **리스트는 섹션과 행으로 나뉠 수 있다.**
+  - **행은 섹션별로 나뉘어 각각의 그룹으로 나뉘어 표현될 수 있다.**
+- **테이블 뷰는 간단한 4가지 스타일이 존재**한다.
+  - 컬렉션뷰는 이러한 스타일이 존재하지 않는다. 
+
+- **서브 타이틀로 간단한 세부 정보(left detail / right detail)를 추가로 보여줄 수 있다.**
+- **테이블 뷰도 커스텀 스타일로 지정하여 사용가능하다.**
+  - **ex) 사용자 정의 UITableViewCell**
+
+<br>
+
+### UITableView Styles
+
+- **Grouped**
+  - **정적인 형태의 테이블정보를 표현할 때 주로 사용**한다. 
+  - **섹션별로 고정적인 정보를 표현**한다. 
+- **Plain**
+- **Inset Grouped**
+
+<br>
+
+## UICollectionView
+
+- **보통 2차원적인 방법으로 정보를 보여주 일반적으로 FlowLayout을 이용해 정보를 표현**한다.
+  - **FlowLayout은 간단히 텍스트라고 생각하면 된다.**
+    - **정보를 나열하다가 공간이 없으면 다음 줄로 물흐르듯 넘어가며 정보를 표현**한다. 
+    - **표현되는 정보는 각기 다른 크기와 형태를 보일 수도 있다.**
+    - **필요에 따라 커스텀 FlowLayout을 정의하여 컬렉션뷰 레이아웃으로 정의가능** 하다.
+- **별도의 스타일이 없으며, 컬렉션뷰의 모든 셀은 전부 커스텀으로 이루어진다.**
+- **컬렉션뷰도 섹션을 가질 수 있어 섹션 별로 아이템을 분류하여 표현할 수 있다.** 
+
+<br>
+
+### UITableView, UICollectionView 생성방법
+
+- **스토리보드에서 Command + Shift + L -> 테이블뷰 or 컬렉션뷰를 드래그하여 스토리보드에 배치 가능**
+  - **순수 테이블뷰, 컬렉션뷰에 셀을 추가할 수 있다.**
+  - **Prepackaged 테이블뷰 컨트롤러, 컬렉션뷰 컨트롤러를 생성할 수 있다.**
+    - **뷰 자체가 테이블뷰, 컬렉션뷰로만 이루어진 MVC가 필요하다면 사용 가능**
+- **코드로도 구현가능**하다.
+
+
+
+### UITableView, UICollectionView 데이터 표현방법
+
+- **UITableView, UICollectionView는 View이므로 자신이 변수로 데이터를 갖고 있을 수 없다.** 
+  - **대신 델리게이션(Delegation) 같은 방식으로 데이터를 요청**하게 된다.
+    - **ex) UITableViewDelegate, UITableViewDataSource...**
+    - **컬렉션뷰와 테이블뷰에서 어떤 시점에 어떤 데이터가 보여져야하는지 등을 정의할 수 있다.**
+
+- **dataSource & delegate의 설정**
+
+~~~ swift
+// MARK: UITableView, UICollectionView의 프로토콜 변수
+// In UITableView ...
+var dataSource: UITableViewDataSource
+var delegate: UITableViewDelegate
+
+// In UICollectionView ...
+var dataSource: UICollectionViewDataSource
+var delegate: UICollectionViewDelegate
+~~~
+
+<br>
+
+
+
+### UITableView 프로토콜 메서드
+
+- **UITableViewDataSource Method**
+
+~~~ swift
+// 테이블 뷰 섹션의 갯수를 지정한다. default 값은 1
+func numberOfSections(in tableView: UITableView) -> Int
+
+// 한개의 섹션에 몇개의 행이 존재하는 지 지정한다. 
+func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int 
+~~~
+
+<br>
+
+
+
+### UICollectionview 프로토콜 메서드
+
+- **UICollectionViewDataSource Method**
+
+~~~ swift
+// numberOfSections : 컬렉션 뷰 섹션의 갯수를 지정한다. default 값은 1
+func numberOfSecitons(in collectionVIew: UICollectionView) -> Int
+
+// numberOfItemsInSection : 한개의 섹션에 몇개의 아이템이 존재하는 지 지정한다. 
+func collectionView(_ collectionView: UIColletionView, numberOfItemsInSection section: Int) -> Int
+
+// cellForRowAt : 각 위치의 셀 별 데이터를 표현하는데 사용한다. 
+// cellForRowAt 메서드 사용 예시 ▼
+func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		guard let myCell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as? MyTableViewCell else { return UITableViewCell() }
+  
+  	myCell.configureCell()
+  	return myCell
+}
+~~~
+
+
+
+### Cell의 재사용 (Cell Reuse)
+
+- **만약 테이블뷰의 셀이 몇만개를 갖고 있다고 할때 이를 화면에 전부 보이지도 않는데 전부 생성해서 사용하는 것은 비효율적**이다.
+  - **테이블 뷰에서는 화면에 보이는 경우에 대해서만 셀을 생성**한다.
+  - **스크롤을 해서 보이는 셀이 바뀌면 위에 가려진 셀을 다시 재사용해서 새로 보여지는 셀에 재사용** 한다. 
+  - **dequeueReusableCell 메소드를 통해 셀은 재사용 되어진다.**
+    - 이렇게 재사용되어지는 셀들은 
+      - **1) 스토리보드의 identifier설정 된 셀 or 코드로 cellIdentifier등록(register)이 되어있는 프로토타입 셀들을**
+      - **2) cellForRowAt 델리게이트 메서드 등에서 dequeueReusableCell 메서드를 사용할 때 식별자 identifier로 불러와 생성**된다.
+    - **재사용 되는 셀은 평범한 BasicCell이 될수도, Custom Cell이 될 수도 있다.**
+- **셀들은 재사용 되어지기 때문**에 **비교적 작업 소요가 큰 이미지등이 셀에 들어가게 될 경우 정확한 셀에 이미지가 표현될 수 있도록 신경을 써야한다.** 
+  - **그렇지 않으면 재사용 되어지는 셀에 잘못된 이미지가 표현되는 경우가 생길 수 있다.**
+
+<br>
+
+### IndexPath 
+
+- **매주 작은 구조체로 테이블뷰 or 컬렉션 뷰등의 섹션, 아이템, 행 등의 정보를 갖고 있다.** 
+  - **변수로 행(row), 아이템(item), 섹션(section)** 등을 갖고 있다.
+- **UITableView, UICollectionView 프로토콜을 사용할때 특정 행, 섹션에 따른 설정을 할때 사용**된다.
+
+<br>
+
+
+
+
 
 
 
