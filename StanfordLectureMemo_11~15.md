@@ -7,7 +7,7 @@
 
 # 목차
 
-## [Lecture 11](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_11~15.md#lecture-11-1)
+## [Lecture 11](https://github.com/applebuddy/iOSWithStanford/blob/master/StanfordLectureMemo_11~15.md#lecture-11-1)
 
 
 <br>
