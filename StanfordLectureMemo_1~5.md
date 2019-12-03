@@ -1,5 +1,5 @@
 # iOS With Stanford
-iOS Study with Stanford Lection Study 1~5
+iOS Study with Stanford Lecture Study 1~5
 
 <br>
 <br>
