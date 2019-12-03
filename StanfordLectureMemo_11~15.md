@@ -580,38 +580,69 @@ func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> U
 ## UITableView Demo
 
 - **FoodForThought App Demo**
-- 
+- **UITableViewController를 CocoaTouch Class로 생성할 경우 기본적으로 제공하는 DataSource Mehods ▼**
 
 
 
+~~~ swift
+class EmojiArtDocumentTableViewController: UITableViewController {
+  
+    // 테이블뷰에 띄울 데이터를 정의
+  	var emojiArtDocuments = ["One", "Two", "Three"] 
+  
+  	override func numberOfSections(in _: UITableView) -> Int {
+      	// 섹션의 갯수를 지정, 현재 앱에서는 1개의 섹션만 있으면 된다.
+      	return 1
+    }
+  
+  	override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+				// 행의 갯수는 정의된 emojiArtDocuments 배열의 크기만큼 있으면 된다. 
+      	return emojiArtDocuments.count
+    }
+  
+  	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) {
+      	let cell = tableView.dequeueReusableCell(withIdentifier: "DocumentCell", for: indexPath)
+      	// 여기서 DocumentCell 을 설정한다. 
+      	cell.textLabel?.text = emojiArtDocuments[indexPath.row]
+      	return cell
+    }
+  
+  	@IBAction func newEmojiArt(_: UIBarButtonItem) {
+      	// emojiArtDocuments 배열의 데이터를 추가하고 이를 TableView UI에 갱신하기 위해 tableView.reloadData() 메서드를 실행한다. 
+				emojiArtDocuments += ["Untitled".madeUnique(withRespectTo: emojiArtDocuments)]
+      	tableView.reloadData()
+    }
+  
+  	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+      	// 만약 삭제동작을 했다면 해당 행을 fade효과를 주며 삭제하고, 해당 행의 데이터를 emojiArtDocuments 배열로부터 제거한다.
+      	if editingStyle == .delete {
+          	emojiArtDocuments.remove(at: indexPath.row)
+          	tableView.deleteRows(at: [indexPath], with: .fade)
+        } else if editingStyle == .insert {
+          	// 새로운 행 생성 시 동작 작성
+        }
+    }
+}
+~~~
 
+<br>
+
+<br>
 
 
 
 ## ♣︎ 총 정리
 
-- **멀티스레딩 (Multithreading)**
-  - **Main Queue**
-    - **Main Queue는  Serial Queue**
-    - **UI처리는  Main에서 처리해야한다.**
-    - **Sync 사용하면 안됨**
-    - **Async**
-  - **Global Queue**
-    - **Serial / Concurrent Queue**
-    - **QoS**
-      - **userInteractive**
-      - **userInitiated**
-      - **Background**
-      - **Utility**
-    - **Sync**
-    - **Async**
-
-<br>
-
-- **오토레이아웃 (AutoLayout)**
-  - **UITraitEnvironment**
-  - **SizeClass**
-    - **Compact / Regular로 분류하여 상황에 맞는 제약설정 가능**
-    - **traitCollectionDidChange**
+- **Drag & Drops**
+  - 드래그의 시작
+  - 드래그의 추가
+  - 드래그의 수용
+  - 드래그 세션 업데이트
+  - 드롭 시 객체 판별 및 수용
+- **UITableView & UICollectionView**
+  - 세그웨이의 활용
+  - 셀의 재사용 
+  - Delegate, DataSource 메서드
+  - IndexPath
 
 <br>
