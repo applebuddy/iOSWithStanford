@@ -7,14 +7,14 @@
 
 # 목차
 
-## [Lecture 6](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-6-1)
-## [Lecture 7](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-7-1)
+## [Lecture 6](https://github.com/applebuddy/iOSWithStanford/blob/master/StanfordLectureMemo_6~10.md#lecture-6-1)
+## [Lecture 7](https://github.com/applebuddy/iOSWithStanford/blob/master/StanfordLectureMemo_6~10.md#lecture-7-1)
 
-## [Lecture 8](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-8-1)
+## [Lecture 8](https://github.com/applebuddy/iOSWithStanford/blob/master/StanfordLectureMemo_6~10.md#lecture-8-1)
 
-## [Lecture 9](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-9-1)
+## [Lecture 9](https://github.com/applebuddy/iOSWithStanford/blob/master/StanfordLectureMemo_6~10.md#lecture-9-1)
 
-## [Lecture 10](https://github.com/applebuddy/iOSWithStanford/blob/master/StudyMemo_6~10.md#lecture-10-1)
+## [Lecture 10](https://github.com/applebuddy/iOSWithStanford/blob/master/StanfordLectureMemo_6~10.md#lecture-10-1)
 
 <br>
 <br>
