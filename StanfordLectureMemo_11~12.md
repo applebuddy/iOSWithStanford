@@ -670,6 +670,7 @@ class EmojiArtDocumentTableViewController: UITableViewController {
 
 ## ♣︎ UICollectionView, UITextField
 
+- **EmojiArt Demo**
 - **UICollectionView**
 - **UITextField**
 
@@ -677,19 +678,182 @@ class EmojiArtDocumentTableViewController: UITableViewController {
 
 <br>
 
+## Emoji Art Demo
+
+- **CollectionView의 추가**
+  - **CollectionView 내에서의 Drag & Drop**
+
+- **layoutSubviews가 호출되기 전 호출되는 viewWillLayoutSubviews**에서 **splitView의 선호배치모드 (preferredDisplayMode)를 변경 시킬 수 있다.** 
+
+~~~ swift
+// layoutSubviews가 호출되기 직전에 splitViewController의 화면 배치를 설정할 수 있다. 
+override func viewWillLayoutSubviews() {
+      super.viewWillLayoutSubviews()
+      if splitViewController?.preferredDisplayMode != .primaryOverlay {
+          splitViewController?.preferredDisplayMode = .primaryOverlay
+      }
+}
+~~~
+
+<br>
+
+- 스크롤뷰 등의 서브뷰가 상위뷰 안에만 있도록 constraints의 값을 greater or Equal 설정 할 수 있다. 
+  - 이때 제약의 오류는 서브뷰의 높이, 너비를 지정하면 해결된다. 
+- 뷰의 제약조건 (Constraints)를 IBOutlet 변수로 가져와 코드로 설정할 수 있다. 
+
+~~~ swift
+// 스크롤뷰 높이 너비 제약의 IBOutlet 변수 선언 예시) 
+@IBOutlet weak var scrollViewHeight: NSLayoutConstraint!
+@IBOutlet weak var scrollViewWidth: NSLayoutConstraint!
+
+// scrollViewDidZoom 델리게이트 메서드 활용 예시)
+func scrollViewDidZoom(_ scrollView: UIScrollView) {
+  	// 스크롤 뷰가 확대 되었을 때 스크롤 뷰의 너비를 컨텐츠 크기로 설정 한다.
+		scrollViewHeight.constant = scrollView.contentSize.height
+  	scrollViewWidth.constant = scrollView.contentSize.width
+}
+~~~
+
+<br>
+
+### CollectionView의 사용
+
+- **스토리보드에서는 컬렉션 뷰를 Command + Shift + L로 드래그하여 추가할 수 있다.**
+- **CollectionView IBOutlet 연결 에디터 예시)**
+
+~~~ swift
+// IBOutlet 연결과 더불어 컬렉션 뷰가 셋팅 될때 didSet을 지정하여 collectionViewDataSource, collectionViewDelegate를 해당 뷰컨 자기자신이 되도록 설정할 수 있다. 
+// self 지정을 위해선 해당 ViewController가 사전에 UIColletionViewDataSource, UICollectionViewDelegate 를 채택한 상태여야 한다. (채택 해주어야 설정 가능)
+@IBOutlet weak var emojiCollectionView: UICollcetionView! {
+		didSet {
+      	emojiCollectionView.dataSource = self
+      	emojiCollectionView.delegate = self 
+    }
+}
+~~~
+
+<br>
+
+- **collectionView의 delegate, dataSource, delegateFlowLayout** 설정
+
+  - **delegateFlowLayout** 
+
+    - **텍스트처럼 나열되는 레이아웃 관련 델리게이트 프로토콜**
+
+  - **UICollectionViewDragDelegate**
+
+    - **CollectionView 드래그 관련 델리게이트 프로토콜**
+
+    - **DragDelegate 필수 메서드**
+
+      - **itemsForBeginning**
+
+        ~~~ swift
+        // UICollectionViewDragDelegate 필수 메서드
+        // indexPath 값에 맞는 dragItem을 반환하는 메서드, dragItems 
+        private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
+          	// 특정 indexPath 위치에 맞는 EmojiCollectinViewCell을 접근한다. 
+          	if let attributedString = (emojiCollectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell)?label.attributedText {
+              	let dragItem = UIDragItem(itemProvider: NSItemPRovider(object: attributedString))
+              	// 지역적으로 드레그를 하는 경우 아래와 같이 localObject를 설정 가능
+              	dragItem.localObject = attributedString
+              	// indexPath에 맞는 dragItem 정보를 배열에 담아 반환한다. 
+              	return [dragItem]
+            } else {
+              	// 셀을 정상적으로 접근하지 못했다면 빈 배열을 반환한다. 
+        				return []
+            }
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        		// itemsForBeginning메서드에서 드래그 시작 시의 인덱스 경로(indexPath)를 확인 할 수 있다.
+          	return dragItems(at: indexPath)
+        }
+        
+        
+        ~~~
+
+    - **DragDelegate 선택적 메서드**
+
+      - **itemsForAddingTo**
+
+        ~~~ swift
+        func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+          	return dragItems(at: indexPath)
+        }
+        ~~~
+
+  - **UICollectionViewDropDelegate** (37min~)
+
+    - **CollectionView Drop 관련 델리게이트 프로토콜**
+
+    - **DropDelegate 필수 메서드**
+
+      - **performDropWith**
+
+      ~~~ swift
+      // UICollectionViewDropDelegate 필수 메서드
+      func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        	
+      }
+      ~~~
+
+      
+
+  <br>
+
+  - **UICollectionViewDelegate**
+  - **UICollectionViewDataSource**
+    - **DataSource 필수  메서드**
+      - **numberOfItemsInSection**
+        - **Default 값은 1**이다.
+        - **각 섹션 별 아이템의 갯수 지정 담당**
+      - **cellForItemAt**
+        - **아이템 셀의 지정을 담당**
+
+~~~ swift
+// UICollectionViewDataSource 활용 예시)
+private var font: UIFont {
+		return UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont.preferredFont(forTextStyle: .body).withSize(64.0))
+}
+
+func collectionView(_ collectionView: UICollectionvIew, numberOfItemsInSection section: Int) -> Int {
+		return emojis.count
+}
+
+func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+  	// 재사용 셀 생성 
+  	guard let emojiCell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
+  	// emojiCell의 텍스트 설정 
+  	let cellText = NSAttributedString(string: emojis[indexPath.item, attributes: [.font: font])
+		emojiCell.label.attributedText = text 
+		// 설정한 emojiCell의 반환
+		return emojiCell
+}
+~~~
+
+<br>
+
+- **CollectionView 레이아웃 설정 간 주의사항**
+  - **스크롤이 안되는 CollectionView의 셀 크기를 CollectionView 너비보다 크게 설정하면 안된다.**
+
+<br>
+
+- **CollectionView Property**
+  - **Scroll Direction**
+    - **Horizontal, Vertical 설정으로 컬렉션뷰의 스크롤 방향을 설정 가능**
+    - **둘을 동시에 설정하는 것은 불가능**
+
+
+
+<br>
+
 ## ♣︎ 총 정리
 
-- **Drag & Drops**
-  - 드래그의 시작
-  - 드래그의 추가
-  - 드래그의 수용
-  - 드래그 세션 업데이트
-  - 드롭 시 객체 판별 및 수용
-- **UITableView & UICollectionView**
-  - 세그웨이의 활용
-  - 셀의 재사용 
-  - Delegate, DataSource 메서드
-  - IndexPath
+- **UICollectionView**
+  - 
+- **UITextField**
+  - 
 
  <br>
 
