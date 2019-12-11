@@ -792,6 +792,8 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
     }
     ~~~
 
+<br>
+
 ### UICollectionViewDropDelegate (37min~)
 
 - **CollectionView Drop 관련 델리게이트 프로토콜**
@@ -802,7 +804,7 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
   - 매개변수 UICollectionViewDropCoordinator는 destinationIndexPath 등 드롭 시 행위 판단에 사용할 수 있는 정보를 제공한다. 
     - 드롭으로 데이터가 최종적으로 도착할 경우, placeHolder(context)에게 모델을 업데이트 하도록 이를 알려준다.
   
-  ~~~ swift
+~~~ swift
   // UICollectionViewDropDelegate 필수 메서드
   func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
     	// 만약 존재하지 않는 위치에 드롭이 된다면, 기본 InpaxPath 값으로 적용한다. 
@@ -851,20 +853,24 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
       }
   }
   ~~~
+ 
+<br>
   
+- **performDrop 내 앱 내부 아이템에 대한 collectionView.performBatchUpdates 메서드 지정 등... 설정 후 결과 ▼)**
+<img width="600"  alt="3" src="https://user-images.githubusercontent.com/4410021/70651052-7cee8c80-1c93-11ea-866b-97ca0cbefff6.png">
+
+<br>
+
 - **performDrop 내 앱 외부 아이템에 대한 placeholderContext 설정 후 결과 ▼)**
   - **외부에서 "bee" 문자열을 드래그 해서 앱 내의 컬렉션뷰에 추가하였다! (emojis 에 추가 됨)**
+<img width="600" alt="0" src="https://user-images.githubusercontent.com/4410021/70650932-53cdfc00-1c93-11ea-9338-63590c688430.png">
+<br>
+<img width="600" alt="1" src="https://user-images.githubusercontent.com/4410021/70650936-54ff2900-1c93-11ea-9e9c-5c51d77f45e1.png">
 
 <br>
-
-
-
 <br>
-
-
 
 - **DropDelegate 옵션 메서드**
-
   - **canHandle** : 컬렉션 뷰가 드롭할 수 있는 구체적인 데이터를 지정
 
   ~~~ swift
@@ -875,9 +881,9 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
   }
   ~~~
 
-  - **DropSessionDidUpdate** 
-    - 드롭상태가 바뀔 때 행위 지정 (.copy, .move, .cancel)
-    - 반환하는 UICollectionViewDropProposal의 두번째 생성자에서 intent 매개변수에서는 현재 컬렉션 뷰 사이에 아이템을 삽입하거나 컨텐츠를 넣는 등의 방식 지정을 한다.  
+- **DropSessionDidUpdate** 
+  - 드롭상태가 바뀔 때 행위 지정 (.copy, .move, .cancel)
+  - 반환하는 UICollectionViewDropProposal의 두번째 생성자에서 intent 매개변수에서는 현재 컬렉션 뷰 사이에 아이템을 삽입하거나 컨텐츠를 넣는 등의 방식 지정을 한다.  
 
   ~~~ swift
   // UICollectionViewDropDelegate 옵션 메서드, dropSessionDidUpdate
@@ -889,15 +895,9 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
   }
   ~~~
 
-  
-
-  
-
 <br>
 
 ### UICollectionViewDelegate
-
-
 
 <br>
 
@@ -1114,16 +1114,22 @@ class EmojiArtView: UIView, UIDropInteractionDelegate
 - **UICollectionView**
   - UICollectionView Protocols
     - UICollectionViewDragDelegate
+      - itemsForBeginning
+      - itemsForAddingTo
     - UICollectionViewDropDelegate
-    - UICollectionViewDelegate
-    - UICollectionViewDataSource
-    - DropDelegate
       - canHandle
       - sessionDidUpdate
       - performDrop
+    - UICollectionViewDelegate
+    - UICollectionViewDataSource
+      - numberOfItemsInSection
+      - cellForItemAt
 - **UITextField**
   - UITextField is UIControl
+    - Using Target/Action
   - UITextFieldDelegate
+    - textFieldShouldReturn
+    - textFieldDidEndEditing
   - UITextField Properties
 
  <br>
