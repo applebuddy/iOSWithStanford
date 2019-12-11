@@ -740,76 +740,175 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 
     - **텍스트처럼 나열되는 레이아웃 관련 델리게이트 프로토콜**
 
-  - **UICollectionViewDragDelegate**
+<br>
 
-    - **CollectionView 드래그 관련 델리게이트 프로토콜**
+<br>
 
-    - **DragDelegate 필수 메서드**
+## UICollectionView Protocols
 
-      - **itemsForBeginning**
+### UICollectionViewDragDelegate
 
-        ~~~ swift
-        // UICollectionViewDragDelegate 필수 메서드
-        // indexPath 값에 맞는 dragItem을 반환하는 메서드, dragItems 
-        private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
-          	// 특정 indexPath 위치에 맞는 EmojiCollectinViewCell을 접근한다. 
-          	if let attributedString = (emojiCollectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell)?label.attributedText {
-              	let dragItem = UIDragItem(itemProvider: NSItemPRovider(object: attributedString))
-              	// 지역적으로 드레그를 하는 경우 아래와 같이 localObject를 설정 가능
-              	dragItem.localObject = attributedString
-              	// indexPath에 맞는 dragItem 정보를 배열에 담아 반환한다. 
-              	return [dragItem]
-            } else {
-              	// 셀을 정상적으로 접근하지 못했다면 빈 배열을 반환한다. 
-        				return []
-            }
+- **CollectionView 드래그 관련 델리게이트 프로토콜**
+
+- **DragDelegate 필수 메서드**
+
+  - **itemsForBeginning**
+
+    ~~~ swift
+    // UICollectionViewDragDelegate 필수 메서드
+    // indexPath 값에 맞는 dragItem을 반환하는 메서드, dragItems 
+    private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
+      	// 특정 indexPath 위치에 맞는 EmojiCollectinViewCell을 접근한다. 
+      	if let attributedString = (emojiCollectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell)?label.attributedText {
+          	let dragItem = UIDragItem(itemProvider: NSItemPRovider(object: attributedString))
+          	// 지역적으로 드레그를 하는 경우 아래와 같이 localObject를 설정 가능
+          	dragItem.localObject = attributedString
+          	// indexPath에 맞는 dragItem 정보를 배열에 담아 반환한다. 
+          	return [dragItem]
+        } else {
+          	// 셀을 정상적으로 접근하지 못했다면 빈 배열을 반환한다. 
+    				return []
         }
-        
-        func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        		// itemsForBeginning메서드에서 드래그 시작 시의 인덱스 경로(indexPath)를 확인 할 수 있다.
-          	return dragItems(at: indexPath)
-        }
-        
-        
-        ~~~
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+      	// 드래그가 시작되면 session.localContext에 collectionView를 넣어준다.
+      	session.localContext = collectionView
+      	
+    		// itemsForBeginning메서드에서 드래그 시작 시의 인덱스 경로(indexPath)를 확인 할 수 있다.
+      	return dragItems(at: indexPath)
+    }
+    
+    
+    ~~~
 
-    - **DragDelegate 선택적 메서드**
+- **DragDelegate 선택적 메서드**
 
-      - **itemsForAddingTo**
+  - **itemsForAddingTo**
 
-        ~~~ swift
-        func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-          	return dragItems(at: indexPath)
-        }
-        ~~~
+    ~~~ swift
+    func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+      	return dragItems(at: indexPath)
+    }
+    ~~~
 
-  - **UICollectionViewDropDelegate** (37min~)
+### UICollectionViewDropDelegate (37min~)
 
-    - **CollectionView Drop 관련 델리게이트 프로토콜**
+- **CollectionView Drop 관련 델리게이트 프로토콜**
 
-    - **DropDelegate 필수 메서드**
+- **DropDelegate 필수 메서드**
 
-      - **performDropWith**
-
-      ~~~ swift
-      // UICollectionViewDropDelegate 필수 메서드
-      func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-        	
+  - **performDropWith** : 드롭 시 행위 지정
+  - 매개변수 UICollectionViewDropCoordinator는 destinationIndexPath 등 드롭 시 행위 판단에 사용할 수 있는 정보를 제공한다. 
+    - 드롭으로 데이터가 최종적으로 도착할 경우, placeHolder(context)에게 모델을 업데이트 하도록 이를 알려준다.
+  
+  ~~~ swift
+  // UICollectionViewDropDelegate 필수 메서드
+  func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+    	// 만약 존재하지 않는 위치에 드롭이 된다면, 기본 InpaxPath 값으로 적용한다. 
+  	let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
+    	
+    	for item in coordinator.items {
+        	if let sourceIndexPath = item.sourceIndexPath {
+            	// item.dragItem을 통해 미리 저장해둔 localObject(NSAttributedString) 값을 얻는다. 
+            	if let attributedString = item.dragItem.localObject as? NSAttributedString {
+                
+                	// ✭ collectionView.performBatchUpdates에서 셀의 이동, 삭제 등을 처리하고 항상 모델과 동기화 시킬 수 있다. 
+                	collectionView.performBatchUpdates({
+                  // 아래 performDropWith 내 두줄(remove/insert)의 코드로 특정 아이템을 다른 IndexPath 위치로 이동 시킬 수 있다.
+                  // -> 드롭 간 이모티콘의 위치를 움직이게 하는 부분
+                	emojis.remove(at: sourceIndexPath.item)
+                	emojis.insert(attributedString.string, at: destinationIndex.item)
+                	collectionView.deleteItems(at: [sourceIndexPath])
+                	collectionView.insertItems(at: [destinationIndexPath])
+                  }) // 맨 마지막 completion 핸들러는 생략 가능
+                
+                	// coordinatior.drop을 통해 특정 위치로의 dragItem 드롭 행위를 동작 시킨다.
+                	coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+              }
+          } else {
+  						// sourceIndexPath가 없다는 것은 앱 외부에서 가져온 것임을 의미한다.
+            	let placeHolderContext = coordinator.drop(
+                	item.dragItem,
+              		to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "여기에 어떤 종류의 셀인지를 식별자로 지정해야함(DropPlaceholderCell)")) // 마지막 매개변수 생략가능
+          }
+        	// 아이템을 주는 제공자로, 앱 외부에서 오기 때문에 비동기적으로 처리된다. 
+        	// 클로저에서는 제공받은 타입과 error를 참고 가능하다. 
+        	item.dragItem.itemProvider.loadObject(ofClass: NSAttributedString.self) { (provider, error) in 
+            		// 해당 클로저 내부는 메인스레드에서 동작하지 않으므로, UI를 다루려면 DispatchQueue 등으로 main스레드에서 작동시켜야 한다. 
+  							// 외부에서 가져온 경우 해당 타입이 NSAttributedString일 경우 emojis에 해당 값을 추가한다. 
+  							DispatchQueue.main.async {
+                  	if let attributedString = provider as? NSAttributedString {
+                      	placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
+                            emojis.insert(attributedString.string, at: insertionIndexPath.item)
+                        })
+                    } else {
+                      	// 만약 NSAttributedString 타입에 맞지 않는다면 placeholder는 제거한다.
+                      	placeholderContext.deletePlaceholder()
+                    }
+                }                                                                 
+          }
       }
-      ~~~
+  }
+  ~~~
+  
+- **performDrop 내 앱 외부 아이템에 대한 placeholderContext 설정 후 결과 ▼)**
+  - **외부에서 "bee" 문자열을 드래그 해서 앱 내의 컬렉션뷰에 추가하였다! (emojis 에 추가 됨)**
 
-      
+<br>
 
-  <br>
 
-  - **UICollectionViewDelegate**
-  - **UICollectionViewDataSource**
-    - **DataSource 필수  메서드**
-      - **numberOfItemsInSection**
-        - **Default 값은 1**이다.
-        - **각 섹션 별 아이템의 갯수 지정 담당**
-      - **cellForItemAt**
-        - **아이템 셀의 지정을 담당**
+
+<br>
+
+
+
+- **DropDelegate 옵션 메서드**
+
+  - **canHandle** : 컬렉션 뷰가 드롭할 수 있는 구체적인 데이터를 지정
+
+  ~~~ swift
+  // UICollectionViewDropDelegate 옵션 메서드, canHandle
+  func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+    	// NSAttributedString 타입을 드롭 가능하도록 수용
+    	return session.canLoadObjects(ofClass: NSAttributedString.self) 
+  }
+  ~~~
+
+  - **DropSessionDidUpdate** 
+    - 드롭상태가 바뀔 때 행위 지정 (.copy, .move, .cancel)
+    - 반환하는 UICollectionViewDropProposal의 두번째 생성자에서 intent 매개변수에서는 현재 컬렉션 뷰 사이에 아이템을 삽입하거나 컨텐츠를 넣는 등의 방식 지정을 한다.  
+
+  ~~~ swift
+  // UICollectionViewDropDelegate 옵션 메서드, dropSessionDidUpdate
+  func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+  		// 현재 드래그 진행 중인 컬렉션뷰와 시작당시 받아온 collectionView가 서로 일치하는지 확인한다.
+    	let isSelf = (session.localDragSession?.localContext) as? UICollectionView == collectionView
+    	// 3항 연산자를 사용해 컨텍스트가 collectionView이면 .move, 아니면 .copy를 사용한다. 
+    	return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
+  }
+  ~~~
+
+  
+
+  
+
+<br>
+
+### UICollectionViewDelegate
+
+
+
+<br>
+
+### UICollectionViewDataSource
+
+- **DataSource 필수  메서드**
+  - **numberOfItemsInSection**
+    - **Default 값은 1**이다.
+    - **각 섹션 별 아이템의 갯수 지정 담당**
+  - **cellForItemAt**
+    - **아이템 셀의 지정을 담당**
 
 ~~~ swift
 // UICollectionViewDataSource 활용 예시)
@@ -839,21 +938,193 @@ func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath:
 
 <br>
 
-- **CollectionView Property**
+- **CollectionView Property, Methods**
+  
   - **Scroll Direction**
+    
     - **Horizontal, Vertical 설정으로 컬렉션뷰의 스크롤 방향을 설정 가능**
     - **둘을 동시에 설정하는 것은 불가능**
+    
+  - **PerformBatchUpdates**
+  
+    - **컬렉션 뷰 셀에 대하여 다수의 수정 (삽입, 삭제 등)을 하면서 모델의 동기화까지 시키고자 할 때 사용**한다. 
+  
+    ~~~ swift
+    // ... in performDropWith Method
+    // ✭ collectionView.performBatchUpdates에서 셀의 이동, 삭제 등을 처리하고 항상 모델과 동기화 시킬 수 있다. 
+                collectionView.performBatchUpdates({
+                      	// 아래 performDropWith 내 두줄(remove/insert)의 코드로 특정 아이템을 다른 IndexPath 위치로 이동 시킬 수 있다.
+                  	emojis.remove(at: sourceIndexPath.item)
+                  	emojis.insert(attributedString.string, at: destinationIndex.item)
+                  	collectionView.deleteItems(at: [sourceIndexPath])
+                  	collectionView.insertItems(at: [destinationIndexPath])
+                }) // 맨 마지막 completion 핸들러는 생략 가능
+    ~~~
+  
+    
 
+<br>
 
+## EmojiArtView 드롭 이벤트 구현 (60min~)
+
+~~~ swift
+import UIKit
+
+class EmojiArtView: UIView, UIDropInteractionDelegate
+{
+    // MARK: - Initialization
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    private func setup() {
+      	// dropInteraction 추가, UIDropInteractionDelegate 를 채택해야 한다.
+        addInteraction(UIDropInteraction(delegate: self))
+    }
+    
+    // this var is not in Demo
+    private var font: UIFont {
+        return
+            UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont.preferredFont(forTextStyle: .body).withSize(64.0))
+    }
+    
+    // MARK: - UIDropInteractionDelegate
+    
+    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+      	// canHandle 메서드에서 NSAttributedString 타입만 드롭할 대상으로 지정한다. 
+        return session.canLoadObjects(ofClass: NSAttributedString.self)
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+      	// 드롭 상태 업데이트 시 .copy를 동작 시킨다. 
+        return UIDropProposal(operation: .copy)
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+      	// 현재 드롭 위치에 대하여 NSAttributedString 값이 존재하면 라벨을 추가한다. 
+        session.loadObjects(ofClass: NSAttributedString.self) { providers in
+            let dropPoint = session.location(in: self)
+            for attributedString in providers as? [NSAttributedString] ?? [] {
+                self.addLabel(with: attributedString, centeredAt: dropPoint)
+            }
+        }
+    }
+    
+    private func addLabel(with attributedString: NSAttributedString, centeredAt point: CGPoint) {
+        let label = UILabel()
+        label.backgroundColor = .clear
+        // next row is not in Demo
+        label.attributedText = attributedString.font != nil ? attributedString : NSAttributedString(string: attributedString.string,attributes: [.font:self.font])
+    //   label.attributedText = attributedString
+        label.sizeToFit() // 임의의 크기가 되지 않도록 sizeToFit 처리를 한다. 
+        label.center = point
+        addEmojiArtGestureRecognizers(to: label) // 각각의 label에 gestureRecognizer를 추가한다. 
+        addSubview(label) // self. 의 subview로 추가한다.
+    }
+    
+    // MARK: - Drawing the Background
+    
+    var backgroundImage: UIImage? { didSet { setNeedsDisplay() } }
+    
+    override func draw(_ rect: CGRect) {
+        backgroundImage?.draw(in: bounds)
+    }
+}
+
+~~~
+
+<br>
+
+<br>
+
+## UITextField
+
+- **편집이 가능한 UILabel**
+
+- **UITextField는 UIControl**이다.
+
+  - **그러므로 UITextField에 특정 행동에 대한 target/action 메서드를 설정 가능**
+  - **그렇기에 delegate 메서드 대신 target methods를 통해 행위에 대한 동작 처리를 하는 경우가 존재**
+
+- **키보드를 띄워주고 텍스트를 입력할 수 있게 해준다.**
+
+  - **이때 키보드가 띄워지는 이유는 어떠한 객체가 becomeFirstResponder의 응답자가 되었기 때문**
+    - **becomeFirstResponder는 TextField에 보낼 수 있는 메세지의 일종**
+    - **만약 최초 응답자가 되는 것을 멈추고 키보드를 내리려면 resignFirstResponder를 전달**하면 된다.
+
+- **UITextFieldDelegate를 갖고 있다.** 
+
+  ~~~ swift
+  // UITextFieldDelegate Methods
+  
+  // * textFieldShouldReturn : return키를 입력받을 때 호출되는 메서드
+  // textFieldShoudReturn 메서드 내에서 resignFirstResponder 메서드를 호출하면 return키를 눌렀을때 키보드가 내려가도록 할 수 있다. 
+  func textFieldShouldReturn(sender: UITextField) -> Bool 
+  
+  // textFieldDidEndEditing : firstResponder에서 풀려났을 때 호출되는 메서드
+  // 텍스트필드를 수정하다가 다른 텍스트필드를 누르는 등의 상황에서 해당 메서드가 호출 된다. 
+  func textFieldDidEndEditing(sender: UITextField)
+  ~~~
+
+  <br>
+
+  - **선택이 바뀌거나 새로운 입력 편집이 있을 때 등을 감지**할 수 있다. 
+
+- 입력, 편집이 가능한 UITextField지만 아이폰 등의 작은휴대기기에서 UITextField를 사용할 때 유저 입장에서 꼭 필요한지 고민해볼 필요가 있다. 
+
+<br>
+
+### UITextField Properties
+
+- **UITextField는 UITextInputTraits 프로토콜을 채택**하고 있다. 
+
+  - **UITextInputTraits는 키보드와 관련된 기능들이 있으며 키보드에 악세서리 뷰를 추가할 수도 있다.** 
+
+  ~~~ swift
+  // UITextField Properties
+  var autocapitalizationType: UITextAutocapitalizationType // 문장, 단어 등의 타입 지정
+  var autocorrectionType: UITextAutocorrectionType // .yes or .no 로 자동완성 지정
+  var returnKeyType: UIReturnKeyType // Go, Search, Google, Done, etc... 타입 지정
+  var isSecureTextEntry: Bool // 패스워드 등 텍스트 감출때 사용
+  var keyboardType: UIKeyboardType // 아스키코드, URL, PhonePad 등의 타입 지정 
+  
+  var clearsOnBeginEditing: Bool
+  var adjustsFontSizeToFitWidth: Bool // 현재 수퍼뷰 크기에 맞게 폰트를 조정하도록 가능
+  var minimumFontSize: CGFLoat // adjustsFontSizeToFitWidth를 설정하면 항상 셋팅됨
+  var placeholder: String? // placeholder의 default 색상값은 gray
+  var background/disabledBackground: UIImage?
+  var defaultTextAttributes: [String:Any] // 전체적인 텍스트에 적용되는 Attributes
+  
+  ~~~
+
+<br>
 
 <br>
 
 ## ♣︎ 총 정리
 
+- **EmojiArt Demo (CollectionView Drag & Drop)**
 - **UICollectionView**
-  - 
+  - UICollectionView Protocols
+    - UICollectionViewDragDelegate
+    - UICollectionViewDropDelegate
+    - UICollectionViewDelegate
+    - UICollectionViewDataSource
+    - DropDelegate
+      - canHandle
+      - sessionDidUpdate
+      - performDrop
 - **UITextField**
-  - 
+  - UITextField is UIControl
+  - UITextFieldDelegate
+  - UITextField Properties
 
  <br>
 
