@@ -1,6 +1,6 @@
 # iOS With Stanford
 
-- **iOS Study with Stanford Lection Study 11~12**
+- **iOS Study with Stanford Lecture Study 11~12**
 
 <br>
 <br>
@@ -46,7 +46,7 @@ func dragInteraction(_ interation: UIDragInteraction, itemsForBeginning session:
 
 <br>
 
-- dragInteraction 메서드에서 반환하는 **UIDragItem은 itemProvider를 갖고 있다.**
+- **dragInteraction 메서드에서 반환하는 UIDragItem은 itemProvider를 갖고 있다.**
   - **itemProvider는 드래그 된 데이터를 제공하는 역할**을 한다. 
     - **NSItemProvider를 사용해 DragItem을 생성하여 사용 가능**하다.
 
@@ -81,7 +81,7 @@ func dropInteraction(_ interaction: UIDripInteraction, canHandle session: UIDrag
 }
 ~~~
 
-- 이때의 드래그 허용 여부 판단을 위해 UIDragSession을 활용해서 특정 객체를 받을 수 있는지를 체크할 수 있다. 
+- **이때 드래그 허용 여부 판단을 위해 UIDragSession을 활용해서 특정 객체를 받을 수 있는지를 체크 가능**하다. 
 
 ~~~ swift
 // NSAttributedString 타입을 제공 받을 수 있나요?
@@ -734,17 +734,17 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 
 <br>
 
-- **collectionView의 delegate, dataSource, delegateFlowLayout** 설정
-
-  - **delegateFlowLayout** 
-
-    - **텍스트처럼 (물 흐르듯)나열되는 레이아웃 관련 델리게이트 프로토콜**
-
-<br>
-
 <br>
 
 ## UICollectionView Protocols
+
+### delegateFlowLayout
+
+- **텍스트처럼 (물 흐르듯) 나열되는 레이아웃 관련 델리게이트 프로토콜**
+
+
+
+<br>
 
 ### UICollectionViewDragDelegate
 
@@ -803,7 +803,6 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 - **performDropWith** : 드롭 시 행위 지정
   - **performDropWith 내 매개변수 UICollectionViewDropCoordinator는 destinationIndexPath 등 드롭 시 행위 판단에 사용할 수 있는 정보를 제공**한다. 
     - **드롭으로 데이터가 최종적으로 도착할 경우, placeHolder(context)에게 모델을 업데이트 하도록 이를 알려준다.**
-  
 ~~~ swift
   // UICollectionViewDropDelegate 필수 메서드
   func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
