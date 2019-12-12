@@ -750,48 +750,47 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 
 - **CollectionView 드래그 관련 델리게이트 프로토콜**
 
-- **UICollectionViewDragDelegate 필수 메서드**
+#### UICollectionViewDragDelegate 필수 메서드
 
-  - **itemsForBeginning**
+- **itemsForBeginning**
 
-    ~~~ swift
-    // UICollectionViewDragDelegate 필수 메서드
-    // indexPath 값에 맞는 dragItem을 반환하는 메서드, dragItems 
-    private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
-      	// 특정 indexPath 위치에 맞는 EmojiCollectinViewCell을 접근한 뒤
-      	// -> 해당 셀의 label.attributedText 값을 가져온다. 
-      	if let attributedString = (emojiCollectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell)?label.attributedText {
-          	let dragItem = UIDragItem(itemProvider: NSItemPRovider(object: attributedString))
-          	// 지역적으로 드레그를 하는 경우 아래와 같이 localObject(지역객체?)를 설정 가능
-          	dragItem.localObject = attributedString
-          	// indexPath에 맞는 dragItem 정보를 배열에 담아 반환한다. 
-          	return [dragItem]
-        } else {
-          	// 셀을 정상적으로 접근하지 못했다면 빈 배열을 반환한다. 
-    				return []
-        }
+~~~ swift
+// UICollectionViewDragDelegate 필수 메서드
+// indexPath 값에 맞는 dragItem을 반환하는 메서드, dragItems 
+private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
+  	// 특정 indexPath 위치에 맞는 EmojiCollectinViewCell을 접근한 뒤
+  	// -> 해당 셀의 label.attributedText 값을 가져온다. 
+  	if let attributedString = (emojiCollectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell)?label.attributedText {
+      	let dragItem = UIDragItem(itemProvider: NSItemPRovider(object: attributedString))
+      	// 지역적으로 드레그를 하는 경우 아래와 같이 localObject(지역객체?)를 설정 가능
+      	dragItem.localObject = attributedString
+      	// indexPath에 맞는 dragItem 정보를 배열에 담아 반환한다. 
+      	return [dragItem]
+    } else {
+      	// 셀을 정상적으로 접근하지 못했다면 빈 배열을 반환한다. 
+				return []
     }
-    
-    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-      	// 드래그가 시작되면 session.localContext에 collectionView를 넣어준다.
-      	session.localContext = collectionView
-      	
-    		// itemsForBeginning메서드에서 드래그 시작 시의 인덱스 경로(indexPath)를 확인 할 수 있다.
-      	return dragItems(at: indexPath)
-    }
-    
-    
-    ~~~
+}
 
-- **DragDelegate 선택적 메서드**
+func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+  	// 드래그가 시작되면 session.localContext에 collectionView를 넣어준다.
+  	session.localContext = collectionView
+  	
+		// itemsForBeginning메서드에서 드래그 시작 시의 인덱스 경로(indexPath)를 확인 할 수 있다.
+  	return dragItems(at: indexPath)
+}
 
-  - **itemsForAddingTo**
+~~~
 
-    ~~~ swift
-    func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-      	return dragItems(at: indexPath)
-    }
-    ~~~
+#### DragDelegate 선택적 메서드
+
+- **itemsForAddingTo**
+
+~~~ swift
+func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+  	return dragItems(at: indexPath)
+}
+~~~
 
 <br>
 
@@ -799,10 +798,10 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 
 - **CollectionView Drop 관련 델리게이트 프로토콜**
 
-- **UICollectionViewDropDelegate 필수 메서드**
+#### UICollectionViewDropDelegate 필수 메서드
 - **performDropWith** : 드롭 시 행위 지정
   - **performDropWith 내 매개변수 UICollectionViewDropCoordinator는 destinationIndexPath 등 드롭 시 행위 판단에 사용할 수 있는 정보를 제공**한다. 
-    - **드롭으로 데이터가 최종적으로 도착할 경우, placeHolder(context)에게 모델을 업데이트 하도록 이를 알려준다.**
+  - **드롭으로 데이터가 최종적으로 도착할 경우, placeHolder(context)에게 모델을 업데이트 하도록 이를 알려준다.**
 ~~~ swift
   // UICollectionViewDropDelegate 필수 메서드
   func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
@@ -871,16 +870,16 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 <br>
 <br>
 
-- **DropDelegate 옵션 메서드**
-  - **canHandle** : 컬렉션 뷰가 드롭할 수 있는 구체적인 데이터 타입 지정
+#### DropDelegate 옵션 메서드
+- **canHandle** : 컬렉션 뷰가 드롭할 수 있는 구체적인 데이터 타입 지정
 
-  ~~~ swift
-  // UICollectionViewDropDelegate 옵션 메서드, canHandle
-  func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
-    	// NSAttributedString 타입을 드롭 가능하도록 수용
-    	return session.canLoadObjects(ofClass: NSAttributedString.self) 
-  }
-  ~~~
+~~~ swift
+// UICollectionViewDropDelegate 옵션 메서드, canHandle
+func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+  	// NSAttributedString 타입을 드롭 가능하도록 수용
+  	return session.canLoadObjects(ofClass: NSAttributedString.self) 
+}
+~~~
 
 <br>
 
@@ -907,12 +906,12 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 
 ### UICollectionViewDataSource
 
-- **DataSource 필수  메서드**
-  - **numberOfItemsInSection**
-    - **Default 값은 1**이다.
-    - **각 섹션 별 아이템의 갯수 지정 담당**
-  - **cellForItemAt**
-    - **아이템 셀의 지정을 담당**
+#### DataSource 필수  메서드
+- **numberOfItemsInSection**
+  - **Default 값은 1**이다.
+  - **각 섹션 별 아이템의 갯수 지정 담당**
+- **cellForItemAt**
+  - **아이템 셀의 지정을 담당**
 
 ~~~ swift
 // UICollectionViewDataSource 활용 예시)
