@@ -888,15 +888,15 @@ func collectionView(_ collectionView: UICollectionView, canHandle session: UIDro
   - **드롭상태가 바뀔 때 복사/이동/취소 등의 행위 지정 (.copy, .move, .cancel)**
 - 반환하는 UICollectionViewDropProposal의 두번째 생성자 -> intent 매개변수에서는 현재 컬렉션 뷰 사이에 아이템을 삽입하거나 컨텐츠를 넣는 등의 방식 지정이 가능하다. 
   
-  ~~~ swift
-  // UICollectionViewDropDelegate 옵션 메서드, dropSessionDidUpdate
-  func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-  		// 현재 드래그 진행 중인 컬렉션뷰와 시작당시 받아온 collectionView가 서로 일치하는지 확인하는 Bool 변수
-    	let isSelf = (session.localDragSession?.localContext) as? UICollectionView == collectionView
-    	// 3항 연산자를 사용해 컨텍스트가 collectionView이면 .move, 아니면 .copy를 사용한다. 
-    	return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
-  }
-  ~~~
+~~~ swift
+// UICollectionViewDropDelegate 옵션 메서드, dropSessionDidUpdate
+func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+		// 현재 드래그 진행 중인 컬렉션뷰와 시작당시 받아온 collectionView가 서로 일치하는지 확인하는 Bool 변수
+  	let isSelf = (session.localDragSession?.localContext) as? UICollectionView == collectionView
+  	// 3항 연산자를 사용해 컨텍스트가 collectionView이면 .move, 아니면 .copy를 사용한다. 
+  	return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
+}
+~~~
 
 <br>
 
@@ -945,30 +945,25 @@ func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath:
 <br>
 
 - **CollectionView Property, Methods**
-  
   - **Scroll Direction**
-    
     - **Horizontal, Vertical 설정으로 컬렉션뷰의 스크롤 방향을 설정 가능**
     - **둘을 동시에 설정하는 것은 불가능**
-    
   - **PerformBatchUpdates**
-  
     - **컬렉션 뷰 셀에 대하여 다수의 수정 (삽입, 삭제 등)을 하면서 모델의 동기화까지 시키고자 할 때 사용**한다. 
   
-    ~~~ swift
-    // ... in performDropWith Method
-    // ✭ collectionView.performBatchUpdates에서 셀의 이동, 삭제 등을 처리하고 항상 모델과 동기화 시킬 수 있다. 
-                collectionView.performBatchUpdates({
-                      	// 아래 performDropWith 내 두줄(remove/insert)의 코드로 특정 아이템을 다른 IndexPath 위치로 이동 시킬 수 있다.
-                  	emojis.remove(at: sourceIndexPath.item)
-                  	emojis.insert(attributedString.string, at: destinationIndex.item)
-                  	collectionView.deleteItems(at: [sourceIndexPath])
-                  	collectionView.insertItems(at: [destinationIndexPath])
-                }) // 맨 마지막 completion 핸들러는 생략 가능
-    ~~~
-  
-    
+~~~ swift
+// ... in performDropWith Method
+// ✭ collectionView.performBatchUpdates에서 셀의 이동, 삭제 등을 처리하고 항상 모델과 동기화 시킬 수 있다. 
+            collectionView.performBatchUpdates({
+                  	// 아래 performDropWith 내 두줄(remove/insert)의 코드로 특정 아이템을 다른 IndexPath 위치로 이동 시킬 수 있다.
+              	emojis.remove(at: sourceIndexPath.item)
+              	emojis.insert(attributedString.string, at: destinationIndex.item)
+              	collectionView.deleteItems(at: [sourceIndexPath])
+              	collectionView.insertItems(at: [destinationIndexPath])
+            }) // 맨 마지막 completion 핸들러는 생략 가능
+~~~
 
+<br>
 <br>
 
 ## EmojiArtView 드롭 이벤트 구현 (60min~)
@@ -1047,7 +1042,6 @@ class EmojiArtView: UIView, UIDropInteractionDelegate
 ~~~
 
 <br>
-
 <br>
 
 ## UITextField
