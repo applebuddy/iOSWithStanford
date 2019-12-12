@@ -683,7 +683,7 @@ class EmojiArtDocumentTableViewController: UITableViewController {
 - **CollectionView의 추가**
   - **CollectionView 내에서의 Drag & Drop**
 
-- **layoutSubviews가 호출되기 전 호출되는 viewWillLayoutSubviews**에서 **splitView의 선호배치모드 (preferredDisplayMode)를 변경 시킬 수 있다.** 
+- **layoutSubviews가 호출되기 전 호출되는 viewWillLayoutSubviews**에서 **splitView의 선호배치모드 (preferredDisplayMode) 변경 설정 예시 ▼** 
 
 ~~~ swift
 // layoutSubviews가 호출되기 직전에 splitViewController의 화면 배치를 설정할 수 있다. 
@@ -699,7 +699,7 @@ override func viewWillLayoutSubviews() {
 
 - 스크롤뷰 등의 서브뷰가 상위뷰 안에만 있도록 constraints의 값을 greater or Equal 설정 할 수 있다. 
   - 이때 제약의 오류는 서브뷰의 높이, 너비를 지정하면 해결된다. 
-- 뷰의 제약조건 (Constraints)를 IBOutlet 변수로 가져와 코드로 설정할 수 있다. 
+- **뷰의 제약조건 (Constraints)를 IBOutlet 변수로 가져와 코드로 설정가능**하다.
 
 ~~~ swift
 // 스크롤뷰 높이 너비 제약의 IBOutlet 변수 선언 예시) 
@@ -723,7 +723,7 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 
 ~~~ swift
 // IBOutlet 연결과 더불어 컬렉션 뷰가 셋팅 될때 didSet을 지정하여 collectionViewDataSource, collectionViewDelegate를 해당 뷰컨 자기자신이 되도록 설정할 수 있다. 
-// self 지정을 위해선 해당 ViewController가 사전에 UIColletionViewDataSource, UICollectionViewDelegate 를 채택한 상태여야 한다. (채택 해주어야 설정 가능)
+// self 지정을 위해선 해당 ViewController가 사전에 UIColletionViewDataSource, UICollectionViewDelegate 를 채택한 상태여야 한다. (채택 해주어야 self 설정 가능)
 @IBOutlet weak var emojiCollectionView: UICollcetionView! {
 		didSet {
       	emojiCollectionView.dataSource = self
@@ -738,7 +738,7 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 
   - **delegateFlowLayout** 
 
-    - **텍스트처럼 나열되는 레이아웃 관련 델리게이트 프로토콜**
+    - **텍스트처럼 (물 흐르듯)나열되는 레이아웃 관련 델리게이트 프로토콜**
 
 <br>
 
@@ -750,7 +750,7 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 
 - **CollectionView 드래그 관련 델리게이트 프로토콜**
 
-- **DragDelegate 필수 메서드**
+- **UICollectionViewDragDelegate 필수 메서드**
 
   - **itemsForBeginning**
 
@@ -758,10 +758,11 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
     // UICollectionViewDragDelegate 필수 메서드
     // indexPath 값에 맞는 dragItem을 반환하는 메서드, dragItems 
     private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
-      	// 특정 indexPath 위치에 맞는 EmojiCollectinViewCell을 접근한다. 
+      	// 특정 indexPath 위치에 맞는 EmojiCollectinViewCell을 접근한 뒤
+      	// -> 해당 셀의 label.attributedText 값을 가져온다. 
       	if let attributedString = (emojiCollectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell)?label.attributedText {
           	let dragItem = UIDragItem(itemProvider: NSItemPRovider(object: attributedString))
-          	// 지역적으로 드레그를 하는 경우 아래와 같이 localObject를 설정 가능
+          	// 지역적으로 드레그를 하는 경우 아래와 같이 localObject(지역객체?)를 설정 가능
           	dragItem.localObject = attributedString
           	// indexPath에 맞는 dragItem 정보를 배열에 담아 반환한다. 
           	return [dragItem]
@@ -798,11 +799,10 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 
 - **CollectionView Drop 관련 델리게이트 프로토콜**
 
-- **DropDelegate 필수 메서드**
-
-  - **performDropWith** : 드롭 시 행위 지정
-  - 매개변수 UICollectionViewDropCoordinator는 destinationIndexPath 등 드롭 시 행위 판단에 사용할 수 있는 정보를 제공한다. 
-    - 드롭으로 데이터가 최종적으로 도착할 경우, placeHolder(context)에게 모델을 업데이트 하도록 이를 알려준다.
+- **UICollectionViewDropDelegate 필수 메서드**
+- **performDropWith** : 드롭 시 행위 지정
+  - **performDropWith 내 매개변수 UICollectionViewDropCoordinator는 destinationIndexPath 등 드롭 시 행위 판단에 사용할 수 있는 정보를 제공**한다. 
+    - **드롭으로 데이터가 최종적으로 도착할 경우, placeHolder(context)에게 모델을 업데이트 하도록 이를 알려준다.**
   
 ~~~ swift
   // UICollectionViewDropDelegate 필수 메서드
@@ -812,7 +812,7 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
     	
     	for item in coordinator.items {
         	if let sourceIndexPath = item.sourceIndexPath {
-            	// item.dragItem을 통해 미리 저장해둔 localObject(NSAttributedString) 값을 얻는다. 
+            	// item.dragItem을 통해 미리 저장해둔 localObject(NSAttributedString) 값을 얻는다. -> 이때 localObject는 Any타입이므로 타입캐스팅 후 사용한다. 
             	if let attributedString = item.dragItem.localObject as? NSAttributedString {
                 
                 	// ✭ collectionView.performBatchUpdates에서 셀의 이동, 삭제 등을 처리하고 항상 모델과 동기화 시킬 수 있다. 
@@ -821,6 +821,7 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
                   // -> 드롭 간 이모티콘의 위치를 움직이게 하는 부분
                 	emojis.remove(at: sourceIndexPath.item)
                 	emojis.insert(attributedString.string, at: destinationIndex.item)
+                  // 기존 IndexPath 위치의 셀은 제거, 새로운 드롭 위치의 셀 삽입
                 	collectionView.deleteItems(at: [sourceIndexPath])
                 	collectionView.insertItems(at: [destinationIndexPath])
                   }) // 맨 마지막 completion 핸들러는 생략 가능
@@ -832,8 +833,9 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
   						// sourceIndexPath가 없다는 것은 앱 외부에서 가져온 것임을 의미한다.
             	let placeHolderContext = coordinator.drop(
                 	item.dragItem,
-              		to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "여기에 어떤 종류의 셀인지를 식별자로 지정해야함(DropPlaceholderCell)")) // 마지막 매개변수 생략가능
+              		to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "여기에 어떤 종류의 셀인지를 식별자로 지정해야함(DropPlaceholderCell)")) // coordinator.drop 마지막 매개변수 생략가능
           }
+   
         	// 아이템을 주는 제공자로, 앱 외부에서 오기 때문에 비동기적으로 처리된다. 
         	// 클로저에서는 제공받은 타입과 error를 참고 가능하다. 
         	item.dragItem.itemProvider.loadObject(ofClass: NSAttributedString.self) { (provider, error) in 
@@ -852,16 +854,16 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
           }
       }
   }
-  ~~~
- 
+~~~
+
 <br>
-  
-- **performDrop 내 앱 내부 아이템에 대한 collectionView.performBatchUpdates 메서드 지정 등... 설정 후 결과 ▼)**
+
+- **performDrop 내 앱 내부 아이템에 대한 collectionView.performBatchUpdates 메서드 지정 & 설정 후 결과 ▼**
 <img width="600"  alt="3" src="https://user-images.githubusercontent.com/4410021/70651052-7cee8c80-1c93-11ea-866b-97ca0cbefff6.png">
 
 <br>
 
-- **performDrop 내 앱 외부 아이템에 대한 placeholderContext 설정 후 결과 ▼)**
+- **performDrop 내 앱 외부 아이템에 대한 placeholderContext 설정 후 결과 ▼**
   - **외부에서 "bee" 문자열을 드래그 해서 앱 내의 컬렉션뷰에 추가하였다! (emojis 에 추가 됨)**
 <img width="600" alt="0" src="https://user-images.githubusercontent.com/4410021/70650932-53cdfc00-1c93-11ea-9338-63590c688430.png">
 <br>
@@ -871,7 +873,7 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 <br>
 
 - **DropDelegate 옵션 메서드**
-  - **canHandle** : 컬렉션 뷰가 드롭할 수 있는 구체적인 데이터를 지정
+  - **canHandle** : 컬렉션 뷰가 드롭할 수 있는 구체적인 데이터 타입 지정
 
   ~~~ swift
   // UICollectionViewDropDelegate 옵션 메서드, canHandle
@@ -881,14 +883,17 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
   }
   ~~~
 
-- **DropSessionDidUpdate** 
-  - 드롭상태가 바뀔 때 행위 지정 (.copy, .move, .cancel)
-  - 반환하는 UICollectionViewDropProposal의 두번째 생성자에서 intent 매개변수에서는 현재 컬렉션 뷰 사이에 아이템을 삽입하거나 컨텐츠를 넣는 등의 방식 지정을 한다.  
+<br>
 
+- **DropSessionDidUpdate** 
+  
+  - **드롭상태가 바뀔 때 복사/이동/취소 등의 행위 지정 (.copy, .move, .cancel)**
+- 반환하는 UICollectionViewDropProposal의 두번째 생성자 -> intent 매개변수에서는 현재 컬렉션 뷰 사이에 아이템을 삽입하거나 컨텐츠를 넣는 등의 방식 지정이 가능하다. 
+  
   ~~~ swift
   // UICollectionViewDropDelegate 옵션 메서드, dropSessionDidUpdate
   func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-  		// 현재 드래그 진행 중인 컬렉션뷰와 시작당시 받아온 collectionView가 서로 일치하는지 확인한다.
+  		// 현재 드래그 진행 중인 컬렉션뷰와 시작당시 받아온 collectionView가 서로 일치하는지 확인하는 Bool 변수
     	let isSelf = (session.localDragSession?.localContext) as? UICollectionView == collectionView
     	// 3항 연산자를 사용해 컨텍스트가 collectionView이면 .move, 아니면 .copy를 사용한다. 
     	return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
@@ -912,14 +917,17 @@ func scrollViewDidZoom(_ scrollView: UIScrollView) {
 
 ~~~ swift
 // UICollectionViewDataSource 활용 예시)
+
 private var font: UIFont {
 		return UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont.preferredFont(forTextStyle: .body).withSize(64.0))
 }
 
+// numberOfItemsInSection : 섹션 별 아이템 갯수를 지정
 func collectionView(_ collectionView: UICollectionvIew, numberOfItemsInSection section: Int) -> Int {
 		return emojis.count
 }
 
+// cellForItemAt : 각 IndexPath 위치 별 셀 item을 정의 
 func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
   	// 재사용 셀 생성 
   	guard let emojiCell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCell", for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
@@ -1022,7 +1030,7 @@ class EmojiArtView: UIView, UIDropInteractionDelegate
         label.backgroundColor = .clear
         // next row is not in Demo
         label.attributedText = attributedString.font != nil ? attributedString : NSAttributedString(string: attributedString.string,attributes: [.font:self.font])
-    //   label.attributedText = attributedString
+        // label.attributedText = attributedString
         label.sizeToFit() // 임의의 크기가 되지 않도록 sizeToFit 처리를 한다. 
         label.center = point
         addEmojiArtGestureRecognizers(to: label) // 각각의 label에 gestureRecognizer를 추가한다. 
@@ -1051,7 +1059,7 @@ class EmojiArtView: UIView, UIDropInteractionDelegate
 - **UITextField는 UIControl**이다.
 
   - **그러므로 UITextField에 특정 행동에 대한 target/action 메서드를 설정 가능**
-  - **그렇기에 delegate 메서드 대신 target methods를 통해 행위에 대한 동작 처리를 하는 경우가 존재**
+  - **delegate 메서드 외에 target methods를 통해 행위에 대한 동작 처리 가능**
 
 - **키보드를 띄워주고 텍스트를 입력할 수 있게 해준다.**
 
@@ -1077,7 +1085,7 @@ class EmojiArtView: UIView, UIDropInteractionDelegate
 
   - **선택이 바뀌거나 새로운 입력 편집이 있을 때 등을 감지**할 수 있다. 
 
-- 입력, 편집이 가능한 UITextField지만 아이폰 등의 작은휴대기기에서 UITextField를 사용할 때 유저 입장에서 꼭 필요한지 고민해볼 필요가 있다. 
+- 입력, 편집이 가능한 UITextField지만 아이폰 등의 작은휴대기기에서 UITextField를 사용할 때 유저 입장에서 꼭 필요한 상태인지 고민해볼 필요가 있다. 
 
 <br>
 
@@ -1095,9 +1103,9 @@ class EmojiArtView: UIView, UIDropInteractionDelegate
   var isSecureTextEntry: Bool // 패스워드 등 텍스트 감출때 사용
   var keyboardType: UIKeyboardType // 아스키코드, URL, PhonePad 등의 타입 지정 
   
-  var clearsOnBeginEditing: Bool
-  var adjustsFontSizeToFitWidth: Bool // 현재 수퍼뷰 크기에 맞게 폰트를 조정하도록 가능
-  var minimumFontSize: CGFLoat // adjustsFontSizeToFitWidth를 설정하면 항상 셋팅됨
+  var clearsOnBeginEditing: Bool // 편집 시 한의 컨텐츠를 비울 지 여부 설정
+  var adjustsFontSizeToFitWidth: Bool // 너비에 맞는 폰트 자동 조정 유무 설정
+  var minimumFontSize: CGFLoat // adjustsFontSizeToFitWidth를 설정하면 항상 셋팅 됨
   var placeholder: String? // placeholder의 default 색상값은 gray
   var background/disabledBackground: UIImage?
   var defaultTextAttributes: [String:Any] // 전체적인 텍스트에 적용되는 Attributes
