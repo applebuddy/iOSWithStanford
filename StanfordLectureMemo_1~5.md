@@ -966,6 +966,7 @@ arrayOfOperations.append(operation)
 ### 에러 예외처리 방법, Thrown Errors
   - 예상 치 못한 에러를 어떻게 처리해야 할까?
 - throws : 에러의 여지가 있음을 알려주는 키워드
+  - 실행 중 에러의 여지가 있는 메서드의 경우 throws 키워드를 붙여 정의할 수 있다.
   - 사용 예시 ▼
 ~~~ Swift
 func save() throws {
@@ -991,14 +992,14 @@ do {
 
 ## ♣︎ Any & AnyObject
 - 사실 강타입언어인 Swift와 Any & AnyObject타입은 어울리지 않음
-- Objective-C, Swift 간 호환을 위해 존재
-- 즉, Objective-C와의 하위호환을 위해 존재
+- **Any & AnyObject는 Objective-C, Swift 간 호환을 위해 존재**
+  - 즉, Objective-C와의 하위호환을 위해 존재
 
 <br>
 
-### Any
+#### ◼︎ Any
   - 어떠한 타입도 될 수 있음(클래스, 구조체, 열거형 등... 뭐든 가능, 어떤 타입일 지 알 수 없음)
-  - Any 가 사용되는 메서드 예시) ▼
+  - Any 가 사용되는 메서드 예시 ▼
 ~~~ swift
 // 스토리보드 UIViewController 세그 화면전환 전 실행 되는 메서드, prepare(for segue:,sender:)
 // prepare 메서드를 발생시키는 존재가 어떤 객체인지 모르기 때문에 Any? 타입을 sender parameter로 사용
@@ -1008,16 +1009,17 @@ func prepare(for segue: UIStoryboardSegue, sender: Any?)
 
 <br>
 
-### AnyObject
-  - 클래스 타입에 한해서 사용할 수 있는 Any타입
+#### ◼︎ AnyObject
+  - "클래스 타입에 한해서" 사용할 수 있는 Any타입
 
 <br>
 
-### Any타입 변환 방법
+#### ◼︎ Any타입 변환 방법
 - as?, as! 등을 통해 타입을 변경시킬 수 있다.
 
 ~~~ swift
 let unknown: Any = ... // 현재 타입을 알 수 없기 때문에 사용이 불가능
+// 옵셔널 바인딩을 통해 캐스팅이 되는지 확인
 if let foo = unknown as? MyType {
     // MyType으로 타입 변환이 성공하면 해당 블럭을 실행할 수 있다.
 }
@@ -1040,17 +1042,18 @@ if let cvc = vc as? ConcentrationViewController {
 
 <br>
 
-### NSObject
-- Objective-C 모든 클래스의 루트클래스
-- UIViewController등이 속한 UIKit 내 모든 객체는 Objective-C에서 개발 -> NSObject을 루트클래스로 상속
+#### ◼︎ NSObject
+- **Objective-C 모든 클래스의 루트클래스**
+- 해당 클래스를 상속해야 KVC(Key Value Coding), KVO(Key Value Observing)등의 Objective-C Runtime 기능 사용이 가능
+- UIViewController등이 속한 **UIKit 내 모든 객체는 Objective-C에서 개발 -> NSObject을 루트클래스로 상속하고 있다.**
 - 몇몇 API는 NSObject클래스를 요구하곤 한다.
 - Swift의 Concentration과 같은 객체는 NSObject를 상속하지 않는다.
 
 <br>
 
-### NSNumber
+#### ◼︎ NSNumber
 - 소수나 정수, Boolean 등 모든 숫자를 표현할 수 있는 클래스
-- NSNumber 사용예시) ▼
+- NSNumber 사용예시 ▼
 ~~~ swift
 let num = NSNumber(35.5)
 let num2: NSNumber = 35.5
@@ -1060,7 +1063,7 @@ let intified: Int = num.intValue
 
 <br>
 
-### Date
+#### ◼︎ Date
 - 1970년 기준 얼마나 흘렀는지, Date 데이터를 제공한다.
 - 시간을 1/1,000,0000 단위로 측정
 - 나라마다 표현하는 시간방식, 체계가 다르기 때문에 Date만으로 세부날짜를 표현하기는 힘들다.
@@ -1072,15 +1075,15 @@ let intified: Int = num.intValue
 
 <br>
 
-### Data
-- URL등을 통해 얻어온 JSON 등 데이터의 비트가방 역할을 한다.
+#### ◼︎ Data
+- URL등을 통해 얻어온 JSON, 이미지 등 데이터의 비트가방 역할을 한다.
 
 <br>
 <br>
 
 ## ♣︎ Views
 - 좌표계로 구성되는 직사각형의 영역, UIView
-- ViewController의 수많은 졸병과 같다.
+- View들은 ViewController의 수많은 졸병과 같다.
 - 최상위의 UIView는 UIViewController의 var view: UIView 이다.
 
 ~~~ swift
@@ -1088,10 +1091,10 @@ func setup() {
     //...
 }
 
-### UIView 초기화 방법
-- override init(frame: CGRect)
-  - 코드를 통해 UIView를 초기화 할때 사용
-​~~~ swift
+// UIView 초기화 방법
+override init(frame: CGRect)
+
+// 코드를 통해 UIView를 초기화 할때 사용
 override init(frame: CGRect) {
     super.init(frame: frame)
     // ...
@@ -1159,14 +1162,16 @@ func removeFromSuperview() // 슈퍼뷰로부터 뷰를 제거할 때 사용
 
 ## ♣︎ CG Structures
 - **Core Graphics Structures**의 약자.
-- 좌표계 체계 데이터 구조, Coordinate System Data Structures
+- **좌표계 체계 데이터 구조 **(Coordinate System Data Structures)
 - **코어 그래픽스는 4개의 타입**을 갖고 있다.
   - **CGFloat, CGPoint, CGSize, CGRect**
+- CG(Core Graphics) 타입의 종속성
+  - **CGFloat < CGPoint < CGSize < CGRect**
 
 <br>
 
-### CGFloat
-- 드로잉을 할 지점이 모두 부동 소수점으로 표현된다. 이때 사용되는 타입이 CGFloat이다.
+#### ◼︎ CGFloat
+- **드로잉을 할 지점이 모두 부동 소수점으로 표현되는데, 이때 사용되는 타입이 CGFloat**이다.
 - 드로잉 간 부동 소수점 좌표는 나타내는 기본 타입
 
 ~~~ swift
@@ -1175,9 +1180,9 @@ let cgFloat = CGFloat(aDouble)
 
 <br>
 
-### CGPoint
-- 두개의 CGFloat 기반 x, y를 구성하는 구조체 타입
-- CGFloat기반으로 점의 위치를 나타내는데 사용한다.
+#### ◼︎ CGPoint
+- **두개의 CGFloat 기반 x, y를 구성**하는 구조체 타입
+- **CGFloat기반으로 점의 위치를 나타내는데 사용**한다.
 ~~~ swift
 // CGPoint는 x, y 두개의 CGFloat 타입 parameter 인자값을 받아 초기화 한다.
 var point = CGPoint(x: 18.0, y: 36.0)
@@ -1187,9 +1192,9 @@ point.y -= 16.0
 
 <br>
 
-### CGSize
-- 두개의 CGFloat 기반 width, height를 구성하는 구조체 타입
-- 크기(높이, 너비)를 나타내는데 사용한다.
+#### ◼︎ CGSize
+- **두개의 CGFloat 기반 width, height를 구성하는 구조체 타입**
+- **크기(높이, 너비)를 나타내는데 사용**한다.
 ~~~ swift
 // CGSize는 width, height 두개의 CGFloat 타입 parameter 인자값을 받아 초기화 한다.
 var cgSize = CGSize(width: 120.0, height: 130.0)
@@ -1199,9 +1204,9 @@ cgSize.height = += 76.3
 
 <br>
 
-### CGRect
+#### ◼︎ CGRect
 - 점과 크기를 조합한 구조체 타입
-  - CGPoint, CGSize를 동시에 같는다.
+  - **CGPoint, CGSize를 동시에 갖는다.**
 ~~~ swift
 struct CGRect {
     var origin: CGPoint
@@ -1241,7 +1246,7 @@ rect.contains(CGPoint) -> Bool // 현재 CGRect가 인자값(parameter)로 받�
 <br>
 <br>
 
-### bounds
+#### ◼︎ bounds
 - 현재 사용중인 뷰의 드로잉 좌표계 원점과 높이, 너비 등을 제공한다.
 - **현재 뷰 기준의 좌표 기준, 액자틀**로 생각하면 이해하기 쉽다.
 
@@ -1251,7 +1256,7 @@ var bounds: CGRect
 
 <br>
 
-### frame
+#### ◼︎ frame
 - **슈퍼뷰 기준으로 서브뷰가 어디에 위치하는지**를 제공한다.
 
 ~~~ swift
@@ -1262,17 +1267,17 @@ var frame: CGRect
 <br>
 
 ## ♣︎ 뷰 그리기 Drawing View
-- **뷰를 그리기 위해선 UIView 서브클래스와 override fraw(CGRect)를 생성**하면 된다.
+- **뷰를 그리기 위해선 UIView 서브클래스와 override draw(CGRect)를 생성**하면 된다.
 - **절대 draw(CGRect)를 직접 호출하지 않는다.**
   - ✓ draw를 사용하기 위해 대신 사용 가능한 메서드
-    - setNeedsDisplay()
-    - setNeedsDisplay(_ rect: CGRect)
+    - **setNeedsDisplay()**
+    - **setNeedsDisplay(_ rect: CGRect)**
       - 인자값(parameter)로 받는 CGRect는 최적화를 위해 쓰이는 사각형이다.(**현재의 사각형만 새로 드로잉 할 수 있도록**)
 
 <br>
 <br>
 
-### Core Graphics 적용 개념
+#### ◼︎ Core Graphics 적용 개념
 - 1) 뷰에 그릴 내용을 얻는다.
 - 2) 경로를 그린다. (외곽선, 상자(arc) 등...)
 - 3) 드로잉 속성을 설정한다. (색상, 폰트, 텍스쳐, 선두께 등...)
@@ -1280,7 +1285,7 @@ var frame: CGRect
 
 <br>
 
-### UIBezierPath
+#### ◼︎ UIBezierPath
 - 선 굵기를 지정하거나, 테두리 그리기/채워넣기 등을 지원한다.
 - **드로잉 과정은 draw(rect) 메서드 내에서 처리**한다.
 - 1) 경로를 정의하기, Defining a KeyPath ▼
@@ -1323,7 +1328,7 @@ path.stroke()
 
 <br>
 
-### UIColor
+#### ◼︎ UIColor
 - UIColor를 통해 색상을 설정할 수 있다.
 - UIColor또한 코어그래픽스 레이어 위에 좋어있기 때문에 CGColor를 반환하는 cgColor 프로퍼티를 지닌다.
 - UIColor 사용 예시) ▼
@@ -1355,7 +1360,7 @@ var backgroundColor: UIColor
 
 <br>
 
-### 텍스트 그리기 
+#### ◼︎ 텍스트 그리기 
 - 일반적으로 텍스트를 화면에 띄울때 UILabel을 사용한다. 
 - NSAttributedString
   - UIView의 draw(CGRect)에서 텍스트를 그리기 위해서 NSAttributedString을 사용한다. 
@@ -1384,8 +1389,8 @@ attributedString.addAttribute(.strokeColor, value: UIColor.orange, range: nsrang
 
 <br>
 
-### UIFont
-- UILabel, UIButton 등 UI에 사용가능한 포드객체
+#### ◼︎ UIFont
+- UILabel, UIButton 등 UI에 사용가능한 폰트객체
 - 제목 / 본문 / 각주 / 캡션폰트... 약 10가지의 폰트 종류를 제공한다.
 ~~~ swift
 let font = UIFont(name: "Helvetica", size: 36.0)
@@ -1406,11 +1411,11 @@ static func boldSystemFont(ofSize: CGFloat) -> UIFont
 
 <br>
 
-  - **단, 사용자의 콘텐츠로 systemFont를 사용하는 것은 권장하지 않는다. 선호 폰트(preferred fonts)를 사용해라.**
+  - **단, 사용자의 콘텐츠로 systemFont를 사용하는 것은 권장하지 않는다. 가급적이면 선호 폰트(preferred fonts)를 사용해라.**
 
 <br>
 
-### 이미지 그리기
+#### ◼︎ 이미지 그리기
 - UIImageView 
   - text를 담는 UILabel이 있었다면 image를 담는 UIImageView가 존재한다.
 - UIImage
@@ -1442,7 +1447,7 @@ image.drawAsPattern(in rect: aCGRect) // tiles the image into aCGRect
 
 <br>
 
-### bounds 값이 바뀌었을때 다시 그려주나?
+#### ◼︎ bounds 값이 바뀌었을때 다시 그려주나?
 - 화면 회전 등으로 경계값이 바뀌었을 때 다시 그려주지 않는다. 
 - 오토레이아웃 AutoLayout을 사용하면 되지만, 만약 오토레이아웃을  사용하지 않는다면??
 - 다행히도, UIView 프로퍼티, contentMode로 이를 제어할 수 있다. 
@@ -1462,8 +1467,8 @@ var contentMode: UIViewContentMode
 
   <br>
 
-  ### layoutSubviews
-  - 뷰의 경계가 바뀔 때 layoutSubview() 메서드가 호출된다. 
+  #### ◼︎ layoutSubviews
+  - **뷰의 경계가 바뀔 때 layoutSubviews() 메서드가 호출**된다. 
   - 오토레이아웃(Autolayout)을 사용하지 않을때 layoutSubviews() 를 사용한다. 
 
 ~~~ swift 
@@ -1475,20 +1480,20 @@ override func layoutSubviews() {
 
 <br>
 
-### enum(열거형) 활용 데모
+#### ◼︎ enum(열거형) 활용 데모
 - CustomStringConvertible 
   - 콘솔에서 문자열을 출력할 때 활용할 수 있는 프로토콜
 <br>
 <br>
 
-## ➣  5강 용어정리
+## ♣︎ 5강 용어정리
 * CustomStringConvertible : 콘솔의 특정 값 문자열을 보다 깔끔하게 출력하도록 지원하는 프로토콜
-* opacue : 불투명한
+* opaque : 불투명한
 
 <br>
 <br>
 
-## ➣  5강 구현결과
+## ♣︎ 5강 구현결과
 <div>
  <img width=600 src="https://user-images.githubusercontent.com/4410021/64927100-472b3a80-d841-11e9-9376-c49825bed2b4.png"> 
  &nbsp  <img width=600 src="https://user-images.githubusercontent.com/4410021/64927101-47c3d100-d841-11e9-8713-32356812087c.png">
@@ -1496,7 +1501,7 @@ override func layoutSubviews() {
 
 <br>
 
-### 열거형(enum)을 사용한 카드 덱 출력 예시
+#### ◼︎ 열거형(enum)을 사용한 카드 덱 출력 예시
 - 카드덱 정보 출력 시 CustomStringConvertible 프로토콜 적용 유무에 따른 콘솔 출력 차이를 보여준다. 
   - * CustomStringConvertible : 콘솔의 특정 값 문자열을 보다 깔끔하게 출력하도록 지원하는 프로토콜
 
@@ -1505,13 +1510,19 @@ override func layoutSubviews() {
 
 ## ♣︎ 총 정리
 - Any & AnyObject 의미와 타입캐스팅을 통한 변수사용
+  - Objc 간 호환을 위해 사용 
 - throws, try/do-catch 에러처리
 - UIView의 초기화방법, 프로퍼티 활용방법
 - Core Graphics
+  - **CGFloat, CGPoint, CGSize, CGRect**
 - CGLayer
-- View Drawing 
+- View Drawing
+  - setNeedsDisplay 
+    - draw() 함수 호출이 필요할 때 사용
+  - layoutIfNeeded
+    - 뷰 윤곽이 변경될 때 호출
   - UIImage, NSAttributedString, UIFont...
-- 열거형을 통한 카드 덱 출력
+- 열거형을 통한 카드 덱 출력 연습
 
 <br>
 <br>
