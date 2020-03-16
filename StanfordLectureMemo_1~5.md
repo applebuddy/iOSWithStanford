@@ -492,31 +492,31 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 ## ✭ Protocol, Closure, String
 - 그 외 mutating 등...
 
-### Concentration 객체를 class -> struct로 변경!
+#### Concentration 객체를 class -> struct로 변경!
 - 이제 Concentration은 ViewController에 참조되는 포인터가 아닌 하나의 모델이 된다.
 - **왜 구조체로 교체할까??**
-  - 구조체는 값 복사 타입이다. 그러므로 Heap에 존재하지 않고 구조체를 전달 시 계속해서 그 값을 복사한다.
+  - **구조체는 값 복사 타입**이다. 그러므로 **Heap에 존재하지 않고 구조체를 전달 시 계속해서 그 값을 복사**한다.
   - 값이 계속 복사되니 비효율적이라고 생각할 수 있다.
-  - 다만 스위프트는 영리해서 struct일 지라도 해당 내용이 변경되엇을 때만 값을 복제한다.
+    - 하지만 스위프트는 영리해서 **struct일 지라도 해당 내용이 변경되엇을 때만 값을 복제**한다.
 
 <br>
 
 ## ♣︎ Protocol
-### Struct, Class, Enum과 함께 스위프트의 자료구조를 형성하는 네번째 기둥
-- 별도의 구현이 없는 메서드와 변수의 리스트이자 하나의 일급타입
-- 프로토콜은 메서드에 대한 기본 구현을 제공한다.
+#### ◼︎ Struct, Class, Enum과 함께 스위프트의 자료구조를 형성하는 네번째 기둥
+- **별도의 구현이 없는 메서드와 변수의 리스트**이자 하나의 일급타입
+- **프로토콜은 메서드에 대한 기본 구현을 제공**한다.
+- **블라인드 커뮤니케이션을 할때 최적의 도구**이다.
+  - ex) view - Controller Delegation Pattern
+- **프로토콜은 API(Application Programming Interface)에서 원하는 것을 불러오는 방식으로 작동**한다.
 - **프로토콜은 코드가 없다. 구현방식이 아닌 순수한 선언이기 때문이다.**
 - 만약 **특정 프로토콜이 클래스만 받는 프로토콜 이라면, 프로토콜 뒤에 : class 를 표시** 해주어야 한다.
-  - **class 선언을 해두면 굳이 mutating 표시를 할 필요가 없다. 
-    - 참조타입인 class 에 mutating 을 넣을 일은 없기 때문이다.**
+  - class 선언을 해두면 굳이 mutating 표시를 할 필요가 없다. 
+    - struct일 경우에만 mutating 내부 쓰기를 위해 키워드가 필요하다.
   - extension에 protocol을 채택하여 사용할 수도 있다.
-- 프로토콜은 API에서 원하는 것을 불러오는 방식으로 작동한다.
-- 블라인드 커뮤니케이션을 할때 최적의 도구이다.
-  - ex) view - Controller Delegation Pattern
 - 특정 유사한 기능을 공유하면서도 동일한 클래스로부터 상속받을 필요가 없도록 할 수 있다. 
-- "다중상속과 같은 효과를 낼 수 있음"
+  - 프로토콜을 통해 "**다중상속과 같은 효과를 낼 수 있음**"
 
-### 프로토콜의 선언 방식
+#### ◼︎ 프로토콜의 선언 방식
 - 프로토콜의 선언
  - 클래스, 열거형, 구조체 선언과 같은 선언방식
  - 클래스, 구조체 등의 선언방식과 유사
@@ -525,8 +525,8 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 // 프로토콜 선언 예
 // AProtocol을 구현하려면, IngeritedProtocolA, InheritedProtocolB 프로토콜을 충족시켜야 한다.
 protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
-   var someProperty: Int { get set }
-   func aMethod(arg1: Double, anotherArgument: String) -> SomeType
+    var someProperty: Int { get set }
+    func aMethod(arg1: Double, anotherArgument: String) -> SomeType
     mutating func changeIt()
     init(arg: Type)
  }
@@ -538,7 +538,7 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
     - 서브클래스에서는 더이상 이 프로토콜을 구현하지 않았는데도 사람들은 프로토콜이 서브클래스에서도 가능한것으로 착각할 수 있기 때문이다.
     - 서브클래스의 init이 형성되지 않도록 메인 클래스의 required init 지정을 해준다.
 
-### 프로토콜 채택방법
+#### ◼︎ 프로토콜 채택방법
 
 ~~~ swift
 // 프로토콜 채택방법 예시(클래스)
@@ -553,18 +553,21 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
  }
 ~~~
 
-### 프로토콜 옵셔널 메서드 (optional func)
+<br>
+
+#### ◼︎ 프로토콜 옵셔널 메서드 (optional func)
+
 - 프로토콜 내 func 앞에 "optional"을 붙여주면 구현 가능하다.
 - 프로토콜에서 지정한 옵셔널 메서드는 반드시 선언할 필요가 없다.
 - 프로토콜의 메서드를 선택적으로 사용 할 수 있다.
 
-### mutating
+#### ◼︎ mutating
 - 내부 객체 자체를 변경시킬 수 있음을 알려주는 예약어
 - 값 타입인 Struct 등 만 구현하며, 참조타입인 class등에는 구현할 필요가 없다.
   - ex) Concentration 객체를 class -> struct로 변경하니 내부 오류가 발생한다. 
   - => 이때 내부에서 Concentration 객체 자체를 변경시킬 것임을 mutating을 통해 명시해주어야 한다.
 
-### 프로토콜 사용 예
+#### ◼︎ 프로토콜 사용 예
 
 ~~~ swift
 // 프로토콜, Moveable
@@ -598,46 +601,67 @@ thingToMove.changeOil() // thingToMove 인스턴스는 Moveable타입이므로 C
 // 둘다 Moveable 프로토콜을 준수하는 인스턴스이기 때문이다.
 let thingsToMove: [Moveable] = [prius, square]
 
- func slide(slider: Moveable) {
+func slide(slider: Moveable) {
     let positionToSlideTo = ...
-        slider.move(to: positionToSlideTo)
- }
+    slider.move(to: positionToSlideTo)
+}
 
 // prius, square 둘 다 Moveable 프로토콜을 준수하기때문에 들다 slide의 인자값으로 사용할 수 있다.
 slide(slider: prius)
 slide(slider: square)
 ~~~
 
- ### MVC Delegation
+<br>
+
+ ### ◼︎ MVC Delegation
+
  - Protocol을 사용하면 ViewController에서 데이터 Model에 대해서 몰라도 뷰-모델 간 반응을 시킬 수 있다.
 
- ### MVC Delegation 사용 순서
-- 1) 스크롤뷰, 테이블뷰와 같은 델리게이션 P프로토콜을 선언한다. ex) will, should, did...
+ #### MVC Delegation 사용 순서
+- 1) 스크롤뷰, 테이블뷰와 같은 **델리게이션 P 프로토콜을 선언**한다. ex) will, should, did...
 ~~~ swift
-// delegate 변수를 weak으로 설정
+// delegate 변수를 weak으로 설정하는것은 델리게이션 패턴 사용 간 순환참조를 방지하기 위함이다. 
 // -> 사용하지 않고, 힙에서 빠져나가려 한다면 nil로 설정하고 더이상 사용하지 않는다.
 // delegate 변수 weak 설정 예시) 
 weak var delegate: UIScrollViewDelegate?
 ~~~
 
-- 2) 프로토콜 적용을 할 A뷰 내부에 델리게이트 변수, D를 생성한다. 이 D 델리게이트 변수는 공개변수이며 weak속성을 가진다.
-- 3) A뷰가 will, did, should등의 이벤트를 보내고 싶을때 D변수에 전해주면 된다.
-- 4) C컨트롤러가 P프로토콜을 채택한다. 사용을 시작한다.
-- 5) C컨트롤러가 A뷰의 P프로토콜 델리게이트 변수인 D를 자기 자신으로 설정한다.
-  - C컨트롤러는 P프로토콜의 D델리게이트를 구현하기로 선언했고, D델리게이트는 P프로토콜을 타입으로 가지고 있다.
+- 2) **프로토콜 적용을 할 A뷰 내부에 델리게이트 변수, D를 생성**한다. 이 **D 델리게이트 변수는 공개변수**이며 사용 간 **순환참조를 방지하기 위해 weak속성을 가진다.**
+- 3) **A뷰가 will, did, should등의 이벤트를 보내고 싶을때 D변수에 이벤트에 필요한 값들을 전해주면 된다.**
+- 4) 이제 **C컨트롤러가 P프로토콜을 채택하여 델리게이션 사용을 준비**한다.
+- 5) **C컨트롤러가 A뷰의 P프로토콜 델리게이트 변수인 D를 자기 자신으로 설정**한다.
+  - C컨트롤러는 P프로토콜의 D델리게이트를 구현하기로 선언했고, 이로써 A뷰와 C컨트롤러는 서로를 잘 모르지만, C는 뷰에 대한 조작이 가능하다. 
 ~~~ swift
 // in C Controller...
 scrollView.delegate = self
 ~~~
 
-- 6) C컨트롤러는 프로토콜을 준수해야한다. (프로토콜의 모든 필수 메서드를 구현해야 한다. optional func는 선택적으로 사용한다.)
+- 6) **C컨트롤러는 P프로토콜을 준수해야한다.** (프로토콜의 모든 필수 메서드를 구현해야 한다. optional func는 선택적으로 사용한다.)
   - 일반적으로 대부분의 델리게이트 메서드는 옵셔널이다. 그렇기에 대부분은 그냥 원하는 델리게이트 메서드만 사용할 수 있다.
-- 7) C컨트롤러가 P프로토콜의 D델리게이트 변수를 자기자신으로 선언 + 델리게이트메서드 구현을 하여 서로 의사소통할 수 있다.
+- 7) **C컨트롤러가 P프로토콜의 D델리게이트 변수를 자기자신으로 선언 + 델리게이트메서드 구현을 하여 서로 의사소통할 수 있다.**
   - A뷰는 C컨트롤러로 원하는 will, did, should 이벤트 등을 전달 할 수 있게 되었다.
   - **C컨트롤러는 A뷰 클래스에대해 잘 몰라도 뷰와 소통할 수 있게 되었다.**
   - **블라인드 커뮤니케이션이 가능해짐**
 
-### Hashable
+<br>
+
+#### ◼︎ 딕셔너리 dictionary
+
+- 키와 값(해쉬가능한 키와 값)으로 이루어진 컬렉션
+- 키는 Hashable 프로토콜을 준수해야하면 값은 어떤 값이든 상관없다(Any).
+  - **key: Hashable, value: Any**
+- 딕셔너리는 Hashable한 즉, 키가 될 수 있어야만 값과 함께 구현이 될 수 있다.
+- 딕셔너리의 키를 접근해 얻는 값은 옵셔널형태이다.
+
+~~~ swift
+// 딕셔너리의 정의 형태 예시)
+Dictionary<Key: Hashable, Value>
+var dic = [String: Int]()
+var iDic = [Int: String]()
+~~~
+
+#### ◼︎ Hashable
+
 - 해쉬가능하다 -> 딕셔너리의 키가 될 수 있다.
 
 ~~~ swift
@@ -657,30 +681,20 @@ protocol Equatable {
 }
 ~~~
 
-### 딕셔너리 dictionary
-- 키와 값(해쉬가능한 키와 값)으로 이루어진 컬렉션
-- 키는 Hashable 프로토콜을 준수해야, 값은 어떤 값이든 상관없다.
-- 딕셔너리는 Hashable한 즉, 키가 될 수 있어야만 값과 함께 구현이 될 수 있는 컬렉션
-- 딕셔너리의 키를 접근해 얻는 값은 옵셔널형태이다.
-
-~~~ swift
-// 딕셔너리의 정의 형태 예시)
-Dictionary<Key: Hashable, Value>
-~~~
-
 <br>
 
-### 프로토콜의 다중상속 효과
-- 프로토콜은 한번의 구현만으로 여러곳에서 일일히 정의할 필요없이 사용이 가능하다.
-- 마치 상속없이도 프로토콜을 통해 다중상속처럼 보이는 효과를 얻을 수 있는 것이다.
+#### ◼︎ 프로토콜의 다중상속 효과
+- 프로토콜은 일일히 중복된 기능을 여럿 정의할 필요없이 한번의 공통 된 구현만으로 여러곳에서 사용이 가능하다.
+- 마치 **상속없이도 프로토콜을 통해 다중상속처럼 보이는 효과**를 얻을 수 있는 것이다.
 - **그렇다면 이 프로토콜은 어디에 정의해야할까?**
  - => **extension protocol, 프로토콜의 익스텐션에 넣으면 된다.**
  - 하지만 extension은 저장공간이 없기에 조금의 제약이 존재한다.
 
-### Sequence 프로토콜의 extension protocol 예시
-- Sequence를 통해 사용가능 한 메서드
+#### ◼︎ Sequence 프로토콜의 extension protocol 예시
+- **Sequence를 통해 사용가능 한 메서드**
   - -> contains(), forEach(), joined(separator:), min(), max(), filter(), map() and so on...
-- 실제 배열, 딕셔너리등을 사용할때 위와 같은 메서드들은 함께 자동으로 사용이 가능하다.
+- **실제 배열, 딕셔너리등을 사용할때 위와 같은 메서드들은 함께 자동으로 사용이 가능하다.**
+  - **동일한 프로토콜(Sequence)을 채택하고 있기 때문에 가능**
 - 좀 더 효율적인 방법이나 기능을 구현하기 위해서 extension을 활용할 수 있다.
 
 ~~~ swift
@@ -692,8 +706,8 @@ extension Sequence {
 }
 ~~~
 
-### 다중상속 관련 프로토콜
-- ex) Collection, Sequence, CountableRange...
+#### ◼︎ 다중상속의 효과를 지닌 프로토콜
+- ex) **Collection, Sequence, CountableRange...**
 - CountableRange : 계수 가능 범위는 많은 프로토콜을 구현한다.(12 ~ 15개의 프로토콜이 존재)
 - Sequence : makeIterator
   - for in(수행하는 대상은 수열형태) 등 지원
@@ -704,37 +718,41 @@ extension Sequence {
   - 배열(Array), 딕셔너리(Dictionary), Set, String들은 각각 하나의 Collection이다.
   - 이들은 또한 Sequence의 특성을 가진다.
   - 이들은 계수가능범위를 표현하는 indices()등의 메서드를 쓰기도 한다.
-  - **다른 객체 간에도 공통적인 속성, 기능을 사용해야 할때가 있다. 이럴때 프로토콜 유용함을 이용할 수 있다.**
+  - **이처럼 다른 객체 간에도 공통적인 속성, 기능을 사용해야 할때가 있다. 이럴때 프로토콜 유용함을 이용할 수 있다.**
 
 <br>
 
-## ✭ 함수형 프로그래밍 (Functional Programming)
+#### ✭ 함수형 프로그래밍 (Functional Programming)
 - **객체지향 프로그래밍의 진화된 형태라고도 한다.**
 - 다중상속 등을 보다 쉽게 통제할 수 있다.
 - 어떤 것이 어떤 작업을 하는지 증명할 수 있는 등 많은 장점이있다.
 - **거의 모든 기초 프레임워크인 딕셔너리, 배열 등이 함수형 프로그래밍으로 만들어져 있다.**
 - 프로토콜을 이용한 제약이나 프로토콜의 익스텐션 등은 함수형 프로그래밍을 지원한다.
-  - 스위프트는 함수형프로그래밍, 객체지향프로그밍 등을 모두 지원한다.
+  - **스위프트는 함수형프로그래밍, 객체지향프로그밍 등을 모두 지원**한다.
+  - **스위프트는 프로토콜 & 객체 & 함수형 프로그래밍 등을 전부 지원하는 다중 패러다임 언어**이다.
 
 <br>
 
 ## ♣︎ 문자열 String
 - 문자열 구조체와 별개로 문자(Character) 구조체가 있다.
-- 문자열은 유니코드로 이루어져있다. ("CAFE" -> 5개의 유니코드로 표현)
-- 문자열은 구조체이자 값 타입니다.
+- **문자열은 유니코드로 구성**되어있다. ("CAFE" -> 5개의 유니코드로 표현)
+  - Character는 unicodeScalars.first!.value / asciiValue! 등을 통해 각각의 ascii 코드값을 얻을 수 있다.
+- **문자열은 구조체이자 값 타입**이다.
 - **Swift에서는 문자열을 정수로 색인하지 않는다.**
   - 정수형이 아닌 String.Index로 색인
-  - Array는 Array.Index가 정수형으로 정의되어 정수형으로 색인 가능
-- String, Array 전부 rangeReplacableCollection 프로토콜을 준수한다.
+  - **Array는 Array.Index가 정수형으로 정의되어 정수형으로 색인 가능**
+    - 쓰기, 읽기 복잡도 O(1)
+- **String, Array 전부 rangeReplacableCollection 프로토콜을 준수**한다. (계수범위 지정 가능..)
 
-### String.Index
-- 정수 대신 다른 특수한 타입, Stirng.index를 사용하여 문자열을 색인한다.
-- startIndex, endIndex, index(of:) 등을 통해 인덱스를 얻을 수 있다.
-- 문자열(String)의 배열(Array)은 곧 그 문자(Character)들의 배열이다.
+#### String.Index
+- String은 정수 대신 다른 특수한 타입, Stirng.index를 사용하여 문자열을 색인한다.
+- **startIndex, endIndex, index(of:) 등을 통해 인덱스를 얻을 수 있다.**
+  - **BidirectionalCollection <-> Array는 RandomAccessCollection**
+- **문자열(String)의 배열(Array)은 곧 문자(Character)들의 모음 배열**이다.
 
 ~~~ swift
 let characterArray = Array(str) // Array<Character>
-print(characterArray[0]) // Array형으로 변환하면 String.Index 대신 정수값으로 접근이 가능해진다.
+print(characterArray[0]) // Array형으로 변환하면 String.Index 대신 정수값으로 접근이 가능해진다.(O(1))
 ~~~
 
 ~~~ swift
@@ -750,7 +768,7 @@ if let firstSpace = pizzaJoint.index(of: " ") {
    let secondWord = pizzaJoint[secondWordIndex..<pizzaJoint.endIndex] // "pesto"
 }
 ~~~
-- * ..< 등으로 String.Index의 영역을 지정할 수 있다.
+- ..< 등으로 String.Index의 영역을 지정할 수 있다.
 
 ### Range
 - Range는 제네릭 타입으로 꼭 Int형으로만 범위를 설정할 필요가 없다. ex) Array.Index 외 String.Index의 사용...
@@ -784,9 +802,9 @@ emojiChoices.remove(at: randomStringIndex)
 ~~~
 
 ### NSAttributedString
-- 각각의 문자가 속성을 지닌 문자열
-- 여러 문자의 범위 내에서 하나의 딕셔너리를 사용한다.
-- 속정 문자 별로 다양한 폰트나 문자 색상을 부여하는 등 UI라벨 글자설정, UI버튼 설정 등에 활용가능
+- **각각의 문자가 속성을 지닌 문자열**
+- **여러 문자의 범위 내에서 하나의 딕셔너리를 사용**한다.
+- 속성 문자 별로 다양한 폰트나 문자 색상의 부여, UI라벨 글자설정, UI버튼 설정 등에 활용가능
 
 ~~~ swift
 // NSAttributedString 사용 예시)
@@ -795,18 +813,19 @@ filpCountLabel.attributedText = attribText // UIButton은 attributedText라는 �
 ~~~
 
 - NSAttributedString의 특징
-  - **NS가 붙어있다. -> 해당 접두어를 통해 오래된 API임을 유추할 수 있다.**
-  - class 구조이며 내부에 var를 사용하여 가변변수(variables)를 만들 수는 없다.
+  - **NS가 붙어있다. -> 해당 접두어(NS)를 통해 objc때부터 사용 된 오래된 API임을 유추할 수 있다.**
+  - NSAttributedString은 class 구조이며 내부에 var를 사용하여 가변변수(variables)를 만들 수는 없다.
 
 ## ♣︎ Any
 - 어떤 구조체나 클래스던 모두 들어갈 수 있음을 의미
-- 강타입의 Swift답지 않은 표현이다.
-- **절대 자료구조에 Any를 쓰지 말자**
+- 강타입의 Swift답지 않은 표현이다. (Objective-C와의 호환을 위해 사용한다.)
+- **가능하면 절대 자료구조에 Any를 쓰지 말자**
 
 <br>
 
 ## ♣︎ 함수타입 (Function Types)
-- Swift의 함수는 1급 객체이다.
+- **Swift의 함수는 1급 객체이다.**
+  - 1급객체란 어떤 변수로서 할당 될 수 있고 / 매개변수로 전달될 수 있고 / 반환될 수 있는 객체를 의미합니다.
 - 함수는 타입이 가지는 모든 것을 가질 수 있다.
 - 어떤 것이던 함수 타입으로 선언하고 인자값, 반환값을 지정하면 된다.
 - **클로져를 활용하면 보다 가독성있고 간결한 코드를 구성할 수 있다.**
@@ -817,7 +836,7 @@ func changeSign(operand: Double) -> Double { return -operand }
 
 // Double형 인자값을 받아 Double형 을 반환하는 함수 명, operation
 var operation: (Double) -> Double
-operation = sqrt // 동일한 형태의 함수를 대입할 수 있다.
+operation = sqrt // sqrt 와 동일한 형태의 클로져 변수(Double) -> Double)이므로 대입할 수 있다.
 
 // 실제로 operation을 사용해도 sqrt와 같은 동작을 얻을 수 있다.
 let result = operation(4.0)
@@ -831,7 +850,7 @@ result = operation(4.0) // 결과 값 -4.0
 ## ✭ 익명함수 Closure
 - Closure는 인라인 함수이다.
 
-### 클로져의 사용 형태
+#### ◼︎ 클로져의 사용 형태
 
 ~~~ swift
 // Closure 사용 에시)
@@ -851,8 +870,10 @@ operation = { -$0 }
 let result = operation(4.0) // 결과 값 -4.0로 동일
 ~~~
 
+<br>
+
 - 만약 필요하다면 초기화를 위해 이름없는 클로저, ()를 사용할 수도 있다.
-  - **lazy 등의 지연프로퍼티 등에 클로져 사용 시 멋지게 작동 수 있다.**
+  - **lazy 등의 지연프로퍼티 등에 클로져 사용 시 멋지게 작동 할 수 있다.**
 
 ~~~ swift
 // lazy에서의 이름없는 클로저 사용 예
@@ -866,15 +887,14 @@ var someProperty: type = {
 ### 고차함수 
 - 클로저의 일부인 고차함수
 - **다른 함수를 전달인자로 받거나 or 함수 실행을 통해 다른 함수값을 반환하는 함수**
-- **filter, map, reduce 등 많은 고차함수가 존재**
+- **filter, map(flatMap, compactMap), reduce, joined 등... 많은 고차함수가 존재**
   
-- filter
-  - 하나의 함수만을 받아 Bool을 리턴한다. #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-
-- map
-  - 배열을 받아 각각의 요소에 특정 적용을 시킨 후 새로운 배열을 반환한다.
-  - 요소를 순회한다. 만약 true를 리턴하면 해당 값들만 새로운 배열에 추가하여 리턴한다.
-  - false인 값은 넘어간다.
+- **filter**
+  - 특정 조건을 충족하는 요소들의 시퀀스를 반환한다.
+- 클로저 내에서는 Element를 인자로 받아 Bool를 반환한다. (true인 경우의 시퀀스 요소만 필터링)
+  
+- **map**
+  - **배열을 받아 각각의 요소에 특정 적용을 시킨 후 새로운 배열을 반환**한다.
 
 ~~~ swift
 //map 사용예시
@@ -886,9 +906,12 @@ let negativePrimes = primes.map() { 1.0 / $0 } // [0.5, 0.333, 0.2, ...]
 let primeStrings = primes.map { String($0) } // ["2.0", "3.0", "5.0", "7.0", "11.0"]
 ~~~
 
-### 클로저 사용 시 주의사항
-- 캡쳐링 Capturing
-  - 클로저는 클래스와 같은 참조타입으로 캡쳐링이 발생할 수 있다.
+<br>
+
+### ◼︎ 클로저 사용 시 주의사항
+
+- 클로저 캡쳐링 Closure Capturing
+  - 클로저는 클래스와 같은 주소참조타입일 경우에 캡쳐링이 발생할 수 있다.
   - 클로저는 Heap안에 들어가 있다. 가령 배열 안에 클로저가 사용 되면 배열이 클로저의 포인터를 가지고 있게 된다.
   - 주변코드로부터 클로저에서 변수를 받게 되면, 해당 변수들도 Heap내에 위치하게 된다.
 
@@ -899,15 +922,16 @@ operation = { ltuae * $0 } // 클로저 내에서 ltuae가 캡쳐링 된다. 참
 arrayOfOperations.append(operation)
 ~~~
 
-- 위와 같이 연산의 배열이 있는 클래스를 받을 때, 메모리 사이클(Memory Cycle)이 발생할 수 있다.
+- 위와 같이 연산의 배열이 있는 클래스를 받을 때, **메모리 사이클(Memory Cycle)**이 발생할 수 있다.
 - 연산이 있는 배열의 클래스를 받게 되면 클로저가 그 클래스를 힙(Heap) 안에 넣는다.
 - + 배열의 클래스가 또 클로저를 힙에 넣게 된다.
 - (arrayOfOperations, operation...) 클로저는 클래스를, 클래스는 클로저를 담는 메모리 사이클이 발생하게 된다.
+  - **클로저 블럭 맨 앞에 [weak self] / [unowned self] 등을 붙여 메모리 사이클을 방지**할 수 있다. 
 
-### ➣  4강 용어정리
+#### ◼︎ 4강 용어정리
 * peculiarity : 특질 이라는 뜻
 
-### ➣  4강 구현결과
+#### ◼︎ 4강 구현결과
 - 집중력게임(Concentration Game) 내 계산프로퍼티, indexOfTheOneAndOnlyFaceUpCard의 클로저, 익스텐션 활용 예시
 - **클로져(Closure)와 익스텐션 등을 활용하여 훨씬 간결하고 직관적인 코드가 되었다.**
 <div>
