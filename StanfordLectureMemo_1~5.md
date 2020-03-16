@@ -26,12 +26,15 @@ iOS Study with Stanford Lecture Study 1~5
 - **Any & AnyObject**
 - **throws, try/do-catch 에러처리**
 - **UIView**
+  
   - 초기화 방법, 프로퍼티, 뷰 그리기
 - **Core Graphics**
+  
   - **UIImage, NSAttributedString, UIFont**...
 - 열거형을 활용한 카드 덱 출력 데모
 
   
+
 <br>
 <br>
 <br>
@@ -40,7 +43,7 @@ iOS Study with Stanford Lecture Study 1~5
 ## ♣︎ 기본 Xcode 사용법 및 개발
  * 개발자 문서 내 자주사용하는 클래스의 OverView는 전부 읽어보도록 하자.
  * 프로젝트를 만들때 필요한 것 : 프로젝트명, 팀명, 기관명, 기관식별자
- 
+
 ### ➣  Xcode Interface 요소
  - 네비게이터 : 좌측 창 영역은 네비게이터라고 한다. 검색/디버깅/파일목록 등을 볼 수 있다. (CMD+0)
  - 유틸리티창 : 우측 창 영역 (OPT+CMD+0)
@@ -68,12 +71,12 @@ iOS Study with Stanford Lecture Study 1~5
 # Lecture 2) 
 ## ♣︎ MVC패턴
 - Model + View + Controller (모델-뷰-컨트롤러)로 구성하는 디자인패턴 기법
- 
+
  ### ◼︎ Controller : UIViewController 등의 컨트롤러 요소
  - 모델과 원하는대로 얘기 하며 사용자에게 보여져야 할 데이터를 받는다.(특히 공개적인 데이터와는 무제한적으로 대화가능)
  - @IBOutlet, @IBAction 등 을 통해 View와 소통한다. 
    - ex) @IBOutlet/Action Delegation패턴 등 으로 Interface builder 내 View 요소와 블라인드 소통 가능
- 
+
  ### ◼︎ View : 스토리보드의 UILabel, UIImageView, UIView... and so on...
  - 모델과 절대 소통 불가능
  - 뷰는 컨트롤러와 블라인드상태로 소통해야한다. 뷰는 컨트롤러가 집중력게임 컨트롤러인지 어떤 컨트롤러인지 알지 못한다. 소통 시 컨트롤러에서 뷰에 대한 정의를 구조적으로 지정하고 교류할 수 있다.(타겟메서드, 델리게이트, 데이터소스 프로토콜 등...)
@@ -132,17 +135,19 @@ iOS Study with Stanford Lecture Study 1~5
 - 프로퍼티옵저버(didSet, willSet)
 - 배열 Array<Element>, [Element]
 - 딕셔너리 Dictionary<Key, Value>
-  - -> 해쉬타입, 키(Hashable, Equatable)와 값(Any)으로 이루어짐
-- for in 반복문 : 시퀀스(sequence) 성질이 있는 요소 순회탐색에 사용 가능
-- 문자열, 배열, 딕셔너리, Set 등
+  - -> 키(Hashable, Equatable)와 값(Any)으로 이루어진 해쉬타입 구조체
+- for _ in 반복문
+  - 시퀀스(sequence) 성질이 있는 요소 순회탐색에 사용 가능
+  - forEach와 달리 도중 break 를 통해 반복문을 빠져나갈 수 있음
+- 문자열(String), 배열(Array), 딕셔너리(Dictionary), Set 등
 - MVC(Model-View-Controller) 패턴
 - 값타입 Struct, 참조타입 class
-- 초기화함수, initializers
-- 실제 실행 시 초기화 되는 lazy 프로퍼티(프로퍼티옵저버 역할 불가능)
+- 초기화함수, 생성자(initializers)
+- 실제 실행 시 초기화 되는 lazy 프로퍼티(사용 시 프로퍼티옵저버 역할 불가능)
 - 타입변환 
   - ex) UInt32(Int)
-- nil이 될 수도 있는 옵셔널, 옵셔널바인딩방법 "if let"
- 
+- nil이 될 수도 있는 옵셔널, 옵셔널바인딩방법 "if let" (+ guard let)
+
 * **오토레이아웃을 적용하지 않은 집중력게임앱 가로모드 실행화면**
 <div>
  <img width="500" src="https://user-images.githubusercontent.com/4410021/63637755-88ee1880-c6bb-11e9-90cb-7c47b704ebbf.png">
@@ -160,6 +165,7 @@ iOS Study with Stanford Lecture Study 1~5
    - distribution : 스택뷰 내 서브뷰의 배치 설정 
    - fill, fillEqually, fillProportionally... 등의 옵션이 있다.
    - alignment : 스택뷰 정렬 기준 설정
+     - center ... 
 
  ### Stride(from:,through:,by:)
  - *Float 등의 부동소수점을 반복문으로 돌릴 수 없을까?*
@@ -172,11 +178,11 @@ iOS Study with Stanford Lecture Study 1~5
 
  }
  ~~~
- 
+
  ### Tuple
  - 튜플은 무엇일까? 
-   - 메소드나 변수가 없는 소형 구조체, 값만 들어가 있는 다른 언어의 구조체와 유사하다.
- - 가볍기때문에 한 줄만으로 표현할 수 있다.
+   - **메소드나 변수가 없는 소형 구조체**, 값만 들어가 있는 다른 언어의 구조체와 유사하다.
+ - 가볍기 때문에 한 줄만으로 표현할 수 있다.
  - 여러 요소의 이름을 유연하게 설정할 수 있다.
  - 함수 내에서 하나 이상의 값을 리턴할때 유용하다.
     - ex) (weight: Double, height: Double)로 신장(height)+체중(weight) 값 리턴
@@ -185,7 +191,7 @@ iOS Study with Stanford Lecture Study 1~5
  // tuple의 타입이 Tuple이 된다.
  let tuple: (String, Int, Double) = ("Hello", 5, 9.84) 
  ~~~
- 
+
  ~~~ swift
  // Tuple 사용 예 2)
  let tuple2: (w: String, i: Int, v: Double) = ("Hello", 5, 9.85)
@@ -196,10 +202,11 @@ iOS Study with Stanford Lecture Study 1~5
 
  ### 계산프로퍼티 (Computed Properties)
  - 쓰기, 읽기 시 사전 정의한 get, set 대로 계산되는 프로퍼티
- - 프로퍼티감지자(property Observer)와 혼용해서 사용할 수 없다.
+ - 계산프로퍼티는 프로퍼티감시자(property Observer)와 혼용해서 사용할 수 없다.
+     - 둘 중 하나만 선택해서 사용할 수 있다. 
  - 저장프로퍼티와 달리 쓰기/읽기 시 마다 set, get 블럭 내용을 실행한다.
- - get(읽기)과 달리 set(쓰기)은 필수 구현요소가 아니다.
-    - -> 읽기/쓰기(get/set) or 읽기(get) 상태로 구현 가능
+ - **get(읽기)과 달리 set(쓰기)은 필수 구현요소가 아니다.**
+    - -> **읽기/쓰기(get/set) or 읽기(get) 상태로 구현 가능**
     - get 만 사용한다면 get 명시 없이 return <값> 로 구현할 수도 있다.
  - 상황에 따라 계산되는 속성으로 코드는 훨씬 간결해지고, 직관적이게 된다. 일어난 상황에따라 반응하기 때문이다.
  - 특정 행위를 할 때마다 변경 혹은 읽기가 필요한 경우 유용할 수 있다.
@@ -225,33 +232,37 @@ iOS Study with Stanford Lecture Study 1~5
 
 ## ♣︎ **접근제어 Access Control**
  - 외부로부터 코드 내부를 접근하는 기준을 지정할 수 있다.
-### - open : 해당 프레임워크 이외의 모듈에서 불러올 뿐만 아니라 할당, 서브클래싱(상속), 오버라이딩 까지 전부 가능하다. 즉 완전개방 상태이다.
+#### ◼︎ open : 해당 프레임워크 이외의 모듈에서도 읽기 + 할당, 서브클래싱(상속), 오버라이딩 까지 전부 가능하다. 
+
+- 즉 전체 모듈에 대하여 완전개방 상태이다.
 - 현재 모듈 뿐 만 아니라 다른 모듈에서도 읽기, 서브클래싱(상속), 오버라이딩, 할당 모두 가능한 완전개방 상태이다.
-### - public : 해당 프레임워크 이외의 모듈에서도 사용자가 불러와 사용이 가능하다. 
-- 다른 모듈에서 불러와 읽을 수 있다. 
+#### ◼︎ public : 해당 프레임워크 이외의 모듈에서는 읽기만 가능하다. 
+- 선언된 내부 모듈에서는 읽기, 상속, 오버라이딩 등이 모두 가능하다. 
+  - 다른 모듈에서 불러와 읽기가 가능하다. 
   - 하지만 다른 모듈에서의 서브클래싱(상속), 할당, 오버라이딩은 불가능하다. 
-### - Internal : default 접근제어, Internal일 경우, 모듈 내에 서는 지정한 객체나 코드이던 해당 메서드, 프로퍼티에 접근이 가능하다.
+#### ◼︎ Internal : default 접근제어, Internal일 경우, 모듈 내에 서는 읽기, 상속, 오버라이딩이 가능하다.
 - 어떠한 접근제어 명시를 안했을 때 적용되는 Default Access Control 상태
 - 모듈 내에서는 읽기, 서브클래스(상속), 오버라이딩, 할당 모두 가능하다.
   - 하지만 다른 모듈에서의 읽기, 서브클래식(상속), 할당, 오버라이딩을 불가능하다. 
-### - Private : 다른 객체로부터 불러올 수 없다. 해당 지정된 블록 내에서만 접근 가능, 접근 비공개상태
+#### ◼︎ Private : 해당 지정된 블록 내에서만 접근 가능, 다른 객체로부터 접근 비공개상태
 - 현재 정의된 블록 이외의 영역에서는 접근할 수 없다. 
-### - Private(set) : 다른 객체로부터 불려질 수 있다. 읽기 접근은 되지만 할당은 불가능 하다. 지정 된 내부에서만 할당 가능.
-- 정의 된 블록 내에서만 서브클래싱(상속), 오버라이딩, 할당이 가능하다. 
-- 현재 정의 된 블록 이외의 영역에서는 읽기만 가능하다.
-- public private(set)과 동일한 표현
-### - fileprivate : 파일 이내에서는 지정 된 메서드, 프로퍼티에 대해서 접근 및 할당 가능
-- 현재 정의 된 파일 영역에서만 읽기, 오버라이딩, 서브클래싱(상속), 할당 등의 접근이 가능하다.
+- 블록 내에서만 쓰기등이 가능하다. 
+#### ◼︎ Private(set) : 다른 객체에서 읽기가 가능하지만 할당은 불가능 하다. 지정 된 내부에서만 읽기, 쓰기 가능.
+- **정의 된 블록 내에서만 서브클래싱(상속), 오버라이딩, 할당이 가능**하다. 
+- **현재 정의 된 블록 이외의 영역에서는 읽기만 가능**하다.
+- **public private(set)과 동일한 표현**
+#### ◼︎ fileprivate : 파일 이내에서는 지정 된 메서드, 프로퍼티에 대해서 읽기, 쓰기 및 할당 가능
+- **현재 정의 된 파일 영역 읽기, 오버라이딩, 서브클래싱(상속), 할당 등의 접근이 가능**하다.
 - 정의 된 파일 영역 이외에서는 접근할 수 없다. 
 
 <br>
 
 ## ♣︎ 확장 Extension
  - extension <객체이름> {} 과 같은 식으로 사용할 수 있다.
- - **확장은 iOS에서 매우 강력한 도구**이다. 비유하자면, 마치 **"조심스럽게 다루는 무기"와 같다.**
+ - **extension(확장)은 iOS에서 매우 강력한 도구**이다. 비유하자면, 마치 **"조심스럽게 다루는 무기"와 같다.**
  - **extension은 저장공간이 있는 변수는 아니다.**
  - **extension은 간편하여 쉽게 남용 될 수 있다.**
-   - 그러므로 확장 사용 시 불필요한 기능인지 고려할 필요가 있다.
+   - 그러므로 **확장 사용 시 불필요한 기능인지 고려할 필요**가 있다.
 
 <br>
 
@@ -282,10 +293,10 @@ iOS Study with Stanford Lecture Study 1~5
     case .none: // 예외 발생(강제 바인딩을 했으나 값이 없으므로 오류발생), 안전한 바인딩 시 해당 상황 시 옵셔널 바인딩의 else 부분이 실행 되고 Crash를 면할 수 있다.
     case .some: // 만약 강제 바인딩 시 값이 존재했다면 오류없이 해당 데이터(연동자료)를 출력 했을 것이다.
  }
- ~~~
+~~~
 
-### ➣  옵셔널 체이닝
- - 옵셔널 체이닝은 수차례의 옵셔널 검사를 하며 값을 접근하는 방법이다.
+#### ◼︎ 옵셔널 체이닝
+ - 옵셔널 체이닝은 수차례의 옵셔널 검사(?.)를 하며 값을 접근하는 방법이다.
 
 ~~~ swift
 // 옵셔널 체이닝 사용 예시)
@@ -298,12 +309,14 @@ iOS Study with Stanford Lecture Study 1~5
 
 ## ♣︎ ARC (Automatic Reference Counting)
  - **iOS의 자동 참조할당 해제 방식**
- - **ARC가 0 이되면 Heap에서 빼내서 할당을 해제**한다.
+ - **Class에서만 적용되는 방식**
+    - 값참조를 하는 구조체와는 상관없다. 
+ - **ARC가 0 이되면 Heap에서 빼내어 할당을 해제**한다.
  - **strong, weak, unowned** 등의 참조 옵션이 존재한다.
 
-### ➣  Strong
+#### ◼︎ Strong
 - 참조카운팅의 기본 설정값.
-- strong으로 설정하고 있는 한 해당 객체는 힙 내에 계속 유지된다.
+- strong으로 설정하고 있는 한 해당 객체는 해제되기 전가지 힙 내에 계속 유지된다.
 
 ### ➣  weak
 - **weak은 옵셔널 포인터로 참조타입을 가리킨다.**
@@ -324,30 +337,31 @@ iOS Study with Stanford Lecture Study 1~5
 <br>
 
 ## ✯ Swift 앱개발에 사용되는 자료구조
-### => Class, Struct, Enum, Protocol
+#### - Class, Struct, Enum, Protocol
 
 ## ♣︎ 클래스 Class
 - **클래스는 참조타입, 상속을 지원한다.**
 - **참조타입으로서 힙(Heap)영역에 존재**하게 된다.
-- **클래스 등의 참조계산 방식은 앞서 언급한 ARC(Automatic Refernce Counting)로 동작**한다.
+- **참조계산 방식은 앞서 언급한 ARC(Automatic Refernce Counting)로 동작**한다.
 
 ## ♣︎ 구조체 Struct
 - **구조체는 값타입**, 상속을 지원하지 않는다.
+  - Class, Struct 전부 프로토콜 채택은 가능하다.
 - **구조체 종류**
-  - 배열, 딕셔너리, 문자열, 문자, 정수형 ,Double, UInt32 등... 많다.
-- **값 타입이므로 내부적으로 변경되야 하는 여지가 있을 때 mutating 예약어를 사용**해야 한다. 
+  - 배열, 딕셔너리, 문자열, 문자, 정수형 ,Double, UInt32 등... 많은 경우에 구조체가 활용된다. 
+- **값 타입이므로 내부적으로 변경이 필요한 메서드를 정의할때 mutating 예약어를 사용**해야 한다. 
 
 ## ♣︎ 열거형 Enum
-- 타입의 일종, 데이터 구조 타입인 enum, struct, class 중 하나인 열거형.
+- Struct, Class 등과 함께  데이터 구조 타입의 일종인 열거형.
 - struct, class와 비슷하다.
-  - 그 중 구조체(struct)와 동일한 값 타입이다.
+  - 그 중 enum은 구조체(struct)와 동일한 값 타입이다.
 - 메서드, 변수를 가질 수 있지만 저장공간을 가지지는 않는다.
   - enum의 저장공간은 연동자료들 각각에 대해서만 존재한다. 그러므로 enum의 값들은 계산된 변수만을 가질 수 있다.
     - enum의 각 case 내 연동자료를 제외한 저장공간은 존재하지 않는다.
 - swift enum은 다른 언어의 열거형과 흡사하다. 하지만...
 - **다른 언어에 비해 swift의 enum은 매우 강력하다.**
    - **enum 각각의 케이스들이 연동된 데이터 혹은 값을 가질 수 있기 때문이다.**
-- * 타입 추론이 가능하지만 좌측 혹은 우측 어느 한곳에는 해당 타입을 명시해주어야 추론이 가능하다.
+   - 타입 추론이 가능하지만 좌측 혹은 우측 어느 한곳에는 해당 타입을 명시해주어야 추론이 가능하다.
 
 ~~~ swift
 // swift enum의 사용 예시)
@@ -364,11 +378,11 @@ enum FastFoodMenuItem {
 let menuItem: FastFoodMenuItem = FastFoodMenuItem.hamburger(patties: 2)
 var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 ~~~
- 
+
 - enum은 등호(==)대신 switch 문을 통해 비교한다.
 - enum switch 문 내 case문에서 ".값" 만 명시해도 값 추론이 가능하다.
 - case 내 두줄 이상의 코드도 실행 가능하다.
- 
+
 ### ➣  break
  - switch 문 내에서 특정 분기 시 아무것도 실행하고 싶지 않다면, break문을 사용하면 된다.
  ~~~ swift
@@ -379,12 +393,12 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
         case .drink: print("drinK")
         case .cookie: print("cookie")
     }
-~~~
+ ~~~
 
-### ➣  default:
+#### ◼︎ default:
 - 만약 특정 케이스 이외의 케이스를 한번에 묶어 구분하려면 case로 default:를 사용할 수 있다.
 
-### ➣  case let
+#### ◼︎ case let
 - 만약 case 내 정보에 따른 연동자료를 얻고 싶다면 case문 내에 let을 활용할 수 있다.
 - let 변수 이름은 enum 요소와 무관하게 지정해도 무방하다.
 
@@ -393,17 +407,20 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 // drink에 대한 특정 값 부여에 따른 연동자료를 얻을 수 있다.
  var menuItem = FastFoodMenuItem.drink("Coke", ounces: 32)
  switch menuItem {
-     case . hamburger(let pattyCount): print("a burger with \(pattyCount) patties!")
+     case .hamburger(let pattyCount): print("a burger with \(pattyCount) patties!")
      case .fries(let size): print("a \(size) order of fries!")
      case .drink(let brand, let ounces): print("a \(ounces)oz \(brand)")
      case .cookie: print("a cookie!")
  }
 ~~~
 
-### ➣  switch self 
+<br>
+
+#### ◼︎ switch self 
+
 - **enum 내에 switch self 를 구성하여 case에 따른 연동자료를 반환시길 수 있다.**
 - enum 내부적으로 self를 변경 시킬 수도 있다.
-  - 단, **값타입인 enum 타입 내에서는 mutating 속성이 부여되어 있어야 내부 쓰기가 가능**
+  - 단, **값타입인 enum 타입 내에서는 struct와 같이 내부 쓰기를 위해선 mutating 속성이 부여되어 있어야 가능하다.**
   
 ~~~ swift
 // switch self 사용 예시)
@@ -418,7 +435,6 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
                 // * ',' 반점을 사용해 몇 개의 케이스 경우를 묶어줄 수 있다.
         }
     }
- 
 
     // switch self 사용예시 2)
     mutating func switchToBeingACookie() {
@@ -428,21 +444,24 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
  }
 ~~~
 
+<br>
+
 ## ♣︎ 프로토콜 Protocol
+
 - **문자열, 배열 등 많은 것들이 프로토콜을 사용하며 이들의 기초가 된다.**
 - **다중상속과 같은 효과 / Controller-View 간 델리게이션 사용 등을 통한 블라인드 소통기능 등 다양한 역할**을 할 수 있다.
 - 4강에서 이어서 알아본다.
 
 <br>
 
-### ➣  3강 용어정리
+### ♣︎ 3강 용어정리
  * Safe Area : 안전영역 즉, 스크린 주변의 다른 UI와 겹치지 않고 배치할 수 있는 영역
- * Assertion : 어떤 것이 참임을 단언하는 함수
+ * Assertion(Assert) : 어떤 것이 참임을 단언하는 함수
    - 만약 Assertion을 통해 단언한 내용이 성립하지 않으면 디버깅단계에서 프로그램 에러를 발생시킨다.
    - 앱스토어 배포단계에서 Assertion은 무관하게 취급한다.
    - API를 보호하기 좋은 수단이다.
 
-### ➣  3강 구현결과 
+### ♣︎ 3강 구현결과 
 
 <div>
  <img width="400" src="https://user-images.githubusercontent.com/4410021/63647522-54329d80-c75d-11e9-93ce-7be2acb2d7a6.png">
@@ -501,7 +520,7 @@ var otherItem: FastFoodMenuItem = FastFoodMenuItem.cookie
 - 프로토콜의 선언
  - 클래스, 열거형, 구조체 선언과 같은 선언방식
  - 클래스, 구조체 등의 선언방식과 유사
- 
+
 ~~~ swift
 // 프로토콜 선언 예
 // AProtocol을 구현하려면, IngeritedProtocolA, InheritedProtocolB 프로토콜을 충족시켜야 한다.
@@ -962,7 +981,7 @@ do {
 func prepare(for segue: UIStoryboardSegue, sender: Any?)
 ~~~
 - **본 강의에서는 하위호환 API 호출을 제외하고 Any타입을 사용할 일이 없다.**
- 
+
 <br>
 
 ### AnyObject
@@ -1048,7 +1067,7 @@ func setup() {
 ### UIView 초기화 방법
 - override init(frame: CGRect)
   - 코드를 통해 UIView를 초기화 할때 사용
-~~~ swift
+​~~~ swift
 override init(frame: CGRect) {
     super.init(frame: frame)
     // ...
@@ -1289,7 +1308,7 @@ path.stroke()
 // green색상의 객체 할당
 let green = UIColor.green
 ~~~
-    
+
 <br>
 
 - UIColor 프로퍼티
@@ -1297,7 +1316,7 @@ let green = UIColor.green
     - withAlphaComponent(<알파값 0...1>) : 색상 타입프로퍼티에 다시 접근하여 알파값을 설정할 수 있다.
       - * 일반적으로 뷰는 Opacue(불투명) 으로 설정이 된다.
         - -> 투명하게 하려면 UIView의 프로퍼티인 var opaque = false 처리해야 한다. (인터페이스 빌더 설정가능)
-    
+  
 - UIView 내 UIColor 프로퍼티
 ~~~ swift
 // 해당 프로퍼티는 Concentration button에 적용한 적이 있다.
@@ -1324,7 +1343,7 @@ let textSize: CGSize = text.size
 <br>
   - 문자열 특정 영역의 문자 속성을 변경할 수 있다. 
     - NSRange값을 설정한 후 addAttribute(_, value:, range:) 메서드로 속성 설정
-  
+
 ~~~ swift 
 let pizzaJoint = "Cafe Pesto"
 var attributedString = NSMutableAttributedString(string: pizzaJoint)
@@ -1416,13 +1435,13 @@ var contentMode: UIViewContentMode
     - 기본값은 scaleToFill, 새로운 공간에 상황에 따라 맞춘다. 
     - .scaleToFill / .scaleAspectFill / .scaleAspectFit / .scaleToFill ...
   - 리드로잉 Redrawing
-  
+
   <br>
-  
+
   ### layoutSubviews
   - 뷰의 경계가 바뀔 때 layoutSubview() 메서드가 호출된다. 
   - 오토레이아웃(Autolayout)을 사용하지 않을때 layoutSubviews() 를 사용한다. 
-  
+
 ~~~ swift 
 override func layoutSubviews() {
     super.layoutSubviews()

@@ -9,7 +9,6 @@
 import UIKit
 
 class EmojiArtViewController: UIViewController, UIDropInteractionDelegate {
-    
 //    [C1-3] View들을 각각 연결해 줍니다.
     @IBOutlet var dropZone: UIView! {
         didSet {
